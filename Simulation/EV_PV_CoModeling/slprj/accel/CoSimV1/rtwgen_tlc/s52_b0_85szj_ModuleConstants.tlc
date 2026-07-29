@@ -1,6 +1,0 @@
-%implements s52_b0_85szj_ModuleConstants "C"
-
-%function ModuleConstants(block) Output
-
-#define CoSimV1_period (1.0E-5)
-%endfunction
