@@ -4,11 +4,15 @@ close all;
 %% General simulation paras
 Fnom= 50;               % System frequency (Hz)
 Vnom_ac= 240;           % Nominal Ac voltage (V)
-Ts_Control= 10e-6;      % Control system time (s)
+% Ts_Control= 10e-6;      % Control system time (s)
+% Fc = 20e3;
+% Ts_Control= 1/Fc;
+Fc = 100e3;
+Ts_Control = 1/Fc;
 %% python env
 %%
 % target = "/home/changhong/anaconda3/envs/matlab_onnx_py310/bin/python";
-% pe = pyenv;
+% pe = pyenv三;
 % 
 % pyenv("Version", target);
 % 
@@ -106,8 +110,8 @@ mm_halfcycle_overlap = mm_halfcycle_points - 1;   % sliding half-cycle window
 % THD 3.37% (fft1) 3.38 (fft10) 3.38 (rls) 2.85 (model 1) 
 % Ripple 5.6% (fft1) 5.61 (fft10) 5.56 (rls) 5.61 (model 1) 
 
-use_d_predict = 0;
-use_p_predict = 1;
+use_d_predict = 1;
+use_p_predict = 0;
 use_harmonic = 1;
 estimation_src = 1;
 
