@@ -1,6 +1,9 @@
 clc;
 clear;
 close all;
+%% System control
+HIL_enable = 0;
+
 %% General simulation paras
 Fnom= 50;               % System frequency (Hz)
 Vnom_ac= 240;           % Nominal Ac voltage (V)

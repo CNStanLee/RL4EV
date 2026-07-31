@@ -15,6 +15,7 @@ from typing import Any
 
 Number = int | float
 SampleProcessor = Callable[[Number], Number]
+FrameProcessor = Callable[[Sequence[Number]], Number | Sequence[Number]]
 
 
 def identity(value: Number) -> Number:
@@ -114,9 +115,10 @@ class OutputChannel:
         name: str,
         host: str,
         output_port: int,
-        process_function: SampleProcessor,
+        process_function: SampleProcessor | FrameProcessor,
+        processing_mode: str,
         data_type: str,
-        batch_size: int,
+        output_batch_size: int,
         overflow: str,
         stop_event: threading.Event,
     ) -> None:
@@ -124,10 +126,13 @@ class OutputChannel:
             raise ValueError("Output channel name cannot be empty")
         if not callable(process_function):
             raise TypeError(f"Processor for channel {name!r} must be callable")
+        if processing_mode not in {"sample", "frame"}:
+            raise ValueError("processing_mode must be 'sample' or 'frame'")
         self.name = name
         self.host = host
         self.output_port = output_port
-        self.codec = SampleCodec(data_type, batch_size, overflow)
+        self.codec = SampleCodec(data_type, output_batch_size, overflow)
+        self.processing_mode = processing_mode
         self.stop_event = stop_event
         self.results: queue.Queue[bytes] = queue.Queue(maxsize=1)
         self._process_function = process_function
@@ -138,7 +143,7 @@ class OutputChannel:
 
     def set_process_function(
         self,
-        process_function: SampleProcessor,
+        process_function: SampleProcessor | FrameProcessor,
     ) -> None:
         if not callable(process_function):
             raise TypeError("process_function must be callable")
@@ -148,7 +153,14 @@ class OutputChannel:
     def process(self, input_values: Sequence[Number]) -> bytes:
         with self._process_lock:
             process_function = self._process_function
-        output_values = [process_function(value) for value in input_values]
+        if self.processing_mode == "sample":
+            output_values = [process_function(value) for value in input_values]
+        else:
+            frame_result = process_function(input_values)
+            if isinstance(frame_result, Sequence):
+                output_values = list(frame_result)
+            else:
+                output_values = [frame_result]
         return self.codec.encode(output_values)
 
     def publish(self, input_values: Sequence[Number]) -> None:
@@ -270,12 +282,14 @@ class CoSimulationServer:
 
     def __init__(
         self,
-        process_function: SampleProcessor = identity,
+        process_function: SampleProcessor | FrameProcessor = identity,
         host: str = "0.0.0.0",
         input_port: int = 5000,
         output_port: int = 5001,
         data_type: str = "single",
         batch_size: int = 1,
+        output_batch_size: int | None = None,
+        processing_mode: str = "sample",
         overflow: str = "wrap",
     ) -> None:
         self.host = host
@@ -290,20 +304,25 @@ class CoSimulationServer:
 
         if output_port == input_port:
             raise ValueError("input_port and output_port must be different")
+        if output_batch_size is None:
+            output_batch_size = batch_size
+        self.output_batch_size = output_batch_size
+        self.processing_mode = processing_mode
         self.output_channel = OutputChannel(
             name="result",
             host=host,
             output_port=output_port,
             process_function=process_function,
+            processing_mode=processing_mode,
             data_type=data_type,
-            batch_size=batch_size,
+            output_batch_size=output_batch_size,
             overflow=overflow,
             stop_event=self.stop_event,
         )
 
     def set_process_function(
         self,
-        process_function: SampleProcessor,
+        process_function: SampleProcessor | FrameProcessor,
     ) -> None:
         self.output_channel.set_process_function(process_function)
 
@@ -432,7 +451,7 @@ def _release_legacy_notebook_server(
 
 
 def initialize_server(
-    process_function: SampleProcessor = identity,
+    process_function: SampleProcessor | FrameProcessor = identity,
     *,
     namespace: MutableMapping[str, Any] | None = None,
     host: str = "0.0.0.0",
@@ -440,6 +459,8 @@ def initialize_server(
     output_port: int = 5001,
     data_type: str = "single",
     batch_size: int = 1,
+    output_batch_size: int | None = None,
+    processing_mode: str = "sample",
     overflow: str = "wrap",
     namespace_key: str = "cosim_server",
 ) -> CoSimulationServer:
@@ -475,6 +496,8 @@ def initialize_server(
         output_port=output_port,
         data_type=data_type,
         batch_size=batch_size,
+        output_batch_size=output_batch_size,
+        processing_mode=processing_mode,
         overflow=overflow,
     ).start()
     print("Co-simulation server configured")
@@ -485,6 +508,7 @@ def initialize_server(
     channel = server.output_channel
     print(
         f"Output: port={channel.output_port}, "
-        f"type={channel.codec.data_type}"
+        f"type={channel.codec.data_type}, batch={channel.codec.batch_size}, "
+        f"mode={processing_mode}"
     )
     return server

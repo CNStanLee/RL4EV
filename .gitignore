@@ -13,3 +13,27 @@ slprj/
 # OS / editor temp files
 .DS_Store
 Thumbs.db
+
+# AMD/Xilinx Vitis HLS generated workspace and build artifacts
+HLS_PRJ/_ide/
+HLS_PRJ/**/.Xil/
+HLS_PRJ/**/.cache/
+HLS_PRJ/**/compile_commands.json
+HLS_PRJ/*/*/
+HLS_PRJ/**/*.log
+HLS_PRJ/**/*.jou
+HLS_PRJ/**/*.str
+HLS_PRJ/**/*.hlscompile_summary
+HLS_PRJ/**/*.hlsrun_*_summary
+
+# AMD/Xilinx Vivado generated project artifacts
+Vivado_PRJ/**/.Xil/
+Vivado_PRJ/**/*.cache/
+Vivado_PRJ/**/*.gen/
+Vivado_PRJ/**/*.hw/
+Vivado_PRJ/**/*.ip_user_files/
+Vivado_PRJ/**/*.runs/
+Vivado_PRJ/**/*.sim/
+Vivado_PRJ/**/*.jou
+Vivado_PRJ/**/*.log
+Vivado_PRJ/**/*.str
