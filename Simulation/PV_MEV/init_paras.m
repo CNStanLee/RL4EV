@@ -15,7 +15,7 @@ Ts_Control = 1/Fc;
 %% python env
 %%
 % target = "/home/changhong/anaconda3/envs/matlab_onnx_py310/bin/python";
-% pe = pyenv三;
+% pe = pyenv;
 % 
 % pyenv("Version", target);
 % 
