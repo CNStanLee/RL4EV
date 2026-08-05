@@ -1,0 +1,6 @@
+hgq2 @ git+https://github.com/calad0i/HGQ2.git@88ddffde25e8f855c9534015863fa07b269d0b60
+keras>=3.11,<4
+torch>=2.2
+alkaid==0.7.1
+onnx>=1.17
+onnxruntime>=1.20

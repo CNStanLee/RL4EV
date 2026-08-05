@@ -1,0 +1,42 @@
+{
+  "paths": {
+    "dataset": "data/pv_mev_real.npz",
+    "run_dir": "runs/pv_mev_hgq_residual_bls",
+    "report_dir": "reports/pv_mev_hgq_residual_bls",
+    "export_dir": "artifacts/pv_mev_hgq_residual_bls"
+  },
+  "models": ["residual_bls"],
+  "model": {
+    "window_size": 80,
+    "output_dim": 8,
+    "weight_integer_bits": 1,
+    "weight_fractional_bits": 6,
+    "activation_integer_bits": 2,
+    "activation_fractional_bits": 5,
+    "output_integer_bits": 2,
+    "output_fractional_bits": 5,
+    "quantizer_trainable": false,
+    "enable_ebops": false,
+    "beta": 0.0,
+    "dropout": 0.0,
+    "residual_bls_width": 64,
+    "residual_bls_blocks": 3
+  },
+  "training": {
+    "epochs": 300,
+    "batch_size": 128,
+    "learning_rate": 0.0008,
+    "weight_decay": 0.00002,
+    "patience": 40,
+    "reduce_lr_patience": 12,
+    "min_learning_rate": 0.000001,
+    "seed": 20260805,
+    "verbose": 2,
+    "loss": "mse"
+  },
+  "evaluation": {
+    "batch_size": 256,
+    "phase_gate_ratio": 0.02,
+    "latency_repetitions": 50
+  }
+}

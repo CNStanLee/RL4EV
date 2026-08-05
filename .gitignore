@@ -14,6 +14,21 @@ slprj/
 .DS_Store
 Thumbs.db
 
+# Python / HGQ2 training artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+HGQ_MODEL/.venv/
+HGQ_MODEL/data/*.npz
+HGQ_MODEL/data/pv_mev_runs/archive/
+HGQ_MODEL/runs/
+HGQ_MODEL/artifacts/**/*.keras
+HGQ_MODEL/artifacts/**/*.onnx
+HGQ_MODEL/artifacts/**/*.alir.json.gz
+HGQ_MODEL/artifacts/**/*.h5
+
 # AMD/Xilinx Vitis HLS generated workspace and build artifacts
 HLS_PRJ/_ide/
 HLS_PRJ/**/.Xil/

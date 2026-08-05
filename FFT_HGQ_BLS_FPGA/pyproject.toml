@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fft-hgq-bls-fpga"
+version = "0.1.0"
+description = "Self-contained FFT plus HGQ2 Residual-BLS training and FPGA deployment"
+requires-python = ">=3.10"
+dependencies = [
+  "hgq2 @ git+https://github.com/calad0i/HGQ2.git@88ddffde25e8f855c9534015863fa07b269d0b60",
+  "keras>=3.11,<4",
+  "matplotlib>=3.8",
+  "numpy>=1.26,<3",
+  "scikit-learn>=1.4",
+  "scipy>=1.12",
+]
+
+[project.optional-dependencies]
+torch = ["torch>=2.2"]
+onnx = ["onnx>=1.17", "onnxruntime>=1.20", "onnxscript>=0.2"]
+test = ["pytest>=8", "ruff>=0.9"]
+hardware = ["alkaid==0.7.1"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

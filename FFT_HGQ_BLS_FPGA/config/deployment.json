@@ -1,0 +1,28 @@
+{
+  "estimator_rate_hz": 4000,
+  "input": {
+    "shape": [80, 1],
+    "normalization": "x / max(abs(x))",
+    "alkaid_input_kif": [1, 1, 8]
+  },
+  "model": {
+    "framework": "HGQ2",
+    "architecture": "Residual-BLS",
+    "width": 64,
+    "residual_blocks": 3,
+    "quantized_dense_layers": 8,
+    "skip_adds": 3,
+    "trainable_parameters": 30664,
+    "weight_kif": [1, 1, 6],
+    "activation_kif": [1, 2, 5],
+    "output_kif": [1, 2, 5]
+  },
+  "output_order": ["c1", "s1", "c3", "s3", "c5", "s5", "c7", "s7"],
+  "fft_fusion_alpha_mpcc": [
+    0.6704476522845647,
+    0.7221651725151749,
+    0.6446423751787858,
+    0.41926421682656173
+  ],
+  "watchdog_fallback": "FFT-only"
+}

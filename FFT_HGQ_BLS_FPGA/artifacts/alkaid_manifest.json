@@ -1,0 +1,30 @@
+{
+  "alir_bytes": 365640,
+  "alir_file": "harmonic_residual_bls.alir.json.gz",
+  "alir_sha256": "9ff49fca125fd17562966794b407242a217a8a8406861e1b4c20cb89c4e04f4f",
+  "alkaid_version": "0.7.1",
+  "hgq2_version": "0.1.10.dev17+g88ddffde2",
+  "input_kif": [
+    1,
+    1,
+    8
+  ],
+  "input_shape": [
+    80,
+    1
+  ],
+  "keras_backend": "torch",
+  "model": "residual_bls",
+  "output_shape": [
+    8
+  ],
+  "parity": {
+    "exact": true,
+    "max_abs_error": 0.0,
+    "mean_abs_error": 0.0
+  },
+  "parity_examples": 16,
+  "source_keras_model": "model.keras",
+  "source_keras_sha256": "de29a48a488e6f99f3ecc0d0fe564040847748af84c737a96192049995d7a0ce",
+  "warning": "ALIR parity does not replace RTL synthesis, timing closure, or SIL/PIL/HIL validation."
+}
