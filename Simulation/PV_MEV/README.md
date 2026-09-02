@@ -8,6 +8,7 @@
 | `config.csv` | Controller variant table: `VARIANT_NAME, Fc, use_d_predict, use_p_predict, use_harmonic, estimation_src, simu_time, note`. |
 | `run_benchmark.m` | Runs variants headlessly, logs EV-side metrics, writes `results/<VARIANT>.csv` and merges into `results/benchmark_results.csv`. |
 | `results/` | Latest benchmark output. |
+| `docs/EMI_INJECTION_TEST_PLAN.md` (+ `.pdf`) | Sensor-chain injection (EMI-equivalent measurement bias) test plan: injection points, disturbance generator, test matrix, metrics, expected result tables. Loaded by the `pfc-injection-test` skill (`.claude/skills/pfc-injection-test/SKILL.md`). |
 
 ## Usage
 ```matlab
