@@ -52,3 +52,7 @@ Vivado_PRJ/**/*.sim/
 Vivado_PRJ/**/*.jou
 Vivado_PRJ/**/*.log
 Vivado_PRJ/**/*.str
+
+# PV_MEV injection test bench: bulky per-run time series and operating-point snapshots (regenerable)
+Simulation/PV_MEV/results/emi/ts/
+Simulation/PV_MEV/results/emi/snapshots/

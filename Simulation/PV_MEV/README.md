@@ -9,6 +9,11 @@
 | `run_benchmark.m` | Runs variants headlessly, logs EV-side metrics, writes `results/<VARIANT>.csv` and merges into `results/benchmark_results.csv`. |
 | `results/` | Latest benchmark output. |
 | `docs/EMI_INJECTION_TEST_PLAN.md` (+ `.pdf`) | Sensor-chain injection (EMI-equivalent measurement bias) test plan: injection points, disturbance generator, test matrix, metrics, expected result tables. Loaded by the `pfc-injection-test` skill (`.claude/skills/pfc-injection-test/SKILL.md`). |
+| `docs/EMI_DETECTION_PHASES_2-4_PLAN.md` | Plan for the follow-on phases: EMI-injection detector (HGQ2 / FINN) with SIL and FPGA HIL, detection-conditioned robust MPCC (`MPCC_R`), and ZCU104 deployment with real-time verification. Plan only, no experiments started. |
+| `build_injection.m` | One-off: adds `Disturbance Injector`, `Protection Monitor`, `Charger Stage` to `MyLibrary.slx` and splices them into `PV_MEV/EV System` (charger replaces the resistive load; injectors on the Vdc/Vac/Iac lines into `PFC Control`). `build_injection('probe')` checks the current-source polarity. |
+| `tests.csv` | Injection test matrix (plan table 6-1): 13 cases, P1/P2. |
+| `run_injection.m` | `baseline` (0.6 s snapshots), `run` (cases from snapshot to 1.3 s, one summary row + 10 kHz time series per run), `merge` (scorecard), `smoke` (snapshot continuity). Results in `results/emi/`. |
+| `make_injection_figs.m` | Figures 2..8 of the plan from `results/emi/`. |
 
 ## Usage
 ```matlab
@@ -22,6 +27,15 @@ run_benchmark('merge')                            % only rebuild results/benchma
 run_benchmark({'CRPR'}, struct('stop_time',0.05)) % smoke test
 ```
 Several MATLAB processes may run different subsets in parallel; each writes its own `results/<VARIANT>.csv`.
+
+```matlab
+% sensor-chain injection tests (docs/EMI_INJECTION_TEST_PLAN.md)
+run_injection('baseline')                 % snapshots for all six strategies (charger load)
+run_injection('run', 'P1')                % or 'P2', 'all', {'E-DC-01b','E-BAT-02b'}
+run_injection('run', 'P1', 'CRPR')        % one strategy
+run_injection('merge'); make_injection_figs
+```
+The load is now the `Charger Stage` (battery CC/CV, 20 A / 350 V, about 6.9 kW); the old resistive baseline in `results/benchmark_results.csv` is kept for reference.
 
 ## Variant flags
 - `use_p_predict = 1`: MPCC decides the gate directly every `Ts_Control` (PWM generator bypassed).

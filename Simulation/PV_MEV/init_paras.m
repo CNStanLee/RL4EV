@@ -12,8 +12,14 @@
 %   1 = FFT 1 cycle   2 = FFT 10 cycles   3 = ONNX model 1 cycle
 %   4 = ONNX model 0.5 cycle   5 = RLS
 %
-% Only VARIANT_NAME survives the workspace reset below.
-clearvars -except VARIANT_NAME
+% Sensor-chain injection test bench (docs/EMI_INJECTION_TEST_PLAN.md): the
+% struct INJ (fields channel, shape, amp, k, f, phase, period, duty, t_on,
+% dwell, K_hall) selects the disturbance; run_injection.m fills it from
+% tests.csv.  Without INJ the model runs undisturbed.  xInitial holds the
+% ModelOperatingPoint snapshot when a run starts from 0.6 s.
+%
+% Only VARIANT_NAME, INJ and xInitial survive the workspace reset below.
+clearvars -except VARIANT_NAME INJ xInitial
 close all;
 
 %% System control
@@ -29,7 +35,10 @@ Vnom_ac= 240;           % Nominal Ac voltage (V)
 
 %% Model Parameters
 Ts_Power= 50e-9;    % SPS Model sample time (s)
-Ro=22.22;           % 7.2-kW nominal load (Ohms)
+Ro=22.22;           % legacy 7.2-kW resistive load (Ohms); replaced by Charger Stage
+R_bleed=100e3;      % DC-bus bleeder in parallel with the charger (Ohms)
+R_pre=Ro*2;         % start-up preload (3.6 kW), switched off at t_pre_off
+t_pre_off=0.30;     % preload off while the charger ramp is at 10 A (bus never unloaded)
 Ron_FET=50e-3;      % FET resistance (ohms)
 Ron_Diode=50e-3;    % FET resistance (ohms)
 Vf=0.6;             % Diode forward voltage (V)
@@ -53,6 +62,46 @@ Fr_I=Fnom*2;        % Resonant frequency (Hz)
 Kp_V= 0.25;        % Proportional gain
 Ki_V= 80;          % Integral gain
 Limit_V= 100;      % Output limit
+
+%% Battery charger stage (plan section 3.5; assumed values)
+Ts_chg   = 10e-6;   % charger control / averaged-model sample time (s)
+L_chg    = 1e-3;    % buck inductor (H)
+Voc      = 335;     % battery open-circuit voltage (V), CC-segment snapshot
+Rint     = 0.5;     % battery internal resistance (Ohm)
+Icc      = 20;      % constant-current setpoint (A)
+Vcv      = 350;     % constant-voltage setpoint (V)
+V_hys    = 5;       % CV -> CC when Vbat_meas <= Vcv - V_hys ...
+T_hys    = 20e-3;   % ... for T_hys seconds (test-only hysteresis)
+t_chg_on = 0.20;    % charger enable time (s); 20 A reached at 0.40 s
+k_chg    = 100;     % current reference ramp (A/s)
+Kp_v_chg = 1.5;  Ki_v_chg = 1500;   % CV loop (A/V, A/(V s))
+Kp_i_chg = 0.016; Ki_i_chg = 10;    % CC loop (1/A, 1/(A s)), plus duty feed-forward
+D_max_chg = 0.98;
+I_SIGN   = 1;       % Controlled Current Source polarity: +1 = load (checked: -1 drove Vdc to 1430 V, Pdc < 0)
+chg_par      = [L_chg Voc Rint Ts_chg I_SIGN t_chg_on];
+chg_ctrl_par = [Icc Vcv V_hys T_hys Kp_v_chg Ki_v_chg Kp_i_chg Ki_i_chg Ts_chg D_max_chg t_chg_on k_chg];
+
+%% Protection monitor thresholds (plan section 3.3), real quantities only
+prot_thr = [300 450 65 355 25 2e-3 0.55];   % [UV_V OV_V OC_A BOV_V BOC_A hold_s t_arm_s]
+
+%% Sensor-chain injection (plan section 3.2); INJ from run_injection.m
+% channel: 1 Vdc 2 Vac 3 Iac 4 Vbat 5 Ibat (0 = off); two entries allowed.
+% shape:   1 step 2 ramp 3 sine 4 tri 5 pulse 6 hall
+if ~exist('INJ','var') || isempty(INJ), INJ = struct(); end
+def = struct('channel',[0 0],'shape',[1 1],'amp',[0 0],'k',[0 0],'f',[50 50],'phase',[0 0], ...
+             'period',0.1,'duty',0.5,'t_on',0.70,'dwell',0.30,'K_hall',20);
+fn = fieldnames(def);
+for i = 1:numel(fn)
+    if ~isfield(INJ, fn{i}) || isempty(INJ.(fn{i})), INJ.(fn{i}) = def.(fn{i}); end
+end
+for f2 = {'channel','shape','amp','k','f','phase'}      % pad to 1x2
+    v = double(INJ.(f2{1})); v = v(:)'; if numel(v) < 2, v = [v, def.(f2{1})(numel(v)+1:2)]; end
+    INJ.(f2{1}) = v(1:2);
+end
+inj_channel = INJ.channel; inj_shape = INJ.shape; inj_amp = INJ.amp; inj_k = INJ.k;
+inj_f = INJ.f; inj_phase = INJ.phase; inj_period = INJ.period; inj_duty = INJ.duty;
+inj_t_on = INJ.t_on; inj_dwell = INJ.dwell; K_hall = INJ.K_hall;
+clear def fn i f2 v
 
 %% fft and deep learning model sampling
 mm_fund_freq = 50;
