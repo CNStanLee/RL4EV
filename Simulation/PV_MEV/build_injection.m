@@ -63,7 +63,7 @@ for i = 1:numel(c)
 end
 f = [p '/gen'];
 add_block('simulink/User-Defined Functions/MATLAB Function', f, 'Position', [200 170 300 700]);
-set_mlfcn(f, inj_gen_code(), {'t', '1'; 'ch_id', '1'; 'channel', '[1 2]'; 'shape', '[1 2]'; 'amp', '[1 2]'; 'k', '[1 2]'; 'f', '[1 2]'; 'ph', '[1 2]'; ...
+set_mlfcn(f, inj_gen_code(), {'t', '1'; 'ch_id', '1'; 'channel', '[1 3]'; 'shape', '[1 3]'; 'amp', '[1 3]'; 'k', '[1 3]'; 'f', '[1 3]'; 'ph', '[1 3]'; ...
     'period', '1'; 'duty', '1'; 't_on', '1'; 'dwell', '1'; 'K_hall', '1'; 'dy', '1'});
 add_block('simulink/Signal Attributes/Rate Transition', [p '/RT'], 'Position', [340 175 380 205], ...
     'OutPortSampleTime', 'Ts_out', 'Integrity', 'on', 'Deterministic', 'on');
@@ -83,8 +83,10 @@ end
 function s = inj_gen_code()
 s = sprintf([ ...
 'function dy = gen(t, ch_id, channel, shape, amp, k, f, ph, period, duty, t_on, dwell, K_hall)\n' ...
-'%% Equivalent measurement bias dy(t).  channel/shape/amp/k/f/ph are 1x2 so two\n' ...
-'%% channels can be disturbed at once (E-MUL-01); an entry with channel 0 is off.\n' ...
+'%% Equivalent measurement bias dy(t).  channel/shape/amp/k/f/ph are 1x3 so two\n' ...
+'%% channels can be disturbed at once (E-MUL-01) plus a noise slot; an entry\n' ...
+'%% with channel 0 is off.  Shape 7 = uniform white noise of amplitude amp\n' ...
+'%% (measurement noise, a benign negative sample for the detector).\n' ...
 'dy = 0;\n' ...
 'tau = t - t_on;\n' ...
 'if tau < 0 || tau >= dwell, return; end\n' ...
@@ -98,6 +100,7 @@ s = sprintf([ ...
 '        case 4, x = mod(tau, period)/period; d = a*(1 - abs(2*x - 1));\n' ...
 '        case 5, d = a*double(mod(tau, period) < duty*period);\n' ...
 '        case 6, d = K_hall*(0.2 + 0.5*sin(2*pi*f(i)*t));\n' ...
+'        case 7, d = a*(2*rand - 1);\n' ...
 '        otherwise, d = 0;\n' ...
 '    end\n' ...
 '    dy = dy + d;\n' ...
@@ -182,6 +185,7 @@ add_line(p, 'Vdc/1', 'RTin/1');
 add_block('simulink/Sources/Digital Clock', [p '/t'], 'Position', [30 300 80 330], 'SampleTime', 'Ts_chg');
 add_block('simulink/Sources/Constant', [p '/pp'], 'Value', 'chg_par', 'Position', [30 360 80 380]);
 add_block('simulink/Sources/Constant', [p '/pc'], 'Value', 'chg_ctrl_par', 'Position', [30 400 80 420]);
+add_block('simulink/Sources/Constant', [p '/ev'], 'Value', 'chg_ev', 'Position', [30 560 80 580]);   % benign event [t_step Icc_new]
 add_block('simulink/Discrete/Unit Delay', [p '/Ibat'], 'Position', [30 450 80 480], 'SampleTime', 'Ts_chg', 'InitialCondition', '0');
 add_block('simulink/Discrete/Unit Delay', [p '/xc'],   'Position', [30 500 80 530], 'SampleTime', 'Ts_chg', 'InitialCondition', 'zeros(1,4)');
 % plant: [Ibat_next, Isrc] = plant(D, Ibat, Vdc, pp, t);  batt: [Vbat, P] = batt(Ibat, pp)
@@ -196,7 +200,7 @@ add_block('MyLibrary/Disturbance Injector', [p '/inj_Vbat'], 'Position', [480 40
 add_block('MyLibrary/Disturbance Injector', [p '/inj_Ibat'], 'Position', [480 470 560 510], 'ch_id', '5', 'Ts_inj', 'Ts_chg', 'Ts_out', 'Ts_chg');
 % controller: [D, Iref, xn] = ctrl(Vbat_m, Ibat_m, Vdc, t, xc, pc)
 add_block('simulink/User-Defined Functions/MATLAB Function', [p '/ctrl'], 'Position', [660 240 760 400]);
-set_mlfcn([p '/ctrl'], ctrl_code(), {'Vbat_m', '1'; 'Ibat_m', '1'; 'Vdc', '1'; 't', '1'; 'x', '[1 4]'; 'pc', '[1 12]'; 'D', '1'; 'Iref', '1'; 'xn', '[1 4]'; 'state', '1'});
+set_mlfcn([p '/ctrl'], ctrl_code(), {'Vbat_m', '1'; 'Ibat_m', '1'; 'Vdc', '1'; 't', '1'; 'x', '[1 4]'; 'pc', '[1 12]'; 'ev', '[1 2]'; 'D', '1'; 'Iref', '1'; 'xn', '[1 4]'; 'state', '1'});
 add_block('simulink/Signal Attributes/Rate Transition', [p '/RTout'], 'Position', [300 90 340 110], ...
     'OutPortSampleTime', 'Ts_Power', 'Integrity', 'on', 'Deterministic', 'on');
 add_block('simulink/Signal Routing/Mux', [p '/Mux'], 'Inputs', '9', 'Position', [880 300 885 560]);
@@ -212,7 +216,7 @@ add_line(p, 'Ibat/1',  'batt/1'); add_line(p, 'pp/1', 'batt/2');
 add_line(p, 'batt/1', 'inj_Vbat/1');         % Vbat real
 add_line(p, 'Ibat/1',  'inj_Ibat/1');        % Ibat real
 add_line(p, 'inj_Vbat/1', 'ctrl/1'); add_line(p, 'inj_Ibat/1', 'ctrl/2');
-add_line(p, 'RTin/1', 'ctrl/3'); add_line(p, 't/1', 'ctrl/4'); add_line(p, 'xc/1', 'ctrl/5'); add_line(p, 'pc/1', 'ctrl/6');
+add_line(p, 'RTin/1', 'ctrl/3'); add_line(p, 't/1', 'ctrl/4'); add_line(p, 'xc/1', 'ctrl/5'); add_line(p, 'pc/1', 'ctrl/6'); add_line(p, 'ev/1', 'ctrl/7');
 add_line(p, 'ctrl/3', 'xc/1');
 add_line(p, 'plant/2', 'RTout/1'); add_line(p, 'RTout/1', 'Iload/1');
 % output vector
@@ -253,11 +257,13 @@ end
 
 function s = ctrl_code()
 s = sprintf([ ...
-'function [D, Iref, xn, state] = ctrl(Vbat_m, Ibat_m, Vdc, t, x, pc)\n' ...
+'function [D, Iref, xn, state] = ctrl(Vbat_m, Ibat_m, Vdc, t, x, pc, ev)\n' ...
 '%% CC/CV charge controller.  x = [state tmr xv xi]  (0 CC, 1 CV)\n' ...
 '%% pc = [Icc Vcv Vhys Thys Kp_v Ki_v Kp_i Ki_i Ts Dmax t_on k_ramp]\n' ...
+'%% ev = [t_step Icc_new]: benign charging-current reference step (t_step <= 0: none)\n' ...
 'Icc=pc(1); Vcv=pc(2); Vhys=pc(3); Thys=pc(4); Kpv=pc(5); Kiv=pc(6);\n' ...
 'Kpi=pc(7); Kii=pc(8); Ts=pc(9); Dmax=pc(10); t_on=pc(11); kr=pc(12);\n' ...
+'if ev(1) > 0 && t >= ev(1), Icc = ev(2); end\n' ...
 'st = x(1); tmr = x(2); xv = x(3); xi = x(4);\n' ...
 'Iramp = min(Icc, max(0, (t - t_on)*kr));\n' ...
 '%% --- state machine\n' ...
@@ -306,17 +312,18 @@ if getSimulinkBlockHandle([ev '/Ro2']) ~= -1, set_param([ev '/Ro2'], 'Name', 'Rp
 set_param([ev '/Rpre'], 'Resistance', 'R_pre');
 set_param([ev '/Step2'], 'Time', 't_pre_off', 'Before', '1', 'After', '0');
 chg = [ev '/Charger Stage'];
-if getSimulinkBlockHandle(chg) ~= -1, delete_block(chg); end
-add_block('MyLibrary/Charger Stage', chg, 'Position', [1790 1085 1900 1185]);
-hR = get_param([ev '/Rbleed'], 'PortHandles'); hC = get_param(chg, 'PortHandles');
-% Rbleed is vertical (RLC branch): LConn(1) top, RConn(1) bottom.  Branch the
-% charger ports off the same nodes.
-add_line(ev, hR.LConn(1), hC.LConn(1), 'autorouting', 'on');
-add_line(ev, hR.RConn(1), hC.LConn(2), 'autorouting', 'on');
-add_block('simulink/Signal Routing/From', [ev '/From_Vdc_chg'], 'GotoTag', 'Vdc_PFC', 'Position', [1700 1200 1760 1220]);
-add_line(ev, 'From_Vdc_chg/1', 'Charger Stage/1', 'autorouting', 'on');
-add_block('simulink/Signal Routing/Goto', [ev '/Goto_chg'], 'GotoTag', 'chg_sig', 'Position', [1940 1125 2000 1145]);
-add_line(ev, 'Charger Stage/1', 'Goto_chg/1');
+if getSimulinkBlockHandle(chg) == -1          % first splice only; library links pick up later lib rebuilds
+    add_block('MyLibrary/Charger Stage', chg, 'Position', [1790 1085 1900 1185]);
+    hR = get_param([ev '/Rbleed'], 'PortHandles'); hC = get_param(chg, 'PortHandles');
+    % Rbleed is vertical (RLC branch): LConn(1) top, RConn(1) bottom.  Branch the
+    % charger ports off the same nodes.
+    add_line(ev, hR.LConn(1), hC.LConn(1), 'autorouting', 'on');
+    add_line(ev, hR.RConn(1), hC.LConn(2), 'autorouting', 'on');
+    add_block('simulink/Signal Routing/From', [ev '/From_Vdc_chg'], 'GotoTag', 'Vdc_PFC', 'Position', [1700 1200 1760 1220]);
+    add_line(ev, 'From_Vdc_chg/1', 'Charger Stage/1', 'autorouting', 'on');
+    add_block('simulink/Signal Routing/Goto', [ev '/Goto_chg'], 'GotoTag', 'chg_sig', 'Position', [1940 1125 2000 1145]);
+    add_line(ev, 'Charger Stage/1', 'Goto_chg/1');
+end
 % --- 2. injectors on the three PFC measurement lines
 spec = {'From16', 2, 1; 'From18', 3, 2; 'From19', 4, 3};     % From, PFC port, ch_id
 for i = 1:size(spec,1)
@@ -332,9 +339,19 @@ for i = 1:size(spec,1)
     add_line(ev, [spec{i,1} '/1'], [nm '/1']);
     add_line(ev, [nm '/1'], sprintf('PFC Control/%d', spec{i,2}), 'autorouting', 'on');
 end
+% --- 2b. benign Vref step for the detector dataset: Vref = Step1 + vref_ev(2)*u(t - vref_ev(1))
+if getSimulinkBlockHandle([ev '/Vref_sum']) == -1
+    ph = get_param([ev '/Step1'], 'PortHandles'); ln = get_param(ph.Outport(1), 'Line');
+    if ln ~= -1, delete_line(ln); end
+    add_block('simulink/Sources/Step', [ev '/Vref_step'], 'Position', [1065 1735 1095 1765], ...
+        'Time', 'vref_ev(1)', 'Before', '0', 'After', 'vref_ev(2)');
+    add_block('simulink/Math Operations/Sum', [ev '/Vref_sum'], 'Inputs', '++', 'Position', [1120 1690 1140 1710]);
+    add_line(ev, 'Step1/1', 'Vref_sum/1'); add_line(ev, 'Vref_step/1', 'Vref_sum/2', 'autorouting', 'on');
+    add_line(ev, 'Vref_sum/1', 'PFC Control/1', 'autorouting', 'on'); add_line(ev, 'Vref_sum/1', 'Goto6/1', 'autorouting', 'on');
+end
 % --- 3. protection monitor (real quantities only)
 pm = [ev '/Protection Monitor'];
-if getSimulinkBlockHandle(pm) ~= -1, delete_block(pm); end
+if getSimulinkBlockHandle(pm) == -1
 add_block('MyLibrary/Protection Monitor', pm, 'Position', [2110 1230 2200 1330]);
 add_block('simulink/Signal Routing/From', [ev '/From_pm1'], 'GotoTag', 'Vdc_PFC', 'Position', [1990 1235 2050 1255]);
 add_block('simulink/Signal Routing/From', [ev '/From_pm2'], 'GotoTag', 'Iac',     'Position', [1990 1265 2050 1285]);
@@ -349,6 +366,7 @@ for k = 3:9
 end
 add_block('simulink/Sinks/Terminator', [ev '/T_pm'], 'Position', [2230 1275 2245 1285]);
 add_line(ev, 'Protection Monitor/1', 'T_pm/1');
+end
 fprintf('[build] DC-bus connectivity after splice:\n'); check_bus(ev);
 save_system(mdl); close_system(mdl); close_system('MyLibrary');
 fprintf('[build] PV_MEV saved\n');

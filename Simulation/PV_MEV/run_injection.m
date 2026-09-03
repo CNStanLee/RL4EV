@@ -12,9 +12,13 @@ function out = run_injection(mode, tests, variants, opts)
 %                                               shoot, t_settle, t_rec) from ts/ files
 %   run_injection('smoke', [], 'CRPR')          snapshot continuity check (0.6 -> 0.72 s
 %                                               from snapshot vs. straight 0 -> 0.72 s)
+%   run_injection('baseline', [], V, struct('op','cv'))   CV-segment snapshot (Voc 345 V)
+%   run_injection('dataset', [k0 k1], variants, opts)      detector dataset: runs D<k0>..D<k1>
+%                                               with randomized injections / benign events
+%                                               (seeded by k), results/emi/dataset/, labels.csv
 %
 % opts: stop_time (override 1.3), force (rerun even if the result exists),
-%       tag (suffix for smoke files).
+%       tag (suffix for smoke files), op ('cc' | 'cv' operating point).
 % One summary row per run -> results/emi/<test>_<variant>.csv; 10 kHz time
 % series -> results/emi/ts/<test>_<variant>.csv; 1 MHz Iac -> ..._iac.mat.
 % Several MATLAB processes can share the matrix: a run whose summary file
@@ -22,7 +26,7 @@ function out = run_injection(mode, tests, variants, opts)
 if nargin < 2, tests = []; end
 if nargin < 3, variants = []; end
 if nargin < 4, opts = struct(); end
-opts = defaults(opts, struct('stop_time', 1.3, 'force', false, 'tag', ''));
+opts = defaults(opts, struct('stop_time', 1.3, 'force', false, 'tag', '', 'op', 'cc'));
 
 mdl  = 'PV_MEV';
 mdir = fileparts(mfilename('fullpath')); cd(mdir); addpath(mdir);
@@ -61,6 +65,8 @@ switch lower(mode)
         out = merge_results(rdir);
     case 'resummarize'
         out = resummarize(rdir, tdir);
+    case 'dataset'
+        out = run_dataset(mdl, tests, variants, opts, rdir, sdir);
     case 'smoke'
         out = smoke(mdl, string(variants{1}), sdir, rdir, opts);
     otherwise
@@ -105,9 +111,15 @@ INJ = struct('channel', [ch(char(row.channel)) ch(c2)], 'shape', [sh(char(row.sh
 end
 
 % =========================================================================
-function prepare(mdl, name, INJ)
+function prepare(mdl, name, INJ, op, EVT)
+% op: 'cc' (Voc 335 V) or 'cv' (Voc 345 V); EVT: benign-event struct or []
+if nargin < 4 || isempty(op), op = 'cc'; end
+if nargin < 5, EVT = []; end
+CHG_OP = struct(); if strcmpi(op, 'cv'), CHG_OP.Voc = 345; end
 assignin('base', 'VARIANT_NAME', name);
 assignin('base', 'INJ', INJ);
+assignin('base', 'CHG_OP', CHG_OP);
+assignin('base', 'EVT', EVT);
 evalin('base', 'init_paras');
 load_system(mdl);
 if ~evalin('base', 'ENABLE_HIL')
@@ -141,23 +153,26 @@ end
 % =========================================================================
 function make_snapshot(mdl, name, sdir, rdir, opts)
 tsnap = 0.6; if nargin > 4 && isfield(opts, 'snap_time') && ~isempty(opts.snap_time), tsnap = opts.snap_time; end
-prepare(mdl, name, struct());
-fprintf('[%s] baseline 0 -> %g s ...\n', name, tsnap); t0 = tic;
+op = 'cc'; if nargin > 4 && isfield(opts, 'op') && ~isempty(opts.op), op = lower(opts.op); end
+sfx = ''; if strcmp(op, 'cv'), sfx = '_cv'; end
+prepare(mdl, name, struct(), op);
+fprintf('[%s%s] baseline 0 -> %g s ...\n', name, sfx, tsnap); t0 = tic;
 so = sim(mdl, 'StopTime', num2str(tsnap), 'SaveFinalState', 'on', 'SaveOperatingPoint', 'on', ...
     'FinalStateName', 'xFinal', 'SignalLogging', 'on', 'SignalLoggingName', 'logsout', 'ReturnWorkspaceOutputs', 'on');
 wall = toc(t0);
 xFinal = so.xFinal; %#ok<NASGU>
-save(fullfile(sdir, sprintf('%s.mat', name)), 'xFinal');
+save(fullfile(sdir, sprintf('%s%s.mat', name, sfx)), 'xFinal');
 % baseline metrics over the last 100 ms
 S = extract(so.logsout);
 m = metrics_window(S, [tsnap - 0.1, tsnap]);
 r = struct('VARIANT_NAME', name, 'Vdc_V', m.Vdc, 'Pac_kW', m.Pac, 'Pdc_kW', m.Pdc, 'PF', m.PF, ...
     'THD50_pct', m.THD50, 'THD_full_pct', m.THD_full, 'I2_pct', m.I2, 'P_charge_kW', m.P_charge, ...
     'Ibat_A', m.Ibat, 'Vbat_V', m.Vbat, 'state', m.state, 'D_dcdc', m.D_dcdc, 'Iref_A', m.Iref, 'trip', m.trip, 'sim_wall_s', wall);
-writetable(struct2table(r), fullfile(rdir, sprintf('baseline_%s.csv', name)));
-fprintf('[%s] snapshot saved (%.0f s): Vdc=%.1f Pdc=%.3f kW Pcharge=%.3f kW Ibat=%.2f A THD50=%.2f%% trip=%d\n', ...
-    name, wall, m.Vdc, m.Pdc, m.P_charge, m.Ibat, m.THD50, m.trip);
-write_ts(S, fullfile(rdir, 'ts', sprintf('baseline_%s', name)));
+r.op = string(op);
+writetable(struct2table(r), fullfile(rdir, sprintf('baseline_%s%s.csv', name, sfx)));
+fprintf('[%s%s] snapshot saved (%.0f s): Vdc=%.1f Pdc=%.3f kW Pcharge=%.3f kW Ibat=%.2f A state=%d THD50=%.2f%% trip=%d\n', ...
+    name, sfx, wall, m.Vdc, m.Pdc, m.P_charge, m.Ibat, m.state, m.THD50, m.trip);
+write_ts(S, fullfile(rdir, 'ts', sprintf('baseline_%s%s', name, sfx)));
 close_system(mdl, 0);
 end
 
@@ -185,6 +200,120 @@ end
 function write_failed(fsum, row, name, msg)
 r = struct('test_id', row.test_id, 'VARIANT_NAME', name, 'status', "FAILED", 'note', string(msg));
 writetable(struct2table(r), fsum);
+end
+
+% =========================================================================
+function T = run_dataset(mdl, krange, variants, opts, rdir, sdir)
+% Randomized runs for the EMI-detector dataset (plan phase 2, section 2.3).
+% Each run k is fully determined by its seed, so several processes can take
+% disjoint k ranges.  Results: results/emi/dataset/<run_id>_<variant>.csv (summary
+% row), dataset/ts/<run_id>_<variant>.csv + _iac.mat, dataset/labels/<run_id>.csv.
+ddir = fullfile(rdir, 'dataset'); ldir = fullfile(ddir, 'labels'); dts = fullfile(ddir, 'ts');
+for d = {ddir, ldir, dts}, if ~exist(d{1}, 'dir'), mkdir(d{1}); end, end
+if isempty(krange), krange = [1 1]; end
+if isscalar(krange), krange = [1 krange]; end
+for k = krange(1):krange(2)
+    rng(k, 'twister');
+    run_id = sprintf('D%04d', k);
+    name = string(variants{randi(numel(variants))});
+    L = sample_labels(run_id, name, sdir);
+    fsum = fullfile(ddir, sprintf('%s_%s.csv', run_id, name));
+    if exist(fsum, 'file') && ~opts.force, fprintf('[skip] %s\n', fsum); continue; end
+    try
+        snap = fullfile(sdir, sprintf('%s%s.mat', name, L.snap_sfx));
+        s = load(snap); assignin('base', 'xInitial', s.xFinal);
+        prepare(mdl, name, L.INJ, L.op, L.EVT);
+        fprintf('[%s %s %s] %s ...\n', run_id, name, L.op, L.desc); t0 = tic;
+        so = sim(mdl, 'LoadInitialState', 'on', 'InitialState', 'xInitial', 'StopTime', num2str(opts.stop_time), ...
+            'SignalLogging', 'on', 'SignalLoggingName', 'logsout', 'ReturnWorkspaceOutputs', 'on');
+        wall = toc(t0);
+        S = extract(so.logsout);
+        r = summarize(S, L.row, name, L.INJ);
+        r.sim_wall_s = wall; r.status = "OK";
+        writetable(struct2table(r), fsum);
+        write_ts(S, fullfile(dts, sprintf('%s_%s', run_id, name)));
+        L.lab.status = "OK"; writetable(struct2table(L.lab), fullfile(ldir, [run_id '.csv']));
+        fprintf('[%s %s] done %.0f s: THD50 %.2f->%.2f%% Pchg %.2f->%.2f kW trip=%d\n', run_id, name, wall, ...
+            r.THD50_pre_pct, r.THD50_dur_pct, r.P_charge_pre_kW, r.P_charge_dur_kW, r.trip);
+    catch ME
+        fprintf(2, '[%s %s] FAILED: %s\n', run_id, name, getReport(ME, 'extended', 'hyperlinks', 'off'));
+        L.lab.status = "FAILED"; writetable(struct2table(L.lab), fullfile(ldir, [run_id '.csv']));
+        write_failed(fsum, L.row, name, ME.message); close_system(mdl, 0);
+    end
+    close_system(mdl, 0);
+end
+T = merge_labels(ldir, ddir);
+end
+
+function L = sample_labels(run_id, name, sdir)
+% Draw one dataset run (uses the current rng state).  Amplitude ranges from
+% the plan (section 2.3); channel codes 1 Vdc 2 Vac 3 Iac 4 Vbat 5 Ibat.
+chn = {'Vdc', 'Vac', 'Iac', 'Vbat', 'Ibat'}; shn = {'step', 'ramp', 'sine', 'tri', 'pulse', 'hall', 'noise'};
+u = @() rand();
+% operating point: 25 % CV segment when the snapshot exists
+op = 'cc'; sfx = '';
+if u() < 0.25 && exist(fullfile(sdir, sprintf('%s_cv.mat', name)), 'file'), op = 'cv'; sfx = '_cv'; end
+% injection type
+x = u(); if x < 0.25, n_inj = 0; elseif x < 0.85, n_inj = 1; else, n_inj = 2; end
+t_on = 0.65 + 0.25 * u(); dwell = 0.10 + 0.20 * u(); if t_on + dwell > 1.25, dwell = 1.25 - t_on; end
+INJ = struct('channel', [0 0 0], 'shape', [1 1 1], 'amp', [0 0 0], 'k', [0 0 0], 'f', [50 50 50], 'phase', [0 0 0], ...
+    'period', 0.05 + 0.15 * u(), 'duty', 0.3 + 0.4 * u(), 't_on', t_on, 'dwell', dwell, 'K_hall', 20);
+used = [];
+for j = 1:n_inj
+    ch = randi(5); while any(used == ch), ch = randi(5); end, used(end + 1) = ch; %#ok<AGROW>
+    x = u(); if x < 0.50, sh = 1; elseif x < 0.65, sh = 2; elseif x < 0.80, sh = 3; elseif x < 0.90, sh = 6; elseif x < 0.95, sh = 5; else, sh = 4; end
+    if sh == 6 && ch ~= 3, sh = 1; end                       % hall model only on the Iac chain
+    switch ch
+        case 1, a = 20 + 100 * u();  case 2, a = 5 + 35 * u();  case 3, a = 1 + 19 * u();
+        case 4, a = 2 + 23 * u();    case 5, a = 1 + 7 * u();
+    end
+    if u() < 0.4, a = -a; end
+    if ch == 3 && sh == 3, a = abs(a); end
+    INJ.channel(j) = ch; INJ.shape(j) = sh; INJ.amp(j) = a;
+    INJ.k(j) = abs(a) / (0.05 + 0.25 * u());
+    if sh == 3, INJ.f(j) = 50; INJ.phase(j) = 360 * u(); end
+    if sh == 6, INJ.f(j) = 100 * (1 + 9 * (u() < 0.3)); end   % 100 Hz (70 %) or 1 kHz
+end
+% measurement noise slot (30 %): benign
+noise_ch = 0; noise_amp = 0;
+if u() < 0.30
+    noise_ch = randi(3); noise_amp = [2 + 3 * u(), 3 + 7 * u(), 0.5 + 1.5 * u()]; noise_amp = noise_amp(noise_ch);
+    INJ.channel(3) = noise_ch; INJ.shape(3) = 7; INJ.amp(3) = noise_amp;
+end
+% benign transients
+EVT = struct('chg_t', 0, 'chg_I', 20, 'vref_t', 0, 'vref_dV', 0);
+if u() < 0.30, EVT.chg_t = 0.65 + 0.45 * u(); c = [5 10 15 20]; EVT.chg_I = c(randi(4)); end
+if u() < 0.20, EVT.vref_t = 0.65 + 0.45 * u(); EVT.vref_dV = (10 + 20 * u()) * sign(u() - 0.5); end
+% row for summarize() and the label record
+c2 = ""; s2 = ""; a2 = 0;
+if n_inj == 2, c2 = string(chn{INJ.channel(2)}); s2 = string(shn{INJ.shape(2)}); a2 = INJ.amp(2); end
+c1 = ""; s1 = ""; if n_inj >= 1, c1 = string(chn{INJ.channel(1)}); s1 = string(shn{INJ.shape(1)}); end
+row = table(string(run_id), c1, s1, INJ.amp(1), INJ.k(1), INJ.f(1), INJ.phase(1), INJ.period, INJ.duty, t_on, dwell, 20, c2, s2, a2, "D", ...
+    'VariableNames', {'test_id', 'channel', 'shape', 'amp', 'k', 'f', 'phase', 'period', 'duty', 't_on', 'dwell', 'K_hall', 'channel2', 'shape2', 'amp2', 'priority'});
+lab = struct('run_id', string(run_id), 'VARIANT_NAME', name, 'op', string(op), 'n_inj', n_inj, ...
+    'channel1', c1, 'shape1', s1, 'amp1', INJ.amp(1), 'k1', INJ.k(1), 'f1', INJ.f(1), 'phase1', INJ.phase(1), ...
+    'channel2', c2, 'shape2', s2, 'amp2', a2, 'k2', INJ.k(2), 'f2', INJ.f(2), 'phase2', INJ.phase(2), ...
+    'period', INJ.period, 'duty', INJ.duty, 't_on', t_on, 'dwell', dwell, ...
+    'noise_ch', string(ifelse(noise_ch > 0, chn, noise_ch)), 'noise_amp', noise_amp, ...
+    'chg_t', EVT.chg_t, 'chg_I', EVT.chg_I, 'vref_t', EVT.vref_t, 'vref_dV', EVT.vref_dV, 'status', "PENDING");
+desc = sprintf('inj=%d', n_inj);
+for j = 1:n_inj, desc = sprintf('%s %s/%s/%+.1f', desc, chn{INJ.channel(j)}, shn{INJ.shape(j)}, INJ.amp(j)); end
+if noise_ch > 0, desc = sprintf('%s noise(%s %.1f)', desc, chn{noise_ch}, noise_amp); end
+if EVT.chg_t > 0, desc = sprintf('%s chg->%gA@%.2f', desc, EVT.chg_I, EVT.chg_t); end
+if EVT.vref_t > 0, desc = sprintf('%s vref%+.0fV@%.2f', desc, EVT.vref_dV, EVT.vref_t); end
+L = struct('INJ', INJ, 'EVT', EVT, 'op', op, 'snap_sfx', sfx, 'row', row, 'lab', lab, 'desc', desc);
+end
+
+function s = ifelse(c, names, idx)
+if c, s = names{idx}; else, s = ''; end
+end
+
+function T = merge_labels(ldir, ddir)
+f = dir(fullfile(ldir, 'D*.csv')); T = table();
+for i = 1:numel(f)
+    Ti = readtable(fullfile(ldir, f(i).name), 'TextType', 'string'); T = outerjoin_rows(T, Ti);
+end
+if ~isempty(T), T = sortrows(T, 'run_id'); writetable(T, fullfile(ddir, 'labels.csv')); end
 end
 
 % =========================================================================

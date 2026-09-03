@@ -18,8 +18,12 @@
 % tests.csv.  Without INJ the model runs undisturbed.  xInitial holds the
 % ModelOperatingPoint snapshot when a run starts from 0.6 s.
 %
-% Only VARIANT_NAME, INJ and xInitial survive the workspace reset below.
-clearvars -except VARIANT_NAME INJ xInitial
+% CHG_OP (fields Voc, Icc) overrides the charger operating point (CV-segment
+% snapshot); EVT (fields chg_t, chg_I, vref_t, vref_dV) adds benign transients
+% for the detector dataset.
+%
+% Only VARIANT_NAME, INJ, CHG_OP, EVT and xInitial survive the workspace reset below.
+clearvars -except VARIANT_NAME INJ CHG_OP EVT xInitial
 close all;
 
 %% System control
@@ -78,6 +82,17 @@ Kp_v_chg = 1.5;  Ki_v_chg = 1500;   % CV loop (A/V, A/(V s))
 Kp_i_chg = 0.016; Ki_i_chg = 10;    % CC loop (1/A, 1/(A s)), plus duty feed-forward
 D_max_chg = 0.98;
 I_SIGN   = 1;       % Controlled Current Source polarity: +1 = load (checked: -1 drove Vdc to 1430 V, Pdc < 0)
+if exist('CHG_OP','var') && isstruct(CHG_OP)
+    if isfield(CHG_OP,'Voc') && ~isempty(CHG_OP.Voc), Voc = CHG_OP.Voc; end   % 345 V -> CV segment
+    if isfield(CHG_OP,'Icc') && ~isempty(CHG_OP.Icc), Icc = CHG_OP.Icc; end
+end
+% benign transients (detector dataset negatives); t <= 0 disables
+chg_ev  = [0 Icc];   % [t_step Icc_new]  charging-current reference step
+vref_ev = [0 0];     % [t_step dV]       Vdc reference step
+if exist('EVT','var') && isstruct(EVT)
+    if isfield(EVT,'chg_t')  && EVT.chg_t  > 0, chg_ev  = [EVT.chg_t  EVT.chg_I];  end
+    if isfield(EVT,'vref_t') && EVT.vref_t > 0, vref_ev = [EVT.vref_t EVT.vref_dV]; end
+end
 chg_par      = [L_chg Voc Rint Ts_chg I_SIGN t_chg_on];
 chg_ctrl_par = [Icc Vcv V_hys T_hys Kp_v_chg Ki_v_chg Kp_i_chg Ki_i_chg Ts_chg D_max_chg t_chg_on k_chg];
 
@@ -85,18 +100,19 @@ chg_ctrl_par = [Icc Vcv V_hys T_hys Kp_v_chg Ki_v_chg Kp_i_chg Ki_i_chg Ts_chg D
 prot_thr = [300 450 65 355 25 2e-3 0.55];   % [UV_V OV_V OC_A BOV_V BOC_A hold_s t_arm_s]
 
 %% Sensor-chain injection (plan section 3.2); INJ from run_injection.m
-% channel: 1 Vdc 2 Vac 3 Iac 4 Vbat 5 Ibat (0 = off); two entries allowed.
-% shape:   1 step 2 ramp 3 sine 4 tri 5 pulse 6 hall
+% channel: 1 Vdc 2 Vac 3 Iac 4 Vbat 5 Ibat (0 = off); three slots: two
+% simultaneous injections + one measurement-noise slot (shape 7).
+% shape:   1 step 2 ramp 3 sine 4 tri 5 pulse 6 hall 7 noise
 if ~exist('INJ','var') || isempty(INJ), INJ = struct(); end
-def = struct('channel',[0 0],'shape',[1 1],'amp',[0 0],'k',[0 0],'f',[50 50],'phase',[0 0], ...
+def = struct('channel',[0 0 0],'shape',[1 1 1],'amp',[0 0 0],'k',[0 0 0],'f',[50 50 50],'phase',[0 0 0], ...
              'period',0.1,'duty',0.5,'t_on',0.70,'dwell',0.30,'K_hall',20);
 fn = fieldnames(def);
 for i = 1:numel(fn)
     if ~isfield(INJ, fn{i}) || isempty(INJ.(fn{i})), INJ.(fn{i}) = def.(fn{i}); end
 end
-for f2 = {'channel','shape','amp','k','f','phase'}      % pad to 1x2
-    v = double(INJ.(f2{1})); v = v(:)'; if numel(v) < 2, v = [v, def.(f2{1})(numel(v)+1:2)]; end
-    INJ.(f2{1}) = v(1:2);
+for f2 = {'channel','shape','amp','k','f','phase'}      % pad to 1x3
+    v = double(INJ.(f2{1})); v = v(:)'; if numel(v) < 3, v = [v, def.(f2{1})(numel(v)+1:3)]; end
+    INJ.(f2{1}) = v(1:3);
 end
 inj_channel = INJ.channel; inj_shape = INJ.shape; inj_amp = INJ.amp; inj_k = INJ.k;
 inj_f = INJ.f; inj_phase = INJ.phase; inj_period = INJ.period; inj_duty = INJ.duty;
