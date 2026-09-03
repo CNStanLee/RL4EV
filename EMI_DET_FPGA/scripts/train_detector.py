@@ -48,6 +48,7 @@ def build_model(n_in: int, n_cls: int, width=(48, 32), quantized=True, w_bits=(1
                 x = QDense(w, activation="relu", name=f"dense{i}")(x)
             logits = QDense(n_cls, name="logits")(x)
             amp = QDense(1, name="amp")(x)
+            chan = QDense(5, name="chan")(x)
         del wq, aq
     else:
         inp = keras.Input((n_in,), name="features")
@@ -56,21 +57,38 @@ def build_model(n_in: int, n_cls: int, width=(48, 32), quantized=True, w_bits=(1
             x = keras.layers.Dense(w, activation="relu", name=f"dense{i}")(x)
         logits = keras.layers.Dense(n_cls, name="logits")(x)
         amp = keras.layers.Dense(1, name="amp")(x)
-    return keras.Model(inp, [logits, amp], name="emi_det_mlp")
+        chan = keras.layers.Dense(5, name="chan")(x)
+    return keras.Model(inp, [logits, amp, chan], name="emi_det_mlp")
 
 
 def load(npz: str):
     d = np.load(npz, allow_pickle=True)
     X = np.nan_to_num(d["X"].astype(np.float32), nan=0.0, posinf=1e6, neginf=-1e6)
+    ych = d["ych"].astype(np.float32) if "ych" in d else np.zeros((len(d["y"]), 5), np.float32)
     return dict(X=X, y=d["y"].astype(np.int64), a=d["a"].astype(np.float32), tr=d["tr"], t=d["t"],
-                t_on=d["t_on"], run_id=d["run_id"], variant=d["variant"])
+                t_on=d["t_on"], run_id=d["run_id"], variant=d["variant"], ych=ych)
 
 
 def evaluate(model, D, mask, mu, sd, tag: str) -> dict:
     Xn = (D["X"][mask] - mu) / sd
-    logits, amp = model.predict(Xn, batch_size=1024, verbose=0)
+    logits, amp, chan = model.predict(Xn, batch_size=1024, verbose=0)
     pred = logits.argmax(1); y = D["y"][mask]; tr = D["tr"][mask]
     steady = tr == 0
+    # per-channel (multi-label) head: sigmoid probabilities, thresholds at a 1 % false-alarm budget on clean cycles
+    pc = 1.0 / (1.0 + np.exp(-chan)); ych = D["ych"][mask]; clean0 = steady & (ych.sum(1) == 0)
+    thr = np.array([min([q for q in np.linspace(0.05, 0.95, 19) if (pc[clean0, c] >= q).mean() <= 0.01] or [0.95]) for c in range(5)])
+    Pc = pc >= thr; chan_rep = {}
+    for c, nm in enumerate(["Vdc", "Vac", "Iac", "Vbat", "Ibat"]):
+        tp = int((Pc[:, c] & (ych[:, c] == 1) & steady).sum()); fn = int((~Pc[:, c] & (ych[:, c] == 1) & steady).sum()); fp = int((Pc[:, c] & (ych[:, c] == 0) & steady).sum())
+        chan_rep[nm] = dict(recall=tp / max(tp + fn, 1), precision=tp / max(tp + fp, 1), support=tp + fn, thr=float(thr[c]))
+    rid0 = D["run_id"][mask]; det = 0; tot = 0
+    for r in np.unique(rid0):
+        m = (rid0 == r) & steady & (ych.sum(1) > 0)
+        if not m.any():
+            continue
+        tot += 1; chans = [c for c in range(5) if ych[m, c].any()]
+        det += int(min(Pc[m][:, c].mean() for c in chans) >= 0.5)
+    chan_runs = dict(detected=det, injected=tot)
     rep = {}
     for i, c in enumerate(CLASSES):
         tp = int(((pred == i) & (y == i) & steady).sum()); fp = int(((pred == i) & (y != i) & steady).sum())
@@ -99,11 +117,12 @@ def evaluate(model, D, mask, mu, sd, tag: str) -> dict:
         cm[yt, yp] += 1
     out = dict(tag=tag, steady_cycles=int(steady.sum()), accuracy=acc, false_alarms=fa, none_cycles=int(none.sum()),
                amp_mae=mae, latency_median=float(np.median(lat)) if lat else None, latency_max=int(max(lat)) if lat else None,
-               missed_runs=missed, injected_runs=runs, per_class=rep, confusion=cm.tolist())
+               missed_runs=missed, injected_runs=runs, per_class=rep, confusion=cm.tolist(), per_channel=chan_rep, channel_runs=chan_runs)
     print(f"[{tag}] steady {out['steady_cycles']} acc {acc:.4f}  false alarms {fa}/{out['none_cycles']}  amp MAE {mae:.3f}  "
           f"latency med {out['latency_median']} max {out['latency_max']} missed {missed}/{runs}")
     for c, v in rep.items():
         print(f"    {c:9s} P {v['precision']:.3f} R {v['recall']:.3f} n={v['support']}")
+    print(f"  [multi-label @1% FA] runs detected {det}/{tot}; " + "  ".join(f"{k} R {v['recall']:.2f} P {v['precision']:.2f} thr {v['thr']:.2f}" for k, v in chan_rep.items()))
     return out
 
 
@@ -135,11 +154,12 @@ def main() -> None:
     sw = cw[D["y"][fit]]
     model = build_model(D["X"].shape[1], len(CLASSES), tuple(int(w) for w in args.width.split(",")), quantized=not args.float, w_bits=tuple(int(b) for b in args.wbits.split(",")), a_bits=tuple(int(b) for b in args.abits.split(",")))
     model.compile(optimizer=keras.optimizers.Adam(args.lr),
-                  loss=[keras.losses.SparseCategoricalCrossentropy(from_logits=True), "mse"],
-                  loss_weights=[1.0, 2.0])
+                  loss=[keras.losses.SparseCategoricalCrossentropy(from_logits=True), "mse",
+                        keras.losses.BinaryCrossentropy(from_logits=True)],
+                  loss_weights=[1.0, 2.0, 2.0])
     cb = [keras.callbacks.EarlyStopping(monitor="loss", patience=25, restore_best_weights=True),
           keras.callbacks.ReduceLROnPlateau(monitor="loss", factor=0.5, patience=10, min_lr=1e-5)]
-    model.fit(Xn, [D["y"][fit], D["a"][fit]], sample_weight=[sw, np.ones_like(sw)],
+    model.fit(Xn, [D["y"][fit], D["a"][fit], D["ych"][fit]], sample_weight=[sw, np.ones_like(sw), np.ones_like(sw)],
               epochs=args.epochs, batch_size=args.batch, verbose=0, callbacks=cb)
     out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
     model.save(out / "model.keras")

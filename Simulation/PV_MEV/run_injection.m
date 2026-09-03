@@ -216,15 +216,18 @@ for k = krange(1):krange(2)
     rng(k, 'twister');
     run_id = sprintf('D%04d', k);
     name = string(variants{randi(numel(variants))});
-    L = sample_labels(run_id, name, sdir);
+    focus = ''; if isfield(opts, 'focus') && ~isempty(opts.focus), focus = char(opts.focus); end
+    L = sample_labels(run_id, name, sdir, focus);
     fsum = fullfile(ddir, sprintf('%s_%s.csv', run_id, name));
     if exist(fsum, 'file') && ~opts.force, fprintf('[skip] %s\n', fsum); continue; end
     try
         snap = fullfile(sdir, sprintf('%s%s.mat', name, L.snap_sfx));
         s = load(snap); assignin('base', 'xInitial', s.xFinal);
         prepare(mdl, name, L.INJ, L.op, L.EVT);
-        fprintf('[%s %s %s] %s ...\n', run_id, name, L.op, L.desc); t0 = tic;
-        so = sim(mdl, 'LoadInitialState', 'on', 'InitialState', 'xInitial', 'StopTime', num2str(opts.stop_time), ...
+        % record 0.3 s of recovery after the bias is removed (post window of summarize)
+        stopT = max(opts.stop_time, L.INJ.t_on + L.INJ.dwell + 0.30);
+        fprintf('[%s %s %s] %s (to %.2f s) ...\n', run_id, name, L.op, L.desc, stopT); t0 = tic;
+        so = sim(mdl, 'LoadInitialState', 'on', 'InitialState', 'xInitial', 'StopTime', num2str(stopT), ...
             'SignalLogging', 'on', 'SignalLoggingName', 'logsout', 'ReturnWorkspaceOutputs', 'on');
         wall = toc(t0);
         S = extract(so.logsout);
@@ -245,9 +248,12 @@ end
 T = merge_labels(ldir, ddir);
 end
 
-function L = sample_labels(run_id, name, sdir)
+function L = sample_labels(run_id, name, sdir, focus)
 % Draw one dataset run (uses the current rng state).  Amplitude ranges from
 % the plan (section 2.3); channel codes 1 Vdc 2 Vac 3 Iac 4 Vbat 5 Ibat.
+% focus = 'iac': supplement for the rare classes (single Iac-chain injection,
+% shape sine 40 % / hall 40 % / step 20 %, no benign-only runs).
+if nargin < 4, focus = ''; end
 chn = {'Vdc', 'Vac', 'Iac', 'Vbat', 'Ibat'}; shn = {'step', 'ramp', 'sine', 'tri', 'pulse', 'hall', 'noise'};
 u = @() rand();
 % operating point: 25 % CV segment when the snapshot exists
@@ -255,6 +261,7 @@ op = 'cc'; sfx = '';
 if u() < 0.25 && exist(fullfile(sdir, sprintf('%s_cv.mat', name)), 'file'), op = 'cv'; sfx = '_cv'; end
 % injection type
 x = u(); if x < 0.25, n_inj = 0; elseif x < 0.85, n_inj = 1; else, n_inj = 2; end
+if strcmp(focus, 'iac'), n_inj = 1; end
 t_on = 0.65 + 0.25 * u(); dwell = 0.10 + 0.20 * u(); if t_on + dwell > 1.25, dwell = 1.25 - t_on; end
 INJ = struct('channel', [0 0 0], 'shape', [1 1 1], 'amp', [0 0 0], 'k', [0 0 0], 'f', [50 50 50], 'phase', [0 0 0], ...
     'period', 0.05 + 0.15 * u(), 'duty', 0.3 + 0.4 * u(), 't_on', t_on, 'dwell', dwell, 'K_hall', 20);
@@ -262,6 +269,7 @@ used = [];
 for j = 1:n_inj
     ch = randi(5); while any(used == ch), ch = randi(5); end, used(end + 1) = ch; %#ok<AGROW>
     x = u(); if x < 0.50, sh = 1; elseif x < 0.65, sh = 2; elseif x < 0.80, sh = 3; elseif x < 0.90, sh = 6; elseif x < 0.95, sh = 5; else, sh = 4; end
+    if strcmp(focus, 'iac'), ch = 3; x = u(); if x < 0.4, sh = 3; elseif x < 0.8, sh = 6; else, sh = 1; end, end
     if sh == 6 && ch ~= 3, sh = 1; end                       % hall model only on the Iac chain
     switch ch
         case 1, a = 20 + 100 * u();  case 2, a = 5 + 35 * u();  case 3, a = 1 + 19 * u();
@@ -353,6 +361,12 @@ end
 % =========================================================================
 function m = metrics_window(S, w)
 in = @(n) S.(n).t >= w(1) & S.(n).t <= w(2);
+if ~any(in('Iac_real')) || ~any(in('chg'))          % window outside the record -> all NaN
+    for f = {'Vdc','Pac','Pdc','PF','Iref','D','Vbat','Ibat','D_dcdc','P_charge','state','trip','THD50','THD_full','Iac_rms','I2','I_dc','I_peak','e_I_rms','Vdc_max','Vdc_min'}
+        m.(f{1}) = NaN;
+    end
+    return;
+end
 mw = @(n, c) mean(S.(n).x(in(n), c));
 m.Vdc  = mw('Vdc_real', 1);
 m.Pac  = mw('PacPdc', 1); m.Pdc = mw('PacPdc', 2); m.PF = mw('PF', 1);

@@ -22,15 +22,15 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from emi_det.features import (AMP_SCALE, CLASSES, FEATURE_NAMES, class_of, cycle_features,  # noqa: E402
-                              cycle_labels, vref_series)
+from emi_det.features import (AMP_SCALE, CLASSES, FEATURE_NAMES_V2, baseline_relative, channel_targets,  # noqa: E402
+                              class_of, cycle_features, cycle_labels, variant_onehot, vref_series)
 
 VARIANTS = ["CRPR", "MPCC_P", "MPCC_D", "MPCC_D_F1", "MPCC_D_F10", "MPCC_D_R"]
 
 
 def add_run(store: dict, run_id: str, variant: str, ts_path: Path, t_on: float, dwell: float,
             cls: str, amp_norm: float, vref_t: float = 0.0, vref_dv: float = 0.0, extra: dict | None = None,
-            t_min: float | None = None) -> None:
+            t_min: float | None = None, channels: list[str] | None = None) -> None:
     df = pd.read_csv(ts_path)
     if t_min is not None:
         df = df[df["t"] >= t_min].reset_index(drop=True)
@@ -40,7 +40,9 @@ def add_run(store: dict, run_id: str, variant: str, ts_path: Path, t_on: float, 
     cf = cycle_features(df, vref_series(df["t"].to_numpy(), vref_t, vref_dv))
     y, a, tr = cycle_labels(cf.t, t_on, dwell, cls, amp_norm)
     n = cf.t.size
-    store["X"].append(cf.X); store["y"].append(y); store["a"].append(a); store["tr"].append(tr)
+    Xv2 = np.concatenate([baseline_relative(cf.X), variant_onehot(variant, n)], axis=1)
+    store["ych"].append(channel_targets(cf.t, t_on, dwell, channels or []))
+    store["X"].append(Xv2); store["y"].append(y); store["a"].append(a); store["tr"].append(tr)
     store["t"].append(cf.t); store["run_id"].extend([run_id] * n); store["variant"].extend([variant] * n)
     store["t_on"].append(np.full(n, t_on)); store["t_off"].append(np.full(n, t_on + dwell))
     for k, v in (extra or {}).items():
@@ -58,7 +60,7 @@ def from_tests(store: dict, tests: Path, ts: Path, baselines: Path | None) -> No
             p = ts / f"{r['test_id']}_{v}.csv"
             if p.exists():
                 add_run(store, f"{r['test_id']}_{v}", v, p, float(r["t_on"]), float(r["dwell"]), cls, amp_norm,
-                        extra={"source": "tests"})
+                        extra={"source": "tests"}, channels=[c for c in (str(r["channel"]), ch2) if c])
     if baselines is not None:
         for v in VARIANTS:
             for sfx in ("", "_cv"):
@@ -83,7 +85,7 @@ def from_labels(store: dict, labels: Path, ts: Path) -> None:
         add_run(store, r["run_id"], r["VARIANT_NAME"], p, float(r["t_on"]), float(r["dwell"]), cls, amp_norm,
                 float(r.get("vref_t", 0) or 0), float(r.get("vref_dV", 0) or 0),
                 extra={"source": "dataset", "op": str(r.get("op", "cc")), "noise_ch": str(r.get("noise_ch", "")),
-                       "chg_t": float(r.get("chg_t", 0) or 0)})
+                       "chg_t": float(r.get("chg_t", 0) or 0)}, channels=[c for c in (ch1, ch2) if c])
 
 
 def main() -> None:
@@ -92,7 +94,7 @@ def main() -> None:
     ap.add_argument("--tests"); ap.add_argument("--labels")
     ap.add_argument("--ts", required=True); ap.add_argument("--baselines")
     args = ap.parse_args()
-    store = {k: [] for k in ("X", "y", "a", "tr", "t", "run_id", "variant", "t_on", "t_off")}
+    store = {k: [] for k in ("X", "y", "a", "tr", "t", "run_id", "variant", "t_on", "t_off", "ych")}
     if args.tests:
         from_tests(store, Path(args.tests), Path(args.ts), Path(args.baselines) if args.baselines else None)
     if args.labels:
@@ -101,8 +103,8 @@ def main() -> None:
         "X": np.concatenate(store["X"]), "y": np.concatenate(store["y"]), "a": np.concatenate(store["a"]),
         "tr": np.concatenate(store["tr"]), "t": np.concatenate(store["t"]),
         "t_on": np.concatenate(store["t_on"]), "t_off": np.concatenate(store["t_off"]),
-        "run_id": np.array(store["run_id"]), "variant": np.array(store["variant"]),
-        "feature_names": np.array(FEATURE_NAMES), "classes": np.array(CLASSES),
+        "run_id": np.array(store["run_id"]), "variant": np.array(store["variant"]), "ych": np.concatenate(store["ych"]),
+        "feature_names": np.array(FEATURE_NAMES_V2), "classes": np.array(CLASSES),
     }
     for k in store:
         if k not in out and store[k]:

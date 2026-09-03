@@ -41,6 +41,10 @@ FEATURE_NAMES = [
     "vbat_mean", "ibat_mean", "ddcdc_mean", "state", "irefbat_mean", "vbat_step", "ibat_step",
     # power balance (all internal)
     "p_ac_int", "p_chg_int", "p_ratio",
+    # physics cross-checks between the charger's duty and the PFC's internal bus voltage:
+    # D_dcdc*Vdc_int/Vbat_int - 1 ~ Va/Vdc_real for a Vdc-chain bias (~ -dV/Vbat for a Vbat bias);
+    # Vbat_int - D_dcdc*Vdc_int (V) ~ +dV for a Vbat bias, -Va*D for a Vdc bias
+    "xchk_vdc", "vbat_mismatch",
     # cycle-to-cycle deltas
     "d_vdc_mean", "d_iref_mean", "d_iac_rms", "d_iac_mean", "d_vbat_mean", "d_ibat_mean", "d_p_ratio",
 ]
@@ -115,12 +119,13 @@ def cycle_features(df: pd.DataFrame, vref: np.ndarray | None = None) -> CycleFea
             iref.mean(), iref.min(), iref.max(), np.mean(iref < 0), d.mean(), d.mean() - d_ff.mean(),
             vbat.mean(), ibat.mean(), ddc.mean(), st.mean(), irb.mean(), vbat.max() - vbat.min(), ibat.max() - ibat.min(),
             p_ac, p_chg, p_ratio,
+            ddc.mean() * vdc_mean / max(vbat.mean(), 50.0) - 1.0, vbat.mean() - ddc.mean() * vdc_mean,
         ], dtype=np.float64)
         if prev is None:
             deltas = np.zeros(7)
         else:
             deltas = np.array([row[15] - prev[15], row[18] - prev[18], row[4] - prev[4], row[3] - prev[3],
-                               row[24] - prev[24], row[25] - prev[25], row[33] - prev[33]])
+                               row[24] - prev[24], row[25] - prev[25], row[33] - prev[33]])   # indices into the base row
         rows.append(np.concatenate([row, deltas])); tc.append(t[b - 1] + 1.0 / FS)
         prev = row
     X = np.asarray(rows) if rows else np.zeros((0, len(FEATURE_NAMES)))
@@ -183,3 +188,58 @@ def cycle_labels(tc: np.ndarray, t_on: float, dwell: float, cls: str, amp_norm: 
     after = (start >= t_off) & (start < t_off + 1.0 / F0)
     trans[after & (cls != "none")] = 1
     return y, amp, trans
+
+
+# ---------------------------------------------------------------- v2 --
+# Baseline-relative representation: the detector keeps a slow EMA of every
+# feature (a per-feature "normal" for the current operating point / strategy)
+# and feeds the model the current value AND the deviation from that baseline.
+# On the FPGA this is one multiply-add per feature per cycle.  The EMA is
+# updated only while no injection is flagged (here: while the previous
+# cycle's label is 'none' during training data generation we simply use a
+# causal EMA over all cycles with a slow time constant, which is what a
+# freeze-on-detect implementation converges to before the injection).
+CHANNELS = ["Vdc", "Vac", "Iac", "Vbat", "Ibat"]
+VARIANTS = ["CRPR", "MPCC_P", "MPCC_D", "MPCC_D_F1", "MPCC_D_F10", "MPCC_D_R"]
+EMA_ALPHA = 0.1
+
+
+def baseline_relative(X: np.ndarray, alpha: float = EMA_ALPHA, warm: int = 3) -> np.ndarray:
+    """Return [X, X - EMA_prev(X)] for one run (rows = consecutive cycles).
+
+    EMA_prev uses only cycles strictly before the current one; the first
+    `warm` cycles are used to seed it (their deviation is 0).
+    """
+    n, f = X.shape
+    dev = np.zeros_like(X)
+    if n == 0:
+        return np.concatenate([X, dev], axis=1)
+    ema = X[:min(warm, n)].mean(0)
+    for i in range(n):
+        if i >= warm:
+            dev[i] = X[i] - ema
+            ema = (1 - alpha) * ema + alpha * X[i]
+    return np.concatenate([X, dev], axis=1)
+
+
+def variant_onehot(variant: str, n: int) -> np.ndarray:
+    v = np.zeros((n, len(VARIANTS)))
+    if variant in VARIANTS:
+        v[:, VARIANTS.index(variant)] = 1.0
+    return v
+
+
+def channel_targets(tc: np.ndarray, t_on: float, dwell: float, channels: list[str]) -> np.ndarray:
+    """Per-cycle binary presence of an injection on each of the 5 channels."""
+    ych = np.zeros((tc.size, len(CHANNELS)), np.int8)
+    if not channels:
+        return ych
+    t_off = t_on + dwell; start = tc - 1.0 / F0
+    inside = (tc > t_on) & (start < t_off)
+    for c in channels:
+        if c in CHANNELS:
+            ych[inside, CHANNELS.index(c)] = 1
+    return ych
+
+
+FEATURE_NAMES_V2 = FEATURE_NAMES + [f"d_{n}" for n in FEATURE_NAMES] + [f"is_{v}" for v in VARIANTS]
