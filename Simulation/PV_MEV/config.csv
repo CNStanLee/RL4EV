@@ -5,5 +5,6 @@ MPCC_D,20e3,1,0,0,1,1,MPCC duty prediction + PWM
 MPCC_D_F1,20e3,1,0,1,1,1,MPCC_D + harmonic comp. from 1-cycle FFT
 MPCC_D_F10,20e3,1,0,1,2,1,MPCC_D + harmonic comp. from 10-cycle FFT
 MPCC_D_R,20e3,1,0,1,5,1,MPCC_D + harmonic comp. from RLS
-MPCC_D_M1,20e3,1,0,1,3,1,MPCC_D + 1-cycle ONNX model (needs Python env; ONNX subsystems currently commented out)
-MPCC_D_M05,20e3,1,0,1,4,1,MPCC_D + half-cycle ONNX model (needs Python env; ONNX subsystems currently commented out)
+MPCC_D_M1,20e3,1,0,1,3,1,MPCC_D + HGQ2 Residual-BLS one-cycle estimator (raw; ONNX via OnnxRunner/onnxruntime; pyenv hgq2)
+MPCC_D_H1,20e3,1,0,1,6,1,MPCC_D + FFT1/HGQ2 hybrid fusion (package alpha + watchdog fallback to FFT)
+MPCC_D_M05,20e3,1,0,1,4,1,MPCC_D + half-cycle model (no HGQ2 half-cycle model yet; subsystem still commented out)

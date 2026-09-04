@@ -23,7 +23,7 @@
 % for the detector dataset.
 %
 % Only VARIANT_NAME, INJ, CHG_OP, EVT and xInitial survive the workspace reset below.
-clearvars -except VARIANT_NAME INJ CHG_OP EVT xInitial
+clearvars -except VARIANT_NAME INJ CHG_OP EVT DET xInitial
 close all;
 
 %% System control
@@ -129,6 +129,28 @@ fs = mm_fund_freq * mm_points_per_cycle;   % 4000 Hz
 mm_halfcycle_points = mm_points_per_cycle / 2;     % 40 points
 mm_halfcycle_overlap = mm_halfcycle_points - 1;   % sliding half-cycle window
 
+%% Python for the ONNX models (OnnxRunner -> onnx_bridge.py -> onnxruntime); conda env hgq2
+try
+    pe = pyenv;
+    if pe.Status == "NotLoaded" && ~contains(pe.Executable, 'hgq2')
+        pyenv('Version', 'D:\Anaconda\envs\hgq2\python.exe');
+    end
+catch
+end
+
+%% EMI-injection detector (build_detector.m); model from EMI_DET_FPGA/runs/<run>/model.onnx
+det_onnx_file      = 'D:/Prj/RL4EV/EMI_DET_FPGA/runs/det_v2_q/model.onnx';
+det_thr            = [0.5 0.5 0.5 0.5 0.5];   % per-channel sigmoid thresholds (run_injection passes detector.json values in DET.thr)
+if exist('DET', 'var') && isstruct(DET) && isfield(DET, 'thr') && numel(DET.thr) == 5, det_thr = double(DET.thr(:)'); end
+det_ema_alpha      = 0.1;                     % baseline EMA (features.EMA_ALPHA)
+det_persist        = 2;                       % consecutive cycles before a channel flag is raised
+det_variant_onehot = [0 0 0 0 0 0];           % set below from VARIANT_NAME (CRPR MPCC_P MPCC_D MPCC_D_F1 MPCC_D_F10 MPCC_D_R)
+
+%% HGQ2 harmonic estimator (estimation_src 3 raw, 6 = FFT1 + HGQ2 fusion), see build_estimator.m
+% Per-order fusion weights from FFT_HGQ_BLS_FPGA/config/deployment.json (fft_fusion_alpha_mpcc)
+hgq_fusion_alpha = [0.6704476522845647 0.7221651725151749 0.6446423751787858 0.41926421682656173];
+hgq_min_ratio    = single(0);
+
 %% Controller variant (from config.csv)
 if ~exist('VARIANT_NAME','var') || isempty(VARIANT_NAME)
     VARIANT_NAME = "MPCC_D_F1";          % default case when nothing is selected
@@ -157,6 +179,8 @@ simu_time      = cfg_row.simu_time;      % model StopTime (s)
 if use_d_predict && use_p_predict
     error('init_paras:variant', 'use_d_predict and use_p_predict cannot both be 1 (%s)', VARIANT_NAME);
 end
+det_vlist = ["CRPR" "MPCC_P" "MPCC_D" "MPCC_D_F1" "MPCC_D_F10" "MPCC_D_R"];
+det_variant_onehot = double(det_vlist == VARIANT_NAME);      % all-zero for variants unseen by the detector
 fprintf('[init_paras] variant %-11s Fc=%6.0f Hz  d=%d p=%d h=%d src=%d  simu_time=%g s\n', ...
     VARIANT_NAME, Fc, use_d_predict, use_p_predict, use_harmonic, estimation_src, simu_time);
 clear cfg_dir cfg_file cfg_tbl cfg_row

@@ -120,6 +120,8 @@ assignin('base', 'VARIANT_NAME', name);
 assignin('base', 'INJ', INJ);
 assignin('base', 'CHG_OP', CHG_OP);
 assignin('base', 'EVT', EVT);
+dj = 'D:/Prj/RL4EV/EMI_DET_FPGA/artifacts/detector.json';
+if isfile(dj), j = jsondecode(fileread(dj)); assignin('base', 'DET', struct('thr', j.thr(:)')); end
 evalin('base', 'init_paras');
 load_system(mdl);
 if ~evalin('base', 'ENABLE_HIL')
@@ -140,6 +142,9 @@ L = { ...
     [ev '/Charger Stage'], 1, 'chg', '';  [ev '/Protection Monitor'], 1, 'trip', ''; ...
     [pc '/Speed Regulator2'], 1, 'Iref', ''; [pc '/Saturation'], 1, 'D', ''; [pc '/PLL'], 2, 'theta', ''; ...
     [pc '/Multiport Switch'], 1, 'amp_est', ''; ...
+    [pc '/EMI Detector/emi_augment'], 1, 'det_feat', ''; [pc '/EMI Detector/ONNX Runner'], 1, 'det_raw', ''; ...
+    [pc '/EMI Detector/emi_decide'], 1, 'det_chan', ''; [pc '/EMI Detector/emi_decide'], 2, 'det_class', ''; ...
+    [pc '/EMI Detector/emi_decide'], 3, 'det_conf', ''; [pc '/EMI Detector/emi_decide'], 4, 'det_amp', ''; ...
     M, 1, 'Vdc_mean', d200; M, 2, 'PacPdc', d200; M, 3, 'THD_model', d200; M, 5, 'PF', d200};   % these run at Ts_Power
 for i = 1:size(L, 1)
     ph = get_param(L{i, 1}, 'PortHandles'); h = ph.Outport(L{i, 2});
@@ -350,6 +355,14 @@ end
 writetable(Tb, [base '.csv']);
 t_iac = S.Iac_real.t; Iac = single(S.Iac_real.x); %#ok<NASGU>
 save([base '_iac.mat'], 't_iac', 'Iac');
+if isfield(S, 'det_raw')      % per-cycle detector record (20 ms): 43 features, 16 raw outputs, decisions
+    tc = S.det_raw.t; Td = table(tc, 'VariableNames', {'t'});
+    F = S.det_feat.x; for k = 1:size(F, 2), Td.(sprintf('f%02d', k)) = F(1:numel(tc), k); end
+    R = S.det_raw.x; for k = 1:size(R, 2), Td.(sprintf('raw%02d', k)) = R(1:numel(tc), k); end
+    C = S.det_chan.x; for k = 1:size(C, 2), Td.(sprintf('chan_%d', k)) = C(1:numel(tc), k); end
+    Td.det_class = S.det_class.x(1:numel(tc), 1); Td.det_conf = S.det_conf.x(1:numel(tc), 1); Td.det_amp = S.det_amp.x(1:numel(tc), 1);
+    writetable(Td, [base '_det.csv']);
+end
 end
 
 function y = resample_prev(ts, xs, t)
