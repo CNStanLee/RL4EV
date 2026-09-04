@@ -1,0 +1,2 @@
+run_id,VARIANT_NAME,op,n_inj,channel1,shape1,amp1,k1,f1,phase1,channel2,shape2,amp2,k2,f2,phase2,period,duty,t_on,dwell,noise_ch,noise_amp,chg_t,chg_I,vref_t,vref_dV,status
+D0078,CRPR,cc,1,Vac,step,22.060112396218,78.7173230505102,50,0,,,0,0,50,0,0.116602973632893,0.632493950624339,0.850027147914471,0.293059450031252,,0,0.883114925554268,15,0,0,OK

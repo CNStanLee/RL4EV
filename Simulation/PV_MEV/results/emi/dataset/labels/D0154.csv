@@ -1,0 +1,2 @@
+run_id,VARIANT_NAME,op,n_inj,channel1,shape1,amp1,k1,f1,phase1,channel2,shape2,amp2,k2,f2,phase2,period,duty,t_on,dwell,noise_ch,noise_amp,chg_t,chg_I,vref_t,vref_dV,status
+D0154,MPCC_D_F1,cc,1,Iac,hall,-12.4427601463638,48.4900735817221,100,0,,,0,0,50,0,0.174255267870627,0.586666981141254,0.896373326127103,0.273309610958333,,0,0,20,0,0,OK

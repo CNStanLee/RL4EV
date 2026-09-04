@@ -1,10 +1,10 @@
 function make_waveform_figs(cases)
-% MAKE_WAVEFORM_FIGS  Per-case waveform comparison of the six PFC strategies
+% MAKE_WAVEFORM_FIGS  Per-case waveform comparison of the eight PFC strategies
 % before / during / after a sensor-chain injection (from results/emi/ts).
 %   make_waveform_figs()                 all cases in tests.csv
 %   make_waveform_figs({'E-DC-01c'})     subset
 % Output: docs/figures/waveforms/
-%   <case>_state.png       six strategies overlaid: real vs internal Vdc, Iref,
+%   <case>_state.png       eight strategies overlaid: real vs internal Vdc, Iref,
 %                          per-cycle Iac RMS, per-cycle THD50, P_charge, trips
 %   <case>_iac.png         per strategy: 2 cycles of real Iac before / during /
 %                          after the bias
@@ -17,8 +17,8 @@ T = readtable(fullfile(mdir, 'tests.csv'), 'TextType', 'string');
 if nargin < 1 || isempty(cases), cases = cellstr(T.test_id'); end
 if ischar(cases), cases = {cases}; end
 sc = readtable(fullfile(rdir, 'scorecard.csv'), 'TextType', 'string');
-V = {'CRPR', 'MPCC_P', 'MPCC_D', 'MPCC_D_F1', 'MPCC_D_F10', 'MPCC_D_R'};
-col = [0.15 0.15 0.15; 0.85 0.33 0.10; 0.00 0.45 0.74; 0.47 0.67 0.19; 0.49 0.18 0.56; 0.93 0.69 0.13];
+V = {'CRPR', 'MPCC_P', 'MPCC_D', 'MPCC_D_F1', 'MPCC_D_F10', 'MPCC_D_R', 'MPCC_D_M1', 'MPCC_D_H1'};
+col = [0.15 0.15 0.15; 0.85 0.33 0.10; 0.00 0.45 0.74; 0.47 0.67 0.19; 0.49 0.18 0.56; 0.93 0.69 0.13; 0.30 0.75 0.93; 0.64 0.08 0.18];
 set(0, 'DefaultAxesFontSize', 8, 'DefaultLineLineWidth', 0.9);
 tripname = {'UV', 'OV', 'OC', 'BOV', 'BOC'};
 
@@ -28,7 +28,7 @@ for c = 1:numel(cases)
     lab = sprintf('%s: %s %s %+g', id, row.channel, row.shape, row.amp);
     if ~ismissing(row.channel2) && strlength(row.channel2) > 0, lab = sprintf('%s, %s %+g', lab, row.channel2, row.amp2); end
     D = struct('X', {}, 'ti', {}, 'ia', {}, 'tc', {}, 'irms', {}, 'thd', {}, 'trip', {}, 'ttrip', {});
-    for i = 1:6
+    for i = 1:numel(V)
         p = fullfile(tdir, sprintf('%s_%s.csv', id, V{i})); q = fullfile(tdir, sprintf('%s_%s_iac.mat', id, V{i}));
         if ~exist(p, 'file') || ~exist(q, 'file'), D(i).X = []; continue; end
         D(i).X = readtable(p); M = load(q); D(i).ti = M.t_iac; D(i).ia = double(M.Iac);
@@ -49,7 +49,7 @@ end
         f = figure('Visible', 'off', 'Color', 'w', 'Position', [50 50 1000 900]);
         tl = tiledlayout(f, 5, 1, 'TileSpacing', 'compact', 'Padding', 'compact');
         ax = gobjects(5, 1); for k = 1:5, ax(k) = nexttile(tl); hold(ax(k), 'on'); end
-        for i = 1:6
+        for i = 1:numel(V)
             X = D(i).X; if isempty(X), continue; end
             plot(ax(1), X.t, X.Vdc_real, 'Color', col(i, :), 'DisplayName', V{i});
             plot(ax(2), X.t, X.Iref, 'Color', col(i, :));
@@ -75,11 +75,11 @@ end
     end
 
     function fig_iac(id, lab, D, t_on, t_off)
-        f = figure('Visible', 'off', 'Color', 'w', 'Position', [50 50 1100 620]);
-        tl = tiledlayout(f, 2, 3, 'TileSpacing', 'compact', 'Padding', 'compact');
+        f = figure('Visible', 'off', 'Color', 'w', 'Position', [50 50 1100 900]);
+        tl = tiledlayout(f, 3, 3, 'TileSpacing', 'compact', 'Padding', 'compact');
         w = [t_on - 0.04, t_on; t_off - 0.04, t_off; t_off + 0.26, t_off + 0.30];   % before / during / after, 2 cycles each
         cw = [0.55 0.55 0.55; 0.85 0.20 0.10; 0.00 0.45 0.74]; nm = {'before', 'during (last 2 cycles)', 'after (last 2 cycles)'};
-        for i = 1:6
+        for i = 1:numel(V)
             ax = nexttile(tl); hold(ax, 'on');
             if isempty(D(i).X), title(ax, [V{i} ' (no data)'], 'Interpreter', 'none'); continue; end
             for k = 1:3
@@ -104,7 +104,7 @@ end
         for e = 1:2
             axI = nexttile(tl, e); hold(axI, 'on'); axV = nexttile(tl, e + 2); hold(axV, 'on');
             axR = nexttile(tl, e + 4); hold(axR, 'on'); axP = nexttile(tl, e + 6); hold(axP, 'on');
-            for i = 1:6
+            for i = 1:numel(V)
                 if isempty(D(i).X), continue; end
                 m = D(i).ti >= ev(e) - 0.02 & D(i).ti <= ev(e) + 0.06;
                 plot(axI, (D(i).ti(m) - ev(e)) * 1e3, D(i).ia(m), 'Color', col(i, :), 'DisplayName', V{i});

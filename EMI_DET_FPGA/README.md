@@ -53,6 +53,45 @@ python scripts/train_detector.py data/cycles_dataset.npz --out runs/det_mlp --te
 
 漏检集中在 Iac 链小幅值（< 8 A 时 4 / 9）与 Iac 正弦（1 / 5）。MLP 过拟合（训练集 100%），下一步是正则化、特征筛选和更多 Iac 类样本后再量化。
 
+## 评估战役结果（2026-09-04，13 用例 × 8 策略 = 104 次，全部 OK）
+
+同一战役同时给出三件事的答案：SIL 检测器在闭环里的表现、两个 HGQ2 谐波估计变种（MPCC_D_M1 原始、MPCC_D_H1 FFT+HGQ2 融合）与 FFT/RLS 变种的对比、以及阶段一结论在新模型上的复现（原 6 种策略的 78 行 scorecard 与阶段一逐值相同，说明检测器与估计器子系统对它们是纯观测）。原始数据：`Simulation/PV_MEV/results/emi/scorecard.csv`、`ts/<run>_det.csv`；报告：`runs/sil_report/`（`sil_runs.csv`、`summary.json`）、`runs/estimator_report/`。
+
+**SIL 检测器**（`scripts/sil_report.py`，判定 = sigmoid ≥ 阈值且连续 2 周期）
+
+| 指标 | Simulink SIL | 离线参考（features.py + 位精确 ONNX） |
+|---|---:|---:|
+| 检出（延迟有限且注入周期覆盖 ≥ 50%） | 96 / 104 | 96 / 104 |
+| 单通道用例（12 × 8） | 96 / 96 | 96 / 96 |
+| 双通道 E-MUL-01（Vdc +50 V 与 Iac +5 A） | 0 / 8（Vdc 全部检出，Iac 分量全部漏检） | 同 |
+| 延迟中位数 | 2 周期（40 ms，等于持续判据下限） | 2 周期 |
+| 注入前误报周期 | 0 / 416 | 0 / 416 |
+| 撤除后（t_off + 60 ms 起）误报周期 | 8 / 1248（全部 MPCC_P，撤除后恢复慢） | 11 / 1248 |
+| 与 Simulink 标志字不同的周期 | — | 35 / 3640 |
+
+- 每种策略 13 个用例中检出 12 个（漏的都是 E-MUL-01 的 Iac 分量），策略之间没有差别：检测器对控制策略是不变的。
+- 漏检的 Iac +5 A 偏置（峰值约 63 A 上的 8%）与留出评估中的 Iac 弱项一致；下一步若要覆盖它，需要 Iac 专项数据（此前未批准的 60 次补充）或 Iac 交叉校验特征。
+- E-DC-01c（Vdc +100 V，母线被钳到 336 V）下 Vdc 之外的通道也会置位（wrong_channel_frac = 1）：这是物理后果（充电级失调、Iref 跌落），不是误报。
+- 战役期间 Simulink 里跑的是 Keras 导出的旧 ONNX；用位精确 ONNX 在同一批 Simulink 特征上重算（`scripts/redecide.py`）：3744 个周期中 23 个标志字不同，只有 2 次运行首次置位时刻变化（各 1 周期）。战役结束后 `artifacts/detector.onnx` 已替换为位精确版本（旧文件保留为 `detector_keras_export.onnx`）。
+
+**谐波估计变种**（`scripts/estimator_report.py`；充电级负载 6.9 kW）
+
+| 变种 | 基线 THD50 | 基线全带 THD | E-AC-01a | E-AC-01b | E-BAT-01b | E-DC-01b | 恢复时间（E-DC-01b / 01c） | 保护动作 |
+|---|---:|---:|---:|---:|---:|---:|---:|---|
+| MPCC_D（无补偿） | 5.48% | 5.68% | 6.19% | 8.57% | 5.95% | 6.93% | 120 / 122 ms | E-BAT-01n BOC、E-DC-02b OV |
+| MPCC_D_F1（FFT 1 周期） | 2.76% | 3.28% | 4.29% | 7.78% | 3.00% | 3.71% | 180 / 200 ms | + E-BAT-02c OC |
+| MPCC_D_F10 | 2.70% | 3.10% | 4.29% | 7.80% | 3.05% | 3.69% | 120 / 160 ms | 同 MPCC_D |
+| MPCC_D_R（RLS） | 2.80% | 3.11% | 4.72% | 8.19% | 2.99% | 3.68% | 120 / 140 ms | + E-BAT-02c、E-DC-01c、E-MUL-01 OC |
+| MPCC_D_M1（HGQ2 原始） | 3.18% | 3.66% | 4.12% | 5.97% | 3.51% | 4.26% | 180 / 260 ms | + E-DC-01c OC |
+| MPCC_D_H1（FFT+HGQ2 融合） | 3.02% | 3.59% | 4.08% | 6.42% | 3.34% | 4.08% | 180 / 200 ms | + E-DC-01c OC |
+
+- 基线上 HGQ2 变种比 FFT/RLS 变种差 0.3 到 0.4 个百分点（8-bit 量化模型，训练数据来自旧工况），融合（H1）把差距缩到 0.25 pp。
+- 交流链偏置（E-AC-01a/01b/02b）下 HGQ2 变种反而最好：E-AC-01b（Vac 谐波注入）THD50 5.97% / 6.42% 对 FFT 的 7.78%，因为估计器直接看内部电流波形而不依赖被污染的锁相谐波基准；直流与电池链偏置下 HGQ2 变种比 F1 差约 0.5 pp（估计器输入偏离训练分布）。
+- 恢复时间与 F1 同级（一周期估计窗 + 融合 EMA），比 F10/R 慢 40 到 60 ms；E-DC-01c 下 M1 最慢（260 ms）。保护动作与 F1/R 同类：E-DC-01c 的 OC 出现在 M1、H1、R，F1 没有；E-BAT-02c 的 OC 出现在 F1、R，M1、H1 没有——都是 1 到 2 个周期的电流尖峰差异，不是系统性优劣。
+- 结论：两个 HGQ2 变种在闭环注入下与 FFT/RLS 变种同一水平，交流链偏置下略优，基线略差；作为阶段三"检测后切换估计源"的候选是可用的。
+
+**图**：`Simulation/PV_MEV/docs/figures/fig2..fig8`（已含 M1、H1 列）、`docs/figures/waveforms/<case>_{state,iac,transition}.png`（8 种策略）、`runs/estimator_report/estimator_thd_cases.png`。
+
 ## 阶段二 B / C 现状（2026-09-04）
 
 - **可用检测器**：`scripts/train_detector_v4.py`——sklearn 多标签 MLP（64-64，43 个基础特征，标准化输入）作为初始化，迁入 HGQ2 `QDense`（激活 kif 1/4/7，权重 1/2/7）做短量化感知微调。留出运行 34 / 45，阶段一独立 72 / 78，清洁周期误报 2.5% / 3.3%，延迟中位 1 周期；ONNX 与 Keras 逐值一致。产物：`artifacts/detector.onnx`（含标准化，43 → 5 + 10 + 1）、`artifacts/detector.json`（阈值、mu、sd）、`runs/det_v4/chain_std.keras`（板上模型：标准化输入的纯 QDense 链）。

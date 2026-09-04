@@ -71,3 +71,4 @@ Simulation/PV_MEV/results/emi/dataset/ts/
 !HLS_PRJ/harmonic_estimator/tb_data/
 HLS_PRJ/*/tb_data/csim_results.log
 HLS_PRJ/*/build/
+EMI_DET_FPGA/fpga/*.log
