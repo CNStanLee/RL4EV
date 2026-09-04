@@ -133,6 +133,30 @@ def main():
         rep["q_phase1"], _ = metrics(1 / (1 + np.exp(-model.predict(T["X"], verbose=0)[0])), T, np.ones(T["ych"].shape[0], bool), "HGQ2 QAT phase1", thr_q)
     out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
     model.save(out / "model.keras")
+    # board version: pure QDense chain (no Affine / Lambda) with the standardization folded into dense0
+    chain = build_q(NB, mu, sd, widths, tuple(int(b) for b in args.wbits.split(",")), tuple(int(b) for b in args.abits.split(",")))
+    plain_in = keras.Input((NB,), name="features"); x = plain_in
+    from hgq.config import LayerConfigScope, QuantizerConfigScope
+    from hgq.layers import QDense
+    wbits = tuple(int(b) for b in args.wbits.split(",")); abits = tuple(int(b) for b in args.abits.split(","))
+    with QuantizerConfigScope(default_q_type="kif", place="weight", k0=1, i0=wbits[0], f0=wbits[1], trainable=False),          QuantizerConfigScope(default_q_type="kif", place="datalane", k0=1, i0=abits[0], f0=abits[1], trainable=False, overflow_mode="SAT"),          LayerConfigScope(enable_ebops=False, beta0=0.0):
+        for i, w in enumerate(widths):
+            x = QDense(w, activation="relu", name=f"dense{i}")(x)
+        plain_out = QDense(5, name="chan")(x)
+    plain = keras.Model(plain_in, plain_out, name="emi_det_chain")
+    for name in [f"dense{i}" for i in range(len(widths))] + ["chan"]:
+        plain.get_layer(name).set_weights(model.get_layer(name).get_weights())
+    # chain on STANDARDIZED input (the board feature block applies (x-mu)/sd in fixed point); this is the board model
+    chk = plain.predict((D["X"][:512] - mu) / sd, verbose=0); ref = model.predict(D["X"][:512], verbose=0)[0]
+    print(f"standardized-input chain vs full model max |dlogit| (512 samples): {np.abs(chk - ref).max():.4g}")
+    plain.save(out / "chain_std.keras")
+    # folded variant kept for reference only (quantizing W/sd is NOT viable, see fpga_export.py)
+    d0 = plain.get_layer("dense0"); ws = d0.get_weights(); W = ws[0]; b = ws[1]
+    ws[0] = (W / sd[:, None]).astype(np.float32); ws[1] = (b - (mu / sd) @ W).astype(np.float32); d0.set_weights(ws)
+    chk = plain.predict(D["X"][:512], verbose=0)
+    print(f"folded chain vs full model max |dlogit| (512 samples): {np.abs(chk - ref).max():.4f}")
+    plain.save(out / "chain.keras")
+    np.savez(out / "chain_weights.npz", **{f"{l.name}_{k}": w for l in plain.layers if l.get_weights() for k, w in enumerate(l.get_weights())})
     json.dump(dict(features=FEATURE_NAMES, mu=mu.tolist(), sd=sd.tolist(), thr=thr_q.tolist(), width=list(widths),
                    wbits=args.wbits, abits=args.abits, params=int(model.count_params())), open(out / "detector.json", "w"), indent=1)
     json.dump(rep, open(out / "report.json", "w"), indent=1)

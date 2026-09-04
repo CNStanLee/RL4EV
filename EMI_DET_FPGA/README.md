@@ -52,3 +52,10 @@ python scripts/train_detector.py data/cycles_dataset.npz --out runs/det_mlp --te
 | HGQ2 MLP 激活 4/7、权重 2/7 | 24 / 45，32 / 78 | — | 39 / 1622，93 / 1578 | — |
 
 漏检集中在 Iac 链小幅值（< 8 A 时 4 / 9）与 Iac 正弦（1 / 5）。MLP 过拟合（训练集 100%），下一步是正则化、特征筛选和更多 Iac 类样本后再量化。
+
+## 阶段二 B / C 现状（2026-09-04）
+
+- **可用检测器**：`scripts/train_detector_v4.py`——sklearn 多标签 MLP（64-64，43 个基础特征，标准化输入）作为初始化，迁入 HGQ2 `QDense`（激活 kif 1/4/7，权重 1/2/7）做短量化感知微调。留出运行 34 / 45，阶段一独立 72 / 78，清洁周期误报 2.5% / 3.3%，延迟中位 1 周期；ONNX 与 Keras 逐值一致。产物：`artifacts/detector.onnx`（含标准化，43 → 5 + 10 + 1）、`artifacts/detector.json`（阈值、mu、sd）、`runs/det_v4/chain_std.keras`（板上模型：标准化输入的纯 QDense 链）。
+- **从头训练的 Keras 管线为何失败**：类别加权 + 多任务头 + dropout + 按 val_loss 早停导致严重欠训练（14 到 23 / 45），基线相对特征块与策略 one-hot 反而降低留出性能；随机森林（`eval_channels.py`）仍是上限参考（160 / 185）。
+- **Simulink SIL**：`Simulation/PV_MEV/build_detector.m` 在 `PFC Control` 内加入 `EMI Detector`（10 kHz 缓冲 → 43 特征 → `OnnxRunner`（Python onnxruntime 桥）→ 阈值 + 连续计数），逐周期输出 `det_*` 由 `run_injection` 记录到 `<run>_det.csv`；`scripts/sil_parity.py` 做 Simulink 与 Python 特征、ONNX 输出的逐周期对照。
+- **上板版本**：`hls4ml 1.3`（Vitis 后端，`bit_exact=True`，xczu7ev，10 ns）已生成两个工程：`fpga/estimator_hls4ml/`（HGQ2 Residual-BLS 谐波估计器）与 `runs/det_v4/fpga/hls4ml/`（检测器链）。Windows 上 hls4ml 的 C 仿真脚本不可用（需要 Linux shell），C/RTL 协同仿真与综合留到 Vitis HLS 主机。`da4ml` 路线不适用：它只接受 WRAP 溢出模式，而两个模型都以 SAT 训练，WRAP 复刻在数据集上偏差达数百 logit（`scripts/fpga_export.py` 记录了检查）；标准化必须在特征提取模块内以定点常数完成，不能折进第一层权重（折叠后 |Δlogit| 130）。
