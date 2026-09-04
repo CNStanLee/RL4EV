@@ -15,7 +15,8 @@ classdef OnnxRunner < matlab.System
         SampleTime = -1     % block sample time (s); -1 inherited
     end
     properties (Access = private)
-        h = 0          % session handle in onnx_bridge.py
+        mf = ''        % cleaned model path; sessions are cached by path in onnx_bridge.py (a restored
+                       % ModelOperatingPoint brings back block properties from an older session)
     end
     methods
         function obj = OnnxRunner(varargin)
@@ -31,16 +32,16 @@ classdef OnnxRunner < matlab.System
             % the block dialog may hand over the literal text including quotes
             mf = strtrim(char(string(obj.ModelFile))); mf = mf(mf ~= '''' & mf ~= '"');
             if ~isfile(mf), error('OnnxRunner: model file not found: %s', mf); end
-            obj.h = double(br.load(mf, int32(1)));
+            obj.mf = mf; br.ensure(mf, int32(1));
         end
         function y = stepImpl(obj, u)
             br = py.importlib.import_module('onnx_bridge');
-            r = br.run(int32(obj.h), py.list(double(u(:)')), int32(obj.NumIn));
+            if isempty(obj.mf), m0 = strtrim(char(string(obj.ModelFile))); obj.mf = m0(m0 ~= '''' & m0 ~= '"'); end
+            r = br.run_file(obj.mf, py.list(double(u(:)')), int32(obj.NumIn));
             y = single(cellfun(@double, cell(r)));
             y = y(1:obj.NumOut);
         end
-        function releaseImpl(obj)
-            try, br = py.importlib.import_module('onnx_bridge'); br.close(int32(obj.h)); catch, end
+        function releaseImpl(~)
         end
         function resetImpl(~)
         end

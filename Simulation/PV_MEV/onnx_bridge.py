@@ -40,3 +40,25 @@ def run(h: int, values, n_in: int) -> list:
 
 def close(h: int) -> None:
     _SESSIONS.pop(h, None)
+
+
+# ---- path-keyed API (stateless for the caller): a Simulink ModelOperatingPoint restores
+# block properties from an earlier MATLAB/Python session, so integer handles would dangle.
+_BY_PATH: dict[str, tuple[ort.InferenceSession, str]] = {}
+
+
+def ensure(path: str, threads: int = 1) -> int:
+    if path not in _BY_PATH:
+        so = ort.SessionOptions(); so.intra_op_num_threads = int(threads); so.inter_op_num_threads = 1
+        s = ort.InferenceSession(path, so, providers=["CPUExecutionProvider"])
+        _BY_PATH[path] = (s, s.get_inputs()[0].name)
+    return len(_BY_PATH)
+
+
+def run_file(path: str, values, n_in: int) -> list:
+    if path not in _BY_PATH:
+        ensure(path)
+    s, in_name = _BY_PATH[path]
+    x = np.asarray(values, dtype=np.float32).reshape(1, int(n_in))
+    outs = s.run(None, {in_name: x})
+    return np.concatenate([np.asarray(o, dtype=np.float32).ravel() for o in outs]).tolist()

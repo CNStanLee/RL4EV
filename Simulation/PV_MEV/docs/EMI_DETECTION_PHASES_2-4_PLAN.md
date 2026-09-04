@@ -259,6 +259,8 @@ Vivado 工程与 bitstream（`Vivado_PRJ/MPCC_R/`）、`PS_notebook/mpcc_r_hil.i
 | 2026-09-04 03:10 | 全数据集评估（随机森林，5 折按运行留出，逐通道 1% 误报预算） | 注入运行检出 160 / 185（86%），延迟中位 1 周期、90 分位 2 周期；单通道按链：Vdc 29/30、Vac 31/33、Iac 20/27、Vbat 29/29、Ibat 26/28；双通道两链同时标出 26/39；任一通道误报 179 / 6425 清洁周期（2.8%）。漏检集中在 Iac 链小幅值（< 8 A 时 4/9）和 Iac 正弦（1/5），Vdc / Vac 正弦形状各漏 1 到 2 条 |
 | 2026-09-04 03:20 | HGQ2 MLP 在全数据集上训练（按运行划分，阶段一 78 条作独立测试） | 浮点 MLP 训练集 100%、留出运行 29/45、独立测试 63/78：明显过拟合；量化版（激活 4/7、权重 2/7）更差（24/45、32/78）。随机森林优于 MLP，说明网络需要正则化与特征筛选后再量化；FPGA 侧可先以特征提取 + 小型决策规则 / 树集成对照 |
 
+| 2026-09-04 03:00–04:40 | 阶段二 B / C：检测器定型、谐波估计模型接回、SIL 与上板准备 | （1）检测器：sklearn 多标签 MLP（64-64，43 基础特征）迁入 HGQ2 QDense 做量化感知微调（`train_detector_v4.py`）：留出运行 34/45、阶段一 72/78、误报 2.5%/3.3%、延迟 1 周期，ONNX 与 Keras 逐值一致；从头训练的 Keras 管线欠训练（14 到 23/45），基线相对特征与 one-hot 反而有害。（2）ONNX 进 Simulink：MATLAB 没装 ONNX 支持包，改用 `OnnxRunner`（MATLAB System 块）经 `onnx_bridge.py` 调 onnxruntime，与 Python 参考逐值一致、0.84 ms/次；踩坑：pybind11 对象无法进 MATLAB、System 块文本参数不做求值、模块 reload 会清掉共享会话、快照会把旧会话句柄带回来（改为按路径缓存会话）。（3）谐波估计模型：`build_estimator.m` 恢复一周期 HGQ2 Residual-BLS 子系统并接入 FFT1+HGQ2 融合（新增 estimation_src 6），config 新增 MPCC_D_M1（原始）、MPCC_D_H1（融合）；半周期模型不存在，M05 仍注释。基线 THD50：M1 3.18%、H1 3.02%（F1 2.76%）。（4）`build_detector.m` 在 PFC Control 加入 `EMI Detector`，逐周期记录 `det_*`。（5）上板：hls4ml 1.3 Vitis 工程（bit_exact）已为两个模型生成；da4ml 不接受 SAT 溢出模式，标准化不能折进第一层权重。（6）8 份快照重做后，13 用例 × 8 变种 = 104 次评估已启动（04:40，预计 16:00 完成） |
+
 ## 7 与阶段一文件的衔接
 
 | 阶段一产物 | 后续用途 |
