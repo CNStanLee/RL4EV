@@ -42,11 +42,7 @@
 **上传到 Google Drive**：本会话没有 Drive 授权（claude.ai 的 Google Drive 连接器需要交互式
 OAuth），所以分发包只生成在本地，需要你手动上传。上传后把共享链接填到上表下面：
 
-- campaign 10 kHz：（待填）
-- dataset 10 kHz：（待填）
-- snapshots：（待填）
-- campaign 1 MHz：（待填）
-- dataset 1 MHz：（待填）
+https://drive.google.com/file/d/186uhv86RkQAilBb9XWfCzl1BwmxdGY6W/view?usp=sharing
 
 ## 重新生成
 
