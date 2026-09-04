@@ -29,16 +29,26 @@ set_param([ev '/Goto_chg'], 'TagVisibility', 'global');
 if getSimulinkBlockHandle(d) ~= -1, delete_block(d); end
 add_block('built-in/Subsystem', d, 'Position', [5300 1200 5500 1420]);
 delete_lines_in(d);
-% ---- sources: internal PFC quantities (Goto tags inside PFC Control) and Vref inport tag
+% ---- sources: internal PFC quantities.  PFC Control's own Goto tags are LOCAL and a From
+% inside this nested subsystem silently reads zeros, so dedicated GLOBAL tags det_* are
+% branched off the same source lines (plain 'D' would clash with the PV-side MPPT tag).
 src = {'V_o', 'V_in', 'i_L', 'Iref', 'theta_pll', 'D'};       % Vdc_int, Vac_int, Iac_int, Iref, theta, duty
+newtags = {'det_Vdc', 'det_Vac', 'det_Iac', 'det_Iref', 'det_theta', 'det_D'};
 for i = 1:numel(src)
-    add_block('simulink/Signal Routing/From', sprintf('%s/From_%d', d, i), 'GotoTag', src{i}, 'Position', [30 40 * i, 110 40 * i + 20]);
+    g = find_system(pc, 'SearchDepth', 1, 'LookUnderMasks', 'all', 'BlockType', 'Goto', 'GotoTag', src{i}); assert(~isempty(g), 'no Goto %s', src{i}); g = g{1};
+    nb = sprintf('%s/Goto_%s', pc, newtags{i});
+    if getSimulinkBlockHandle(nb) == -1
+        lh = get_param(g, 'LineHandles'); sp = get_param(lh.Inport, 'SrcPortHandle'); p = get_param(g, 'Position');
+        add_block('simulink/Signal Routing/Goto', nb, 'GotoTag', newtags{i}, 'TagVisibility', 'global', 'Position', [p(1) p(2) + 40 p(3) + 30 p(4) + 40]);
+        add_line(pc, sp, get_param(nb, 'PortHandles').Inport(1), 'autorouting', 'on');
+    end
+    add_block('simulink/Signal Routing/From', sprintf('%s/From_%d', d, i), 'GotoTag', newtags{i}, 'Position', [30 40 * i, 110 40 * i + 20]);
 end
 add_block('simulink/Signal Routing/From', [d '/From_vref'], 'GotoTag', 'Vref_det', 'Position', [30 320 110 340]);
 add_block('simulink/Signal Routing/From', [d '/From_chg'], 'GotoTag', 'chg_sig', 'Position', [30 360 110 380]);
 % Vref: PFC Control inport 1 -> Goto Vref_det (added at PFC Control level)
 if getSimulinkBlockHandle([pc '/Goto_vref_det']) == -1
-    add_block('simulink/Signal Routing/Goto', [pc '/Goto_vref_det'], 'GotoTag', 'Vref_det', 'Position', [430 380 520 400]);
+    add_block('simulink/Signal Routing/Goto', [pc '/Goto_vref_det'], 'GotoTag', 'Vref_det', 'TagVisibility', 'global', 'Position', [430 380 520 400]);
     add_line(pc, 'Vref/1', 'Goto_vref_det/1', 'autorouting', 'on');
 end
 % ---- 10 kHz sampling + 200-sample non-overlapping buffers (one grid cycle)
