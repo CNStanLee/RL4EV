@@ -1,0 +1,13 @@
+{
+ "runs": 104,
+ "detected": 96,
+ "fa_pre": 0,
+ "n_pre": 416,
+ "fa_post": 8,
+ "n_post": 1248,
+ "off_detected": 96,
+ "off_fa_pre": 0,
+ "off_fa_post": 11,
+ "diff_cycles": 35,
+ "common_cycles": 3640
+}

@@ -1,0 +1,139 @@
+D:\Prj\RL4EV\EMI_DET_FPGA\scripts\sil_report.py:36: RuntimeWarning: overflow encountered in exp
+  raw = 1 / (1 + np.exp(-logits)) >= thr[None, :]
+  test_id    variant channels     amp  latency_cycles  coverage  wrong_channel_frac  fa_pre  fa_post  cleared  onnx_parity  off_latency_cycles  off_coverage  off_fa_pre  off_fa_post  sim_vs_off_diff  common_cycles
+ E-DC-01b       CRPR      Vdc   50.00            2.00      1.00                0.00       0        0     True         1.14                2.00          1.00           0            0                0             35
+ E-DC-01b     MPCC_P      Vdc   50.00            2.00      1.00                0.00       0        0     True         1.29                2.00          1.00           0            0                0             35
+ E-DC-01b     MPCC_D      Vdc   50.00            2.00      1.00                0.00       0        0     True         1.24                2.00          1.00           0            0                0             35
+ E-DC-01b  MPCC_D_F1      Vdc   50.00            2.00      1.00                0.00       0        0     True         1.31                2.00          1.00           0            0                0             35
+ E-DC-01b MPCC_D_F10      Vdc   50.00            2.00      1.00                0.00       0        0     True         1.31                2.00          1.00           0            0                0             35
+ E-DC-01b   MPCC_D_R      Vdc   50.00            2.00      1.00                0.00       0        0     True         1.27                2.00          1.00           0            0                0             35
+ E-DC-01b  MPCC_D_M1      Vdc   50.00            2.00      1.00                0.00       0        0     True         1.59                2.00          1.00           0            0                0             35
+ E-DC-01b  MPCC_D_H1      Vdc   50.00            2.00      1.00                0.00       0        0     True         1.38                2.00          1.00           0            0                0             35
+ E-DC-01c       CRPR      Vdc  100.00            2.00      1.00                1.00       0        0     True         1.24                2.00          1.00           0            0                0             35
+ E-DC-01c     MPCC_P      Vdc  100.00            2.00      1.00                0.93       0        0     True         3.17                2.00          1.00           0            0                0             35
+ E-DC-01c     MPCC_D      Vdc  100.00            2.00      1.00                0.93       0        0     True         3.30                2.00          1.00           0            0                0             35
+ E-DC-01c  MPCC_D_F1      Vdc  100.00            2.00      1.00                0.93       0        0     True         2.45                2.00          1.00           0            0                0             35
+ E-DC-01c MPCC_D_F10      Vdc  100.00            2.00      1.00                0.93       0        0     True         3.07                2.00          1.00           0            0                0             35
+ E-DC-01c   MPCC_D_R      Vdc  100.00            2.00      1.00                0.93       0        0     True         3.24                2.00          1.00           0            0                0             35
+ E-DC-01c  MPCC_D_M1      Vdc  100.00            2.00      1.00                0.93       0        0     True         2.39                2.00          1.00           0            0                0             35
+ E-DC-01c  MPCC_D_H1      Vdc  100.00            2.00      1.00                0.93       0        0     True         2.36                2.00          1.00           0            0                0             35
+ E-DC-02b       CRPR      Vdc -100.00            2.00      1.00                0.00       0        0     True         1.49                2.00          1.00           0            0                0             35
+ E-DC-02b     MPCC_P      Vdc -100.00            2.00      1.00                0.00       0        1    False         3.50                2.00          1.00           0            1                0             35
+ E-DC-02b     MPCC_D      Vdc -100.00            2.00      1.00                0.00       0        0     True         1.87                2.00          1.00           0            0                0             35
+ E-DC-02b  MPCC_D_F1      Vdc -100.00            2.00      1.00                0.00       0        0     True         1.64                2.00          1.00           0            0                1             35
+ E-DC-02b MPCC_D_F10      Vdc -100.00            2.00      1.00                0.00       0        0     True         1.71                2.00          1.00           0            0                1             35
+ E-DC-02b   MPCC_D_R      Vdc -100.00            2.00      1.00                0.00       0        0     True         2.38                2.00          1.00           0            0                1             35
+ E-DC-02b  MPCC_D_M1      Vdc -100.00            2.00      1.00                0.07       0        0     True         1.65                2.00          1.00           0            0                0             35
+ E-DC-02b  MPCC_D_H1      Vdc -100.00            2.00      1.00                0.07       0        0     True         1.72                2.00          1.00           0            0                0             35
+ E-AC-01a       CRPR      Vac   17.00            2.00      1.00                0.00       0        0     True         0.60                2.00          1.00           0            0                0             35
+ E-AC-01a     MPCC_P      Vac   17.00            2.00      1.00                0.00       0        0     True         0.70                2.00          1.00           0            0                1             35
+ E-AC-01a     MPCC_D      Vac   17.00            2.00      1.00                0.00       0        0     True         0.77                2.00          1.00           0            0                0             35
+ E-AC-01a  MPCC_D_F1      Vac   17.00            2.00      1.00                0.00       0        0     True         0.77                2.00          1.00           0            0                0             35
+ E-AC-01a MPCC_D_F10      Vac   17.00            2.00      1.00                0.00       0        0     True         0.88                2.00          1.00           0            0                0             35
+ E-AC-01a   MPCC_D_R      Vac   17.00            2.00      1.00                0.00       0        0     True         0.78                2.00          1.00           0            0                0             35
+ E-AC-01a  MPCC_D_M1      Vac   17.00            2.00      1.00                0.00       0        0     True         0.83                2.00          1.00           0            0                0             35
+ E-AC-01a  MPCC_D_H1      Vac   17.00            2.00      1.00                0.00       0        0     True         0.85                2.00          1.00           0            0                0             35
+ E-AC-01b       CRPR      Vac   34.00            2.00      1.00                0.00       0        0     True         1.11                2.00          1.00           0            0                0             35
+ E-AC-01b     MPCC_P      Vac   34.00            2.00      1.00                0.00       0        1    False         1.18                2.00          1.00           0            1                0             35
+ E-AC-01b     MPCC_D      Vac   34.00            2.00      1.00                0.00       0        0     True         1.31                2.00          1.00           0            0                0             35
+ E-AC-01b  MPCC_D_F1      Vac   34.00            2.00      1.00                0.00       0        0     True         1.25                2.00          1.00           0            0                0             35
+ E-AC-01b MPCC_D_F10      Vac   34.00            2.00      1.00                0.00       0        0     True         1.26                2.00          1.00           0            0                0             35
+ E-AC-01b   MPCC_D_R      Vac   34.00            2.00      1.00                0.00       0        0     True         1.27                2.00          1.00           0            0                0             35
+ E-AC-01b  MPCC_D_M1      Vac   34.00            2.00      1.00                0.00       0        0     True         1.24                2.00          1.00           0            0                0             35
+ E-AC-01b  MPCC_D_H1      Vac   34.00            2.00      1.00                0.00       0        0     True         1.24                2.00          1.00           0            0                0             35
+ E-AC-02b       CRPR      Iac    5.00            2.00      1.00                0.00       0        0     True         0.51                2.00          1.00           0            0                0             35
+ E-AC-02b     MPCC_P      Iac    5.00            2.00      1.00                0.00       0        0     True         0.74                2.00          1.00           0            0                0             35
+ E-AC-02b     MPCC_D      Iac    5.00            2.00      1.00                0.00       0        0     True         0.57                2.00          1.00           0            0                0             35
+ E-AC-02b  MPCC_D_F1      Iac    5.00            2.00      1.00                0.00       0        0     True         0.75                2.00          1.00           0            0                0             35
+ E-AC-02b MPCC_D_F10      Iac    5.00            2.00      1.00                0.00       0        0     True         0.73                2.00          1.00           0            0                0             35
+ E-AC-02b   MPCC_D_R      Iac    5.00            2.00      1.00                0.00       0        0     True         0.75                2.00          1.00           0            0                0             35
+ E-AC-02b  MPCC_D_M1      Iac    5.00            2.00      1.00                0.00       0        0     True         0.69                2.00          1.00           0            0                0             35
+ E-AC-02b  MPCC_D_H1      Iac    5.00            2.00      1.00                0.00       0        0     True         0.63                2.00          1.00           0            0                0             35
+ E-AC-02s       CRPR      Iac   10.00            4.00      0.86                0.71       0        0     True         0.54                4.00          0.86           0            0                0             35
+ E-AC-02s     MPCC_P      Iac   10.00            2.00      1.00                0.00       0        2    False         0.78                2.00          1.00           0            2                0             35
+ E-AC-02s     MPCC_D      Iac   10.00            2.00      1.00                0.86       0        0     True         0.64                2.00          1.00           0            0                0             35
+ E-AC-02s  MPCC_D_F1      Iac   10.00            2.00      1.00                0.93       0        0     True         0.69                2.00          1.00           0            0                0             35
+ E-AC-02s MPCC_D_F10      Iac   10.00            2.00      1.00                0.93       0        0     True         0.75                2.00          1.00           0            0                0             35
+ E-AC-02s   MPCC_D_R      Iac   10.00            2.00      1.00                0.93       0        0     True         0.63                2.00          1.00           0            0                0             35
+ E-AC-02s  MPCC_D_M1      Iac   10.00            2.00      1.00                0.86       0        0     True         0.69                2.00          1.00           0            0                0             35
+ E-AC-02s  MPCC_D_H1      Iac   10.00            2.00      1.00                0.86       0        0     True         0.62                2.00          1.00           0            0                1             35
+ E-AC-02h       CRPR      Iac    4.00            2.00      1.00                0.00       0        0     True         0.67                2.00          1.00           0            0                0             35
+ E-AC-02h     MPCC_P      Iac    4.00            2.00      1.00                0.07       0        0     True         0.69                2.00          1.00           0            1                1             35
+ E-AC-02h     MPCC_D      Iac    4.00            2.00      1.00                0.00       0        0     True         0.57                2.00          1.00           0            0                0             35
+ E-AC-02h  MPCC_D_F1      Iac    4.00            2.00      1.00                0.00       0        0     True         0.75                2.00          1.00           0            0                0             35
+ E-AC-02h MPCC_D_F10      Iac    4.00            2.00      1.00                0.00       0        0     True         0.71                2.00          1.00           0            0                0             35
+ E-AC-02h   MPCC_D_R      Iac    4.00            2.00      1.00                0.00       0        0     True         0.71                2.00          1.00           0            0                0             35
+ E-AC-02h  MPCC_D_M1      Iac    4.00            2.00      1.00                0.00       0        0     True         0.69                2.00          1.00           0            0                0             35
+ E-AC-02h  MPCC_D_H1      Iac    4.00            2.00      1.00                0.00       0        0     True         0.62                2.00          1.00           0            0                0             35
+ E-MUL-01       CRPR  Vdc+Iac   50.00             inf      0.00                0.00       0        0     True         1.25                 inf          0.00           0            0                0             35
+ E-MUL-01     MPCC_P  Vdc+Iac   50.00             inf      0.00                0.00       0        1    False         1.25                 inf          0.00           0            2                1             35
+ E-MUL-01     MPCC_D  Vdc+Iac   50.00             inf      0.00                0.00       0        0     True         1.31                 inf          0.00           0            0                0             35
+ E-MUL-01  MPCC_D_F1  Vdc+Iac   50.00             inf      0.00                0.00       0        0     True         1.27                 inf          0.00           0            0                0             35
+ E-MUL-01 MPCC_D_F10  Vdc+Iac   50.00             inf      0.00                0.00       0        0     True         1.29                 inf          0.00           0            0                0             35
+ E-MUL-01   MPCC_D_R  Vdc+Iac   50.00             inf      0.00                0.00       0        0     True         1.33                 inf          0.00           0            0                0             35
+ E-MUL-01  MPCC_D_M1  Vdc+Iac   50.00             inf      0.00                0.00       0        0     True         1.27                 inf          0.00           0            0                0             35
+ E-MUL-01  MPCC_D_H1  Vdc+Iac   50.00             inf      0.00                0.00       0        0     True         1.30                 inf          0.00           0            0                0             35
+E-BAT-01b       CRPR     Ibat    5.00            2.00      1.00                0.00       0        0     True         0.56                2.00          1.00           0            0                0             35
+E-BAT-01b     MPCC_P     Ibat    5.00            2.00      1.00                0.00       0        2    False         0.72                2.00          1.00           0            2                0             35
+E-BAT-01b     MPCC_D     Ibat    5.00            2.00      1.00                0.00       0        0     True         0.87                2.00          1.00           0            0                0             35
+E-BAT-01b  MPCC_D_F1     Ibat    5.00            2.00      1.00                0.00       0        0     True         0.78                2.00          1.00           0            0                0             35
+E-BAT-01b MPCC_D_F10     Ibat    5.00            2.00      1.00                0.00       0        0     True         0.82                2.00          1.00           0            0                0             35
+E-BAT-01b   MPCC_D_R     Ibat    5.00            2.00      1.00                0.00       0        0     True         0.67                2.00          1.00           0            0                0             35
+E-BAT-01b  MPCC_D_M1     Ibat    5.00            2.00      1.00                0.00       0        0     True         0.83                2.00          1.00           0            0                0             35
+E-BAT-01b  MPCC_D_H1     Ibat    5.00            2.00      1.00                0.00       0        0     True         0.80                2.00          1.00           0            0                0             35
+E-BAT-02b       CRPR     Vbat   10.00            2.00      1.00                0.00       0        0     True         0.99                2.00          1.00           0            0                0             35
+E-BAT-02b     MPCC_P     Vbat   10.00            4.00      0.86                0.64       0        0     True         1.02                4.00          0.86           0            0                2             35
+E-BAT-02b     MPCC_D     Vbat   10.00            2.00      1.00                0.07       0        0     True         1.04                2.00          1.00           0            0                0             35
+E-BAT-02b  MPCC_D_F1     Vbat   10.00            2.00      1.00                0.07       0        0     True         1.03                2.00          1.00           0            0                1             35
+E-BAT-02b MPCC_D_F10     Vbat   10.00            2.00      1.00                0.07       0        0     True         0.99                2.00          1.00           0            0                1             35
+E-BAT-02b   MPCC_D_R     Vbat   10.00            2.00      1.00                0.00       0        0     True         0.96                2.00          1.00           0            0                1             35
+E-BAT-02b  MPCC_D_M1     Vbat   10.00            2.00      1.00                0.07       0        0     True         0.96                2.00          1.00           0            0                0             35
+E-BAT-02b  MPCC_D_H1     Vbat   10.00            2.00      1.00                0.07       0        0     True         1.05                2.00          1.00           0            0                0             35
+E-BAT-02c       CRPR     Vbat   20.00            2.00      1.00                0.00       0        0     True         2.69                2.00          1.00           0            0                0             35
+E-BAT-02c     MPCC_P     Vbat   20.00            2.00      1.00                0.00       0        1    False         4.34                2.00          1.00           0            0                1             35
+E-BAT-02c     MPCC_D     Vbat   20.00            2.00      1.00                0.07       0        0     True         3.35                2.00          1.00           0            0                0             35
+E-BAT-02c  MPCC_D_F1     Vbat   20.00            2.00      1.00                0.07       0        0     True         3.29                2.00          1.00           0            0                0             35
+E-BAT-02c MPCC_D_F10     Vbat   20.00            2.00      1.00                0.07       0        0     True         3.31                2.00          1.00           0            0                0             35
+E-BAT-02c   MPCC_D_R     Vbat   20.00            2.00      1.00                0.07       0        0     True         3.32                2.00          1.00           0            0                0             35
+E-BAT-02c  MPCC_D_M1     Vbat   20.00            2.00      1.00                0.07       0        0     True         3.28                2.00          1.00           0            0                0             35
+E-BAT-02c  MPCC_D_H1     Vbat   20.00            2.00      1.00                0.07       0        0     True         3.27                2.00          1.00           0            0                0             35
+E-BAT-01n       CRPR     Ibat   -5.00            3.00      0.93                0.79       0        0     True         0.64                2.00          1.00           0            0                3             35
+E-BAT-01n     MPCC_P     Ibat   -5.00            3.00      0.93                0.79       0        0     True         0.72                2.00          1.00           0            2                5             35
+E-BAT-01n     MPCC_D     Ibat   -5.00            2.00      1.00                0.29       0        0     True         0.73                2.00          1.00           0            0                3             35
+E-BAT-01n  MPCC_D_F1     Ibat   -5.00            2.00      1.00                0.57       0        0     True         0.78                2.00          1.00           0            0                2             35
+E-BAT-01n MPCC_D_F10     Ibat   -5.00            2.00      1.00                0.57       0        0     True         0.79                2.00          1.00           0            0                4             35
+E-BAT-01n   MPCC_D_R     Ibat   -5.00            2.00      1.00                0.43       0        0     True         0.78                2.00          1.00           0            0                2             35
+E-BAT-01n  MPCC_D_M1     Ibat   -5.00            3.00      0.93                0.93       0        0     True         0.87                2.00          1.00           0            0                3             35
+E-BAT-01n  MPCC_D_H1     Ibat   -5.00            2.00      1.00                0.79       0        0     True         0.83                2.00          1.00           0            0                0             35
+
+Simulink SIL: runs 104  detected (latency finite and >=50 % coverage) 96  median latency 2.0 cycles  pre-injection false-alarm cycles 0/416  post-removal 8/1248  onnx parity max 4.340576171875
+offline reference (features.py + detector_bitexact.onnx): detected 96  median latency 2.0  fa_pre 0  fa_post 11  cycles with a different flag word 35/3640
+
+per case:
+           det  n  lat  fa_pre  fa_post
+test_id                                
+E-AC-01a     8  8  2.0       0        0
+E-AC-01b     8  8  2.0       0        1
+E-AC-02b     8  8  2.0       0        0
+E-AC-02h     8  8  2.0       0        0
+E-AC-02s     8  8  2.0       0        2
+E-BAT-01b    8  8  2.0       0        2
+E-BAT-01n    8  8  2.0       0        0
+E-BAT-02b    8  8  2.0       0        0
+E-BAT-02c    8  8  2.0       0        1
+E-DC-01b     8  8  2.0       0        0
+E-DC-01c     8  8  2.0       0        0
+E-DC-02b     8  8  2.0       0        1
+E-MUL-01     0  8  inf       0        1
+
+per variant:
+            det   n  lat  fa_pre  fa_post
+variant                                  
+CRPR         12  13  2.0       0        0
+MPCC_D       12  13  2.0       0        0
+MPCC_D_F1    12  13  2.0       0        0
+MPCC_D_F10   12  13  2.0       0        0
+MPCC_D_H1    12  13  2.0       0        0
+MPCC_D_M1    12  13  2.0       0        0
+MPCC_D_R     12  13  2.0       0        0
+MPCC_P       12  13  2.0       0        8
