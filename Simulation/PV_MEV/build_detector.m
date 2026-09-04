@@ -39,6 +39,9 @@ for i = 1:numel(src)
     nb = sprintf('%s/Goto_%s', pc, newtags{i});
     if getSimulinkBlockHandle(nb) == -1
         lh = get_param(g, 'LineHandles'); sp = get_param(lh.Inport, 'SrcPortHandle'); p = get_param(g, 'Position');
+        if strcmp(src{i}, 'Iref')      % the 'Iref' tag carries Prod1 = amplitude*|sin theta|; the detector (and features.py) use the amplitude
+            sr = get_param([pc '/Speed Regulator2'], 'PortHandles'); sp = sr.Outport(1);
+        end
         add_block('simulink/Signal Routing/Goto', nb, 'GotoTag', newtags{i}, 'TagVisibility', 'global', 'Position', [p(1) p(2) + 40 p(3) + 30 p(4) + 40]);
         add_line(pc, sp, get_param(nb, 'PortHandles').Inport(1), 'autorouting', 'on');
     end
