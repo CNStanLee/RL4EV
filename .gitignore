@@ -1,35 +1,42 @@
-# Simulink / MATLAB generated files
-slprj/
-*.slxc
+# =============================================================================
+# RL4EV .gitignore
+#
+# Policy: the repository holds source, models, small derived artifacts and
+# documentation.  Bulky simulation output (10 kHz / 1 MHz waveform logs,
+# operating-point snapshots, tool build trees) stays out and is distributed as
+# the bundles described in DATA.md.
+# =============================================================================
+
+# ---- OS / editor ------------------------------------------------------------
+.DS_Store
+Thumbs.db
 *.asv
 *.m~
-*.mex*
 *.bak
 *.tmp
 *.swp
 *.swo
 *~
+*.autosave
 
-# OS / editor temp files
-.DS_Store
-Thumbs.db
-
-# Python / HGQ2 training artifacts
+# ---- Python -----------------------------------------------------------------
 __pycache__/
 *.py[cod]
 .pytest_cache/
 .ruff_cache/
 .coverage
-HGQ_MODEL/.venv/
-HGQ_MODEL/data/*.npz
-HGQ_MODEL/data/pv_mev_runs/archive/
-HGQ_MODEL/runs/
-HGQ_MODEL/artifacts/**/*.keras
-HGQ_MODEL/artifacts/**/*.onnx
-HGQ_MODEL/artifacts/**/*.alir.json.gz
-HGQ_MODEL/artifacts/**/*.h5
+*.egg-info/
+.venv/
 
-# AMD/Xilinx Vitis HLS generated workspace and build artifacts
+# ---- MATLAB / Simulink generated --------------------------------------------
+slprj/
+*.slxc
+*.mex*
+
+# ---- AMD/Xilinx Vitis HLS ----------------------------------------------------
+# Component sources (hls_config.cfg, wrappers, testbenches) are tracked; the
+# per-component work directories the tools create are not.  The hls4ml firmware
+# and test vectors of the two generated components are re-included below.
 HLS_PRJ/_ide/
 HLS_PRJ/**/.Xil/
 HLS_PRJ/**/.cache/
@@ -40,8 +47,14 @@ HLS_PRJ/**/*.jou
 HLS_PRJ/**/*.str
 HLS_PRJ/**/*.hlscompile_summary
 HLS_PRJ/**/*.hlsrun_*_summary
+!HLS_PRJ/emi_detector/firmware/
+!HLS_PRJ/emi_detector/tb_data/
+!HLS_PRJ/harmonic_estimator/firmware/
+!HLS_PRJ/harmonic_estimator/tb_data/
+HLS_PRJ/*/tb_data/csim_results.log
+HLS_PRJ/*/build/
 
-# AMD/Xilinx Vivado generated project artifacts
+# ---- AMD/Xilinx Vivado -------------------------------------------------------
 Vivado_PRJ/**/.Xil/
 Vivado_PRJ/**/*.cache/
 Vivado_PRJ/**/*.gen/
@@ -53,22 +66,48 @@ Vivado_PRJ/**/*.jou
 Vivado_PRJ/**/*.log
 Vivado_PRJ/**/*.str
 
-# PV_MEV injection test bench: bulky per-run time series and operating-point snapshots (regenerable)
-Simulation/PV_MEV/results/emi/ts/
+# =============================================================================
+# Simulation data (see DATA.md)
+# =============================================================================
+
+# ---- PV_MEV injection campaign ----------------------------------------------
+# Kept: per-run metric rows, scorecards, baselines, and the per-cycle detector
+# records (<run>_det.csv, ~3 MB) that the SIL report reads.
+# Excluded: 10 kHz time-series tables (220 MB) and 1 MHz grid-current .mat
+# (722 MB) per campaign, the 240-run random dataset (2.1 GB), and the
+# ModelOperatingPoint snapshots (48 MB).  All regenerable with run_injection.m.
+Simulation/PV_MEV/results/emi/ts/*
+!Simulation/PV_MEV/results/emi/ts/*_det.csv
 Simulation/PV_MEV/results/emi/snapshots/
-
-# EMI detector datasets and training runs (regenerable)
-EMI_DET_FPGA/data/
-EMI_DET_FPGA/runs/
 Simulation/PV_MEV/results/emi/dataset/ts/
-*.egg-info/
-*.autosave
 
-# EMI detector / harmonic estimator Vitis components: keep the hls4ml firmware and test vectors, not the work dirs
-!HLS_PRJ/emi_detector/firmware/
-!HLS_PRJ/emi_detector/tb_data/
-!HLS_PRJ/harmonic_estimator/firmware/
-!HLS_PRJ/harmonic_estimator/tb_data/
-HLS_PRJ/*/tb_data/csim_results.log
-HLS_PRJ/*/build/
-EMI_DET_FPGA/fpga/*.log
+# ---- EMI detector datasets and training runs ---------------------------------
+# Kept: the per-cycle feature datasets that reproduce the training, and the
+# det_v4 detector artifacts (model, ONNX, thresholds, reports).
+# Excluded: interim datasets and the hls4ml build trees, which are duplicated
+# as the Vitis components under HLS_PRJ/.
+EMI_DET_FPGA/data/*
+!EMI_DET_FPGA/data/cycles_dataset.npz
+!EMI_DET_FPGA/data/cycles_phase1.npz
+EMI_DET_FPGA/runs/*
+!EMI_DET_FPGA/runs/det_v4/
+!EMI_DET_FPGA/runs/sil_report/
+!EMI_DET_FPGA/runs/estimator_report/
+!EMI_DET_FPGA/runs/sil_report.txt
+EMI_DET_FPGA/runs/det_v4/fpga/
+EMI_DET_FPGA/runs/sil_report_preview/
+EMI_DET_FPGA/fpga/
+
+# ---- Legacy HGQ_MODEL package (superseded by FFT_HGQ_BLS_FPGA) ---------------
+HGQ_MODEL/.venv/
+HGQ_MODEL/data/*.npz
+HGQ_MODEL/data/pv_mev_runs/archive/
+HGQ_MODEL/runs/
+HGQ_MODEL/artifacts/**/*.keras
+HGQ_MODEL/artifacts/**/*.onnx
+HGQ_MODEL/artifacts/**/*.alir.json.gz
+HGQ_MODEL/artifacts/**/*.h5
+
+# ---- Data bundles staged for external hosting --------------------------------
+*.tar.xz
+_upload/
