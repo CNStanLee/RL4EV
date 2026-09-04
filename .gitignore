@@ -63,3 +63,11 @@ EMI_DET_FPGA/runs/
 Simulation/PV_MEV/results/emi/dataset/ts/
 *.egg-info/
 *.autosave
+
+# EMI detector / harmonic estimator Vitis components: keep the hls4ml firmware and test vectors, not the work dirs
+!HLS_PRJ/emi_detector/firmware/
+!HLS_PRJ/emi_detector/tb_data/
+!HLS_PRJ/harmonic_estimator/firmware/
+!HLS_PRJ/harmonic_estimator/tb_data/
+HLS_PRJ/*/tb_data/csim_results.log
+HLS_PRJ/*/build/
