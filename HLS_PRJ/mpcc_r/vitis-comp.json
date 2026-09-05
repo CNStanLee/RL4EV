@@ -1,0 +1,13 @@
+{
+  "name": "mpcc_r",
+  "type": "HLS",
+  "configuration": {
+    "componentType": "HLS",
+    "configFiles": [
+      "hls_config.cfg"
+    ],
+    "work_dir": "mpcc_r"
+  },
+  "useSysrootToolchain": false,
+  "template": "empty_hls_component"
+}

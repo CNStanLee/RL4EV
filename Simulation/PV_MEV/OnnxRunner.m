@@ -31,12 +31,13 @@ classdef OnnxRunner < matlab.System
             br = py.importlib.import_module('onnx_bridge');   % no reload: several blocks share the session table
             % the block dialog may hand over the literal text including quotes
             mf = strtrim(char(string(obj.ModelFile))); mf = mf(mf ~= '''' & mf ~= '"');
+            mf = OnnxRunner.resolve(mf);
             if ~isfile(mf), error('OnnxRunner: model file not found: %s', mf); end
             obj.mf = mf; br.ensure(mf, int32(1));
         end
         function y = stepImpl(obj, u)
             br = py.importlib.import_module('onnx_bridge');
-            if isempty(obj.mf), m0 = strtrim(char(string(obj.ModelFile))); obj.mf = m0(m0 ~= '''' & m0 ~= '"'); end
+            if isempty(obj.mf), m0 = strtrim(char(string(obj.ModelFile))); obj.mf = OnnxRunner.resolve(m0(m0 ~= '''' & m0 ~= '"')); end
             r = br.run_file(obj.mf, py.list(double(u(:)')), int32(obj.NumIn));
             y = single(cellfun(@double, cell(r)));
             y = y(1:obj.NumOut);
@@ -57,6 +58,21 @@ classdef OnnxRunner < matlab.System
             end
         end
         function flag = isInputDirectFeedthroughImpl(~, ~), flag = true; end
+    end
+    methods (Static)
+        function mf = resolve(mf)
+            % The block dialogs hold literal paths written on the machine that built the
+            % subsystems (D:/Prj/RL4EV on Windows).  Map that prefix, or any absolute path
+            % containing '/RL4EV/', onto the checkout this file lives in.
+            if isfile(mf), return; end
+            root = fileparts(fileparts(fileparts(mfilename('fullpath'))));   % .../RL4EV
+            m = strrep(mf, '\', '/');
+            k = strfind(m, '/RL4EV/');
+            if ~isempty(k)
+                cand = fullfile(root, m(k(1) + numel('/RL4EV/'):end));
+                if isfile(cand), mf = cand; end
+            end
+        end
     end
     methods (Static, Access = protected)
         function simMode = getSimulateUsingImpl(), simMode = 'Interpreted execution'; end

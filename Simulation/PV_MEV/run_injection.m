@@ -26,7 +26,8 @@ function out = run_injection(mode, tests, variants, opts)
 if nargin < 2, tests = []; end
 if nargin < 3, variants = []; end
 if nargin < 4, opts = struct(); end
-opts = defaults(opts, struct('stop_time', 1.3, 'force', false, 'tag', '', 'op', 'cc'));
+opts = defaults(opts, struct('stop_time', 1.3, 'force', false, 'tag', '', 'op', 'cc', 'save_iac', true));
+save_iac_enabled(opts.save_iac);   % write_ts: 1 MHz Iac .mat (about 10 MB per run); the THD metrics are computed in memory either way
 
 mdl  = 'PV_MEV';
 mdir = fileparts(mfilename('fullpath')); cd(mdir); addpath(mdir);
@@ -120,7 +121,7 @@ assignin('base', 'VARIANT_NAME', name);
 assignin('base', 'INJ', INJ);
 assignin('base', 'CHG_OP', CHG_OP);
 assignin('base', 'EVT', EVT);
-dj = 'D:/Prj/RL4EV/EMI_DET_FPGA/artifacts/detector.json';
+dj = fullfile(fileparts(fileparts(fileparts(mfilename('fullpath')))), 'EMI_DET_FPGA', 'artifacts', 'detector.json');
 if isfile(dj), j = jsondecode(fileread(dj)); assignin('base', 'DET', struct('thr', j.thr(:)')); end
 evalin('base', 'init_paras');
 load_system(mdl);
@@ -146,6 +147,9 @@ L = { ...
     [pc '/EMI Detector/emi_decide'], 1, 'det_chan', ''; [pc '/EMI Detector/emi_decide'], 2, 'det_class', ''; ...
     [pc '/EMI Detector/emi_decide'], 3, 'det_conf', ''; [pc '/EMI Detector/emi_decide'], 4, 'det_amp', ''; ...
     M, 1, 'Vdc_mean', d200; M, 2, 'PacPdc', d200; M, 3, 'THD_model', d200; M, 5, 'PF', d200};   % these run at Ts_Power
+if getSimulinkBlockHandle([pc '/Mitigation']) ~= -1                    % MPCC_R (build_mitigation.m): [g_vdc dVf phys_ok Vamp g_iac hold]
+    L(end + 1, :) = {[pc '/Mitigation'], 7, 'mit_dbg', ''};
+end
 for i = 1:size(L, 1)
     ph = get_param(L{i, 1}, 'PortHandles'); h = ph.Outport(L{i, 2});
     set_param(h, 'DataLogging', 'on', 'DataLoggingNameMode', 'Custom', 'DataLoggingName', L{i, 3});
@@ -258,6 +262,10 @@ function L = sample_labels(run_id, name, sdir, focus)
 % the plan (section 2.3); channel codes 1 Vdc 2 Vac 3 Iac 4 Vbat 5 Ibat.
 % focus = 'iac': supplement for the rare classes (single Iac-chain injection,
 % shape sine 40 % / hall 40 % / step 20 %, no benign-only runs).
+% focus = 'multi': always two channels, the first one drawn from {Vdc, Vac, Vbat}
+% and the second one Iac (60 %) or Ibat (40 %), steps only (the phase-1 E-MUL case).
+% focus = 'benign': no injection; a benign transient (charging-current or Vref
+% step, always at least one) and measurement noise (60 %) -> false-alarm negatives.
 if nargin < 4, focus = ''; end
 chn = {'Vdc', 'Vac', 'Iac', 'Vbat', 'Ibat'}; shn = {'step', 'ramp', 'sine', 'tri', 'pulse', 'hall', 'noise'};
 u = @() rand();
@@ -267,6 +275,8 @@ if u() < 0.25 && exist(fullfile(sdir, sprintf('%s_cv.mat', name)), 'file'), op =
 % injection type
 x = u(); if x < 0.25, n_inj = 0; elseif x < 0.85, n_inj = 1; else, n_inj = 2; end
 if strcmp(focus, 'iac'), n_inj = 1; end
+if strcmp(focus, 'multi'), n_inj = 2; end
+if strcmp(focus, 'benign'), n_inj = 0; end
 t_on = 0.65 + 0.25 * u(); dwell = 0.10 + 0.20 * u(); if t_on + dwell > 1.25, dwell = 1.25 - t_on; end
 INJ = struct('channel', [0 0 0], 'shape', [1 1 1], 'amp', [0 0 0], 'k', [0 0 0], 'f', [50 50 50], 'phase', [0 0 0], ...
     'period', 0.05 + 0.15 * u(), 'duty', 0.3 + 0.4 * u(), 't_on', t_on, 'dwell', dwell, 'K_hall', 20);
@@ -275,6 +285,11 @@ for j = 1:n_inj
     ch = randi(5); while any(used == ch), ch = randi(5); end, used(end + 1) = ch; %#ok<AGROW>
     x = u(); if x < 0.50, sh = 1; elseif x < 0.65, sh = 2; elseif x < 0.80, sh = 3; elseif x < 0.90, sh = 6; elseif x < 0.95, sh = 5; else, sh = 4; end
     if strcmp(focus, 'iac'), ch = 3; x = u(); if x < 0.4, sh = 3; elseif x < 0.8, sh = 6; else, sh = 1; end, end
+    if strcmp(focus, 'multi')
+        sh = 1; f1 = [1 2 4];
+        if j == 1, ch = f1(randi(3)); else, if u() < 0.6, ch = 3; else, ch = 5; end, end
+        used(end) = ch;
+    end
     if sh == 6 && ch ~= 3, sh = 1; end                       % hall model only on the Iac chain
     switch ch
         case 1, a = 20 + 100 * u();  case 2, a = 5 + 35 * u();  case 3, a = 1 + 19 * u();
@@ -289,14 +304,17 @@ for j = 1:n_inj
 end
 % measurement noise slot (30 %): benign
 noise_ch = 0; noise_amp = 0;
-if u() < 0.30
+p_noise = 0.30; if strcmp(focus, 'benign'), p_noise = 0.60; end
+if u() < p_noise
     noise_ch = randi(3); noise_amp = [2 + 3 * u(), 3 + 7 * u(), 0.5 + 1.5 * u()]; noise_amp = noise_amp(noise_ch);
     INJ.channel(3) = noise_ch; INJ.shape(3) = 7; INJ.amp(3) = noise_amp;
 end
 % benign transients
 EVT = struct('chg_t', 0, 'chg_I', 20, 'vref_t', 0, 'vref_dV', 0);
-if u() < 0.30, EVT.chg_t = 0.65 + 0.45 * u(); c = [5 10 15 20]; EVT.chg_I = c(randi(4)); end
-if u() < 0.20, EVT.vref_t = 0.65 + 0.45 * u(); EVT.vref_dV = (10 + 20 * u()) * sign(u() - 0.5); end
+p_chg = 0.30; p_vref = 0.20; if strcmp(focus, 'benign'), p_chg = 0.7; p_vref = 0.5; end
+if u() < p_chg, EVT.chg_t = 0.65 + 0.45 * u(); c = [5 10 15 20]; EVT.chg_I = c(randi(4)); end
+if u() < p_vref, EVT.vref_t = 0.65 + 0.45 * u(); EVT.vref_dV = (10 + 20 * u()) * sign(u() - 0.5); end
+if strcmp(focus, 'benign') && EVT.chg_t == 0 && EVT.vref_t == 0, EVT.chg_t = 0.65 + 0.45 * u(); c = [5 10 15]; EVT.chg_I = c(randi(3)); end
 % row for summarize() and the label record
 c2 = ""; s2 = ""; a2 = 0;
 if n_inj == 2, c2 = string(chn{INJ.channel(2)}); s2 = string(shn{INJ.shape(2)}); a2 = INJ.amp(2); end
@@ -340,6 +358,13 @@ for i = 1:L.numElements
 end
 end
 
+function tf = save_iac_enabled(v)
+persistent flag
+if nargin > 0, flag = logical(v); end
+if isempty(flag), flag = true; end
+tf = flag;
+end
+
 function write_ts(S, base)
 % 10 kHz resampled table of the main signals + 1 MHz Iac in a .mat
 t = (ceil(S.Vdc_real.t(1)*1e4):floor(S.Vdc_real.t(end)*1e4))' / 1e4;
@@ -353,14 +378,22 @@ if isfield(S, 'amp_est') && size(S.amp_est.x, 2) >= 3
     for h = 1:3, Tb.(sprintf('amp_est_%d', 2*h+1)) = rs('amp_est', h); end
 end
 writetable(Tb, [base '.csv']);
-t_iac = S.Iac_real.t; Iac = single(S.Iac_real.x); %#ok<NASGU>
-save([base '_iac.mat'], 't_iac', 'Iac');
+if save_iac_enabled()
+    t_iac = S.Iac_real.t; Iac = single(S.Iac_real.x); %#ok<NASGU>
+    save([base '_iac.mat'], 't_iac', 'Iac');
+end
 if isfield(S, 'det_raw')      % per-cycle detector record (20 ms): 43 features, 16 raw outputs, decisions
     tc = S.det_raw.t; Td = table(tc, 'VariableNames', {'t'});
     F = S.det_feat.x; for k = 1:size(F, 2), Td.(sprintf('f%02d', k)) = F(1:numel(tc), k); end
     R = S.det_raw.x; for k = 1:size(R, 2), Td.(sprintf('raw%02d', k)) = R(1:numel(tc), k); end
     C = S.det_chan.x; for k = 1:size(C, 2), Td.(sprintf('chan_%d', k)) = C(1:numel(tc), k); end
-    Td.det_class = S.det_class.x(1:numel(tc), 1); Td.det_conf = S.det_conf.x(1:numel(tc), 1); Td.det_amp = S.det_amp.x(1:numel(tc), 1);
+    Td.det_class = S.det_class.x(1:numel(tc), 1); Td.det_conf = S.det_conf.x(1:numel(tc), 1);
+    A = S.det_amp.x;
+    if size(A, 2) == 1, Td.det_amp = A(1:numel(tc), 1);                       % v4: one amplitude
+    else, for k = 1:size(A, 2), Td.(sprintf('amp_%d', k)) = A(1:numel(tc), k); end, end   % v5: per channel
+    if isfield(S, 'mit_dbg')                                                  % MPCC_R: resample the 20 kHz debug vector on the cycle grid
+        for k = 1:size(S.mit_dbg.x, 2), Td.(sprintf('mit_%d', k)) = resample_prev(S.mit_dbg.t, S.mit_dbg.x(:, k), tc); end
+    end
     writetable(Td, [base '_det.csv']);
 end
 end

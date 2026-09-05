@@ -7,6 +7,7 @@
 //         (ema_alpha = 1: the EMA, if wanted, is applied by the caller on enc[]).
 #define HE_N_IN 80
 #define HE_N_ENC 8
-#define HE_N_LEGACY 7
-void harmonic_estimator_axi(float wave[HE_N_IN], float enc[HE_N_ENC], float *peak, float legacy[HE_N_LEGACY]);
+// The legacy MPCC decode [A1,A3,A5,A7,delta3,delta5,delta7] (sqrt / atan2 in float) is done on the PS from enc[] and
+// peak (PS_notebook/libs/mpcc_r_overlay.py::decode_legacy); keeping it out of the IP saves about 30k LUT.
+void harmonic_estimator_axi(float wave[HE_N_IN], float enc[HE_N_ENC], float *peak);
 #endif

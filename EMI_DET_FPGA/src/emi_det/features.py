@@ -243,3 +243,39 @@ def channel_targets(tc: np.ndarray, t_on: float, dwell: float, channels: list[st
 
 
 FEATURE_NAMES_V2 = FEATURE_NAMES + [f"d_{n}" for n in FEATURE_NAMES] + [f"is_{v}" for v in VARIANTS]
+
+
+# ---------------------------------------------------------------- v3 --
+# Detector v5 (plan step D2): four physical cross-check features for the Iac chain plus one
+# reserved zero so that the input width is 48 (hls4ml reuse factors must tile n_in x n_out;
+# 43 is prime and only allows 1 / 43 / 86 ...).  A DC component in the REAL grid current is
+# invisible in the internal current (the loop regulates the internal reading to a zero-mean
+# reference) but it modulates the bus power at 50 Hz: the internal Vdc keeps that ripple
+# (an additive bias on the Vdc chain does not change it) and the duty cycle becomes
+# asymmetric between the two half cycles.
+FEATURE_NAMES_V3_EXTRA = ["vdc_h1", "vdc_h1_over_h2", "vdc_h1_phase", "d_asym", "pad0"]
+FEATURE_NAMES_V3 = FEATURE_NAMES + FEATURE_NAMES_V3_EXTRA
+
+
+def cycle_features_v3(df: pd.DataFrame, vref: np.ndarray | None = None) -> CycleFeatures:
+    """43 base features + the 5 v3 extras (48 columns), same cycle grid as cycle_features."""
+    base = cycle_features(df, vref)
+    t = df["t"].to_numpy()
+    phase = int(round((t[0] - T0) * FS)) % NCYC
+    k0 = (NCYC - phase) % NCYC
+    n = (t.size - k0) // NCYC
+    vdc_all = df["Vdc_int"].to_numpy(); vac_all = df["Vac_int"].to_numpy()
+    d_all = df["D"].to_numpy(); th_all = df["theta_pll"].to_numpy()
+    rows = []
+    for i in range(n):
+        sl = slice(k0 + i * NCYC, k0 + (i + 1) * NCYC)
+        vdc = vdc_all[sl]; vac = vac_all[sl]; d = d_all[sl]; th = th_all[sl]
+        h1 = goertzel_amp(vdc, 1); h2 = goertzel_amp(vdc, 2)
+        ph = np.angle(np.exp(1j * (goertzel_phase(vdc, 1) - goertzel_phase(vac, 1))))
+        s = np.sin(th); pos = s > 0; neg = s < 0
+        d_asym = (d[pos].mean() if pos.any() else 0.0) - (d[neg].mean() if neg.any() else 0.0)
+        rows.append([h1, h1 / max(h2, 0.1), ph, d_asym, 0.0])
+    extra = np.asarray(rows) if rows else np.zeros((0, len(FEATURE_NAMES_V3_EXTRA)))
+    X = np.concatenate([base.X, extra], axis=1)
+    assert X.shape[1] == len(FEATURE_NAMES_V3)
+    return CycleFeatures(base.t, X)

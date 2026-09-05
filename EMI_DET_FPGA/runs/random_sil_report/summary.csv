@@ -1,0 +1,2 @@
+runs,injected,benign,MPCC_D_H1_ret_mean,MPCC_R_ret_mean,MPCC_D_H1_dVdc_abs,MPCC_R_dVdc_abs,MPCC_D_H1_thd_rise,MPCC_R_thd_rise,MPCC_D_H1_trips,MPCC_R_trips,MPCC_D_H1_benign_thd,MPCC_R_benign_thd,MPCC_D_H1_benign_trips,MPCC_R_benign_trips,res_better_ret,res_worse_ret,res_better_thd,res_worse_thd
+20,17,3,86.48487564737664,96.87436528627221,11.861028248474119,4.766670027775463,132.8273360693709,4.569852715068773,3,5,2.779924655009187,2.779924655009187,0,0,5,0,12,1

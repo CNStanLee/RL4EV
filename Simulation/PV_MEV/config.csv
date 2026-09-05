@@ -1,10 +1,22 @@
-VARIANT_NAME,Fc,use_d_predict,use_p_predict,use_harmonic,estimation_src,simu_time,note
-CRPR,100e3,0,0,0,1,1,PR current loop + PWM
-MPCC_P,100e3,0,1,0,1,1,MPCC direct gating (no PWM)
-MPCC_D,20e3,1,0,0,1,1,MPCC duty prediction + PWM
-MPCC_D_F1,20e3,1,0,1,1,1,MPCC_D + harmonic comp. from 1-cycle FFT
-MPCC_D_F10,20e3,1,0,1,2,1,MPCC_D + harmonic comp. from 10-cycle FFT
-MPCC_D_R,20e3,1,0,1,5,1,MPCC_D + harmonic comp. from RLS
-MPCC_D_M1,20e3,1,0,1,3,1,MPCC_D + HGQ2 Residual-BLS one-cycle estimator (raw; ONNX via OnnxRunner/onnxruntime; pyenv hgq2)
-MPCC_D_H1,20e3,1,0,1,6,1,MPCC_D + FFT1/HGQ2 hybrid fusion (package alpha + watchdog fallback to FFT)
-MPCC_D_M05,20e3,1,0,1,4,1,MPCC_D + half-cycle model (no HGQ2 half-cycle model yet; subsystem still commented out)
+VARIANT_NAME,Fc,use_d_predict,use_p_predict,use_harmonic,estimation_src,simu_time,use_detector,mitigation_mask,det_force,note
+CRPR,100e3,0,0,0,1,1,0,0,0,PR current loop + PWM
+MPCC_P,100e3,0,1,0,1,1,0,0,0,MPCC direct gating (no PWM)
+MPCC_D,20e3,1,0,0,1,1,0,0,0,MPCC duty prediction + PWM
+MPCC_D_F1,20e3,1,0,1,1,1,0,0,0,MPCC_D + harmonic comp. from 1-cycle FFT
+MPCC_D_F10,20e3,1,0,1,2,1,0,0,0,MPCC_D + harmonic comp. from 10-cycle FFT
+MPCC_D_R,20e3,1,0,1,5,1,0,0,0,MPCC_D + harmonic comp. from RLS
+MPCC_D_M1,20e3,1,0,1,3,1,0,0,0,MPCC_D + HGQ2 Residual-BLS one-cycle estimator (raw; ONNX via OnnxRunner/onnxruntime; pyenv hgq2)
+MPCC_D_H1,20e3,1,0,1,6,1,0,0,0,MPCC_D + FFT1/HGQ2 hybrid fusion (package alpha + watchdog fallback to FFT)
+MPCC_D_M05,20e3,1,0,1,4,1,0,0,0,MPCC_D + half-cycle model (no HGQ2 half-cycle model yet; subsystem still commented out)
+MPCC_R,20e3,1,0,1,6,1,1,437,0,MPCC_H + detection-conditioned mitigation M0,MPCC_H + detection-conditioned mitigation M0 M2 M4 M5 M7 M8 (M1 slew limit; M3 / M6 amplitude-head based Iac / Ibat compensation off; M5 physics-based) (build_mitigation.m)
+MPCC_R_OFF,20e3,1,0,1,6,1,0,437,0,MPCC_R with the detector disconnected (must equal MPCC_D_H1)
+MPCC_R_ON,20e3,1,0,1,6,1,1,437,1,MPCC_R with every flag forced on (always-on ablation)
+MPCC_R_m0,20e3,1,0,1,6,1,1,436,0,MPCC_R with measure M0 disabled (per-bit ablation)
+MPCC_R_m1,20e3,1,0,1,6,1,1,439,0,MPCC_R with measure M1 added (ablation)
+MPCC_R_m2,20e3,1,0,1,6,1,1,433,0,MPCC_R with measure M2 disabled (per-bit ablation)
+MPCC_R_m3,20e3,1,0,1,6,1,1,445,0,MPCC_R with measure M3 added (ablation)
+MPCC_R_m4,20e3,1,0,1,6,1,1,421,0,MPCC_R with measure M4 disabled (per-bit ablation)
+MPCC_R_m5,20e3,1,0,1,6,1,1,405,0,MPCC_R with measure M5 disabled (per-bit ablation)
+MPCC_R_m6,20e3,1,0,1,6,1,1,501,0,MPCC_R with measure M6 added (ablation)
+MPCC_R_m7,20e3,1,0,1,6,1,1,309,0,MPCC_R with measure M7 disabled (per-bit ablation)
+MPCC_R_m8,20e3,1,0,1,6,1,1,181,0,MPCC_R with measure M8 disabled (per-bit ablation)

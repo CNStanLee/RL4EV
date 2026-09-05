@@ -51,10 +51,27 @@ HLS_PRJ/**/*.hlsrun_*_summary
 !HLS_PRJ/emi_detector/tb_data/
 !HLS_PRJ/harmonic_estimator/firmware/
 !HLS_PRJ/harmonic_estimator/tb_data/
+!HLS_PRJ/emi_feat/tb_data/
 HLS_PRJ/*/tb_data/csim_results.log
 HLS_PRJ/*/build/
 
+# hls4ml compiled C-model libraries and tool logs
+HLS_PRJ/**/*.so
+vitis_hls.log
+
 # ---- AMD/Xilinx Vivado -------------------------------------------------------
+# MPCC_R: the project directory is rebuilt by build_bd.tcl; the bitstream / hwh copy in PS_notebook/hardware is tracked
+Vivado_PRJ/MPCC_R/MPCC_R/
+Vivado_PRJ/MPCC_R/out/*.bit
+Vivado_PRJ/MPCC_R/out/*.xsa
+# FFT_HGQ_BLS training runs: keep the v2 PV_MEV retraining (model, history), drop the hls4ml build tree
+FFT_HGQ_BLS_FPGA/artifacts/pv_mev_v2/fpga/*_prj/
+FFT_HGQ_BLS_FPGA/artifacts/pv_mev_v2/fpga/*.tcl
+FFT_HGQ_BLS_FPGA/artifacts/pv_mev_v2/fpga/*.sh
+FFT_HGQ_BLS_FPGA/artifacts/pv_mev_v2/fpga/*.cpp
+FFT_HGQ_BLS_FPGA/artifacts/pv_mev_v2/fpga/*.yml
+FFT_HGQ_BLS_FPGA/artifacts/pv_mev_v2/fpga/keras_model.keras
+FFT_HGQ_BLS_FPGA/artifacts/pv_mev_v2/fpga/tb_data/
 Vivado_PRJ/**/.Xil/
 Vivado_PRJ/**/*.cache/
 Vivado_PRJ/**/*.gen/
@@ -78,6 +95,7 @@ Vivado_PRJ/**/*.str
 # ModelOperatingPoint snapshots (48 MB).  All regenerable with run_injection.m.
 Simulation/PV_MEV/results/emi/ts/*
 !Simulation/PV_MEV/results/emi/ts/*_det.csv
+Simulation/PV_MEV/results/emi/ts_v1/
 Simulation/PV_MEV/results/emi/snapshots/
 Simulation/PV_MEV/results/emi/dataset/ts/
 
@@ -89,12 +107,22 @@ Simulation/PV_MEV/results/emi/dataset/ts/
 EMI_DET_FPGA/data/*
 !EMI_DET_FPGA/data/cycles_dataset.npz
 !EMI_DET_FPGA/data/cycles_phase1.npz
+!EMI_DET_FPGA/data/cycles_v3_supp.npz
+!EMI_DET_FPGA/data/cycles_v3_base.npz
+!EMI_DET_FPGA/data/cycles_v3_all.npz
 EMI_DET_FPGA/runs/*
 !EMI_DET_FPGA/runs/det_v4/
+!EMI_DET_FPGA/runs/det_v5/
 !EMI_DET_FPGA/runs/sil_report/
+!EMI_DET_FPGA/runs/sil_report_v2/
 !EMI_DET_FPGA/runs/estimator_report/
+!EMI_DET_FPGA/runs/estimator_report_v2/
+!EMI_DET_FPGA/runs/resilience_report/
+!EMI_DET_FPGA/runs/random_sil_report/
 !EMI_DET_FPGA/runs/sil_report.txt
 EMI_DET_FPGA/runs/det_v4/fpga/
+EMI_DET_FPGA/runs/det_v5/fpga/
+EMI_DET_FPGA/runs/det_v5_trial/
 EMI_DET_FPGA/runs/sil_report_preview/
 EMI_DET_FPGA/fpga/
 

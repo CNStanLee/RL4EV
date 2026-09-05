@@ -1,0 +1,27 @@
+{
+  "keras_backend": "torch",
+  "model": "residual_bls",
+  "onnx_bytes": 602580,
+  "onnx_file": "harmonic_residual_bls.onnx",
+  "onnx_sha256": "931874cd370568606bf88d2796a779c7d459de092919085f6b536362cbd2aa22",
+  "parity": {
+    "allclose_atol_1e_6": true,
+    "input_name": "waveform",
+    "input_shape": [
+      "batch",
+      "80",
+      "1"
+    ],
+    "max_abs_error": 0.0,
+    "mean_abs_error": 0.0,
+    "output_name": "3505",
+    "output_shape": [
+      "Where3505_dim_0",
+      "8"
+    ]
+  },
+  "parity_examples": 16,
+  "source_keras_model": "model.keras",
+  "source_keras_sha256": "5828b837274adc647c8d5d247aa3634ca65fcf638361c32a2559b21089bfd0b6",
+  "warning": "ONNX host parity is not an HLS timing or bit-accurate RTL result; complete SIL/PIL/HIL and closed-loop stability validation before control use."
+}

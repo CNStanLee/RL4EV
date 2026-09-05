@@ -1,0 +1,1 @@
+# hls4ml sweep 2026-09-04: bare networks (no AXI wrapper), Vitis HLS 2022.2, xczu7ev, 10 ns; detector = det_v4 chain (43 in), estimator = hgq_residual_bls v1. 'sequential' = top-level DATAFLOW pragma removed (scripts/hls4ml_sweep.py --no-dataflow). Chosen: detector RF 16 sequential, estimator RF 64 sequential.

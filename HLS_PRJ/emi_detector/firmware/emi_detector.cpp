@@ -5,26 +5,26 @@
 
 
 void emi_detector(
-    features_t features[43],
-    result_t layer9_out[5]
+    features_t features[48],
+    result_t layer9_out[10]
 ) {
 
     // hls-fpga-machine-learning insert IO
     #pragma HLS ARRAY_RESHAPE variable=features complete dim=0
     #pragma HLS ARRAY_PARTITION variable=layer9_out complete dim=0
     #pragma HLS INTERFACE ap_vld port=features,layer9_out 
-    #pragma HLS PIPELINE
+    // #pragma HLS DATAFLOW  (removed by hls4ml_sweep.py --no-dataflow: sequential layers, no element FIFOs)
 
     // hls-fpga-machine-learning insert load weights
 #ifndef __SYNTHESIS__
     static bool loaded_weights = false;
     if (!loaded_weights) {
-        nnet::load_weights_from_txt<dense0_weight_t, 2752>(w3, "w3.txt");
+        nnet::load_weights_from_txt<dense0_weight_t, 3072>(w3, "w3.txt");
         nnet::load_weights_from_txt<dense0_bias_t, 64>(b3, "b3.txt");
         nnet::load_weights_from_txt<dense1_weight_t, 4096>(w6, "w6.txt");
         nnet::load_weights_from_txt<dense1_bias_t, 64>(b6, "b6.txt");
-        nnet::load_weights_from_txt<chan_weight_t, 320>(w9, "w9.txt");
-        nnet::load_weights_from_txt<chan_bias_t, 5>(b9, "b9.txt");
+        nnet::load_weights_from_txt<head_weight_t, 640>(w9, "w9.txt");
+        nnet::load_weights_from_txt<head_bias_t, 10>(b9, "b9.txt");
         loaded_weights = true;    }
 #endif
     // ****************************************
@@ -53,7 +53,7 @@ void emi_detector(
 
     nnet::relu<dense1_t, dense1_relu_t, relu_config7>(layer6_out, layer7_out); // dense1_relu
 
-    nnet::dense<dense1_relu_t, result_t, config9>(layer7_out, layer9_out, w9, b9); // chan
+    nnet::dense<dense1_relu_t, result_t, config9>(layer7_out, layer9_out, w9, b9); // head
 
 }
 

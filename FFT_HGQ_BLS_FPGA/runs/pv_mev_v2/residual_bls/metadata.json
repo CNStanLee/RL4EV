@@ -1,0 +1,59 @@
+{
+  "backend": "torch",
+  "best_epoch": 258,
+  "best_val_loss": 0.0010498613119125366,
+  "dataset": "/mnt/data6/playground/OLD_BRANCH/RL4EV/FFT_HGQ_BLS_FPGA/data/pv_mev_windows_v2.npz",
+  "hgq2_version": "0.1.10.dev17+g88ddffde2",
+  "keras_version": "3.15.1",
+  "model": "residual_bls",
+  "model_config": {
+    "activation_fractional_bits": 5,
+    "activation_integer_bits": 2,
+    "beta": 0.0,
+    "dropout": 0.0,
+    "enable_ebops": false,
+    "mlp_units": [
+      64,
+      48,
+      32
+    ],
+    "output_dim": 8,
+    "output_fractional_bits": 5,
+    "output_integer_bits": 2,
+    "quantizer_trainable": false,
+    "residual_bls_blocks": 3,
+    "residual_bls_width": 64,
+    "rnn_head_units": 32,
+    "rnn_patch_filters": 16,
+    "rnn_patch_size": 8,
+    "rnn_units": [
+      24
+    ],
+    "transformer_dim": 16,
+    "transformer_ff_dim": 32,
+    "transformer_head_units": 48,
+    "transformer_heads": 2,
+    "transformer_key_dim": 8,
+    "transformer_patch_size": 8,
+    "weight_fractional_bits": 6,
+    "weight_integer_bits": 1,
+    "window_size": 80
+  },
+  "total_parameter_variables": 122722,
+  "train_examples": 5357,
+  "trainable_parameter_values": 30664,
+  "training_config": {
+    "batch_size": 128,
+    "epochs": 400,
+    "learning_rate": 0.0008,
+    "loss": "mse",
+    "min_learning_rate": 1e-06,
+    "patience": 50,
+    "reduce_lr_patience": 12,
+    "seed": 20260805,
+    "verbose": 2,
+    "weight_decay": 2e-05
+  },
+  "training_seconds": 205.57766191795235,
+  "validation_examples": 1164
+}

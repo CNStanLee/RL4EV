@@ -26,17 +26,19 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from emi_det.features import cycle_features, vref_series  # noqa: E402
+from emi_det.features import cycle_features, cycle_features_v3, vref_series  # noqa: E402
 
 CH = ["Vdc", "Vac", "Iac", "Vbat", "Ibat"]
-VARS = ["CRPR", "MPCC_P", "MPCC_D", "MPCC_D_F1", "MPCC_D_F10", "MPCC_D_R", "MPCC_D_M1", "MPCC_D_H1"]
+VARS = ["CRPR", "MPCC_P", "MPCC_D", "MPCC_D_F1", "MPCC_D_F10", "MPCC_D_R", "MPCC_D_M1", "MPCC_D_H1", "MPCC_R", "MPCC_R_ON"]
 
 
-def decide(logits, thr, persist):
-    raw = 1 / (1 + np.exp(-logits)) >= thr[None, :]
-    cnt = np.zeros(raw.shape[1], int); out = np.zeros_like(raw)
+def decide(logits, thr, persist, hyst=1.0):
+    """Set after `persist` consecutive cycles with p >= thr; clear when p < hyst * thr (hyst = 1: no hysteresis, v4 rule)."""
+    p = 1 / (1 + np.exp(-logits)); raw = p >= thr[None, :]; low = p < (hyst * thr)[None, :]
+    cnt = np.zeros(raw.shape[1], int); on = np.zeros(raw.shape[1], bool); out = np.zeros_like(raw)
     for i in range(raw.shape[0]):
-        cnt = np.where(raw[i], cnt + 1, 0); out[i] = cnt >= persist
+        cnt = np.where(raw[i], cnt + 1, 0)
+        on = np.where(on, ~low[i], cnt >= persist); out[i] = on
     return out
 
 
@@ -59,6 +61,8 @@ def main():
     args = ap.parse_args()
     T = pd.read_csv(args.tests); ts = Path(args.ts); out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
     cfg = json.load(open(ROOT / "artifacts" / "detector.json")); thr = np.array(cfg["thr"]); n_in = len(cfg["features"])
+    v5 = int(cfg.get("version", 4)) >= 5; hyst = float(cfg.get("hyst", 1.0)) if v5 else 1.0   # v5: hysteresis clear threshold hyst * thr
+    feat_fn = cycle_features_v3 if v5 else cycle_features
     import onnxruntime as ort
     sess = ort.InferenceSession(args.onnx, providers=["CPUExecutionProvider"]); in_name = sess.get_inputs()[0].name
     rows = []
@@ -79,9 +83,10 @@ def main():
             # offline reference: features.py on the logged record -> ONNX -> same decision rule, aligned on cycle end time
             log = ts / f"{r['test_id']}_{v}.csv"
             if log.exists():
-                df = pd.read_csv(log); cf = cycle_features(df, vref_series(df["t"].to_numpy(), float(r.get("vref_t", 0) or 0), float(r.get("vref_dV", 0) or 0)))
-                X = np.nan_to_num(cf.X[:, :n_in].astype(np.float32)); L_off = np.asarray(sess.run(None, {in_name: X})[0])
-                fl_off = decide(L_off, thr, args.persist); t_off_c = cf.t
+                df = pd.read_csv(log); cf = feat_fn(df, vref_series(df["t"].to_numpy(), float(r.get("vref_t", 0) or 0), float(r.get("vref_dV", 0) or 0)))
+                X = cf.X[:, :n_in].astype(np.float32); mu = np.array(cfg["mu"], np.float32)
+                X = np.where(np.isfinite(X), X, mu); L_off = np.asarray(sess.run(None, {in_name: X})[0])
+                fl_off = decide(L_off, thr, args.persist, hyst); t_off_c = cf.t
                 mo = flag_metrics(t_off_c, fl_off, idx, t_on, t_off)
                 row.update({f"off_{k}": val for k, val in mo.items() if k in ("latency_cycles", "coverage", "fa_pre", "fa_post", "cleared")})
                 # cycles present in both records whose flag word differs

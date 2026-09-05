@@ -22,14 +22,14 @@ int main() {
     std::ofstream fo("tb_data/csim_results.log");
     double maxerr = 0, sumsq = 0, maxpk = 0; int n = 0;
     for (size_t r = 0; r < X.size(); ++r) {
-        float enc[HE_N_ENC], peak, legacy[HE_N_LEGACY];
-        harmonic_estimator_axi(&X[r][0], enc, &peak, legacy);
+        float enc[HE_N_ENC], peak;
+        harmonic_estimator_axi(&X[r][0], enc, &peak);
         double ep = std::fabs((double)peak - S[r][0]) / S[r][0]; if (ep > maxpk) maxpk = ep;
         for (int k = 0; k < HE_N_ENC; ++k) {
             double e = std::fabs((double)enc[k] - Y[r][k]); if (e > maxerr) maxerr = e; sumsq += e * e; ++n;
             fo << enc[k] << ' ';
         }
-        fo << peak; for (int k = 0; k < HE_N_LEGACY; ++k) fo << ' ' << legacy[k]; fo << '\n';
+        fo << peak << '\n';
     }
     std::printf("harmonic_estimator: %zu windows  max |denc| %.4g  rms %.4g  (output LSB 1/32 = 0.03125)  peak rel err %.3g\n",
                 X.size(), maxerr, std::sqrt(sumsq / n), maxpk);

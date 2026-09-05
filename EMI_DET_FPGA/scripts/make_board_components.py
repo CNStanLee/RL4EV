@@ -30,7 +30,7 @@ PART = "xczu7ev-ffvc1156-2-e"
 
 
 def carr(name, v, ctype="float"):
-    body = ",\n    ".join(", ".join(f"{x:.9g}f" if ctype == "float" else str(x) for x in v[i:i + 6]) for i in range(0, len(v), 6))
+    body = ",\n    ".join(", ".join(f"{x:.9e}f" if ctype == "float" else str(x) for x in v[i:i + 6]) for i in range(0, len(v), 6))
     return f"static const {ctype} {name}[{len(v)}] = {{\n    {body}\n}};\n"
 
 
@@ -62,11 +62,14 @@ def copy_firmware(src: Path, dst: Path):
 # ----------------------------------------------------------------------------- detector
 def make_detector(out: Path):
     comp = out / "emi_detector"; comp.mkdir(parents=True, exist_ok=True)
-    copy_firmware(ROOT / "runs/det_v4/fpga/hls4ml/firmware", comp / "firmware")
     cfg = json.load(open(ROOT / "artifacts/detector.json"))
+    v5 = int(cfg.get("version", 4)) >= 5
+    fw_src = Path(FIRMWARE["detector"]) if FIRMWARE.get("detector") else ROOT / ("runs/det_v5/fpga/firmware" if v5 else "runs/det_v4/fpga/hls4ml/firmware")
+    copy_firmware(fw_src, comp / "firmware")
     mu = np.array(cfg["mu"], np.float32); inv = (1.0 / np.array(cfg["sd"], np.float32)).astype(np.float32)
     thr = np.array(cfg["thr"], np.float32); lthr = np.log(thr / (1 - thr)).astype(np.float32)
-    n_in = len(cfg["features"])
+    n_in = len(cfg["features"]); n_head = int(cfg.get("head", 5)); n_amp = n_head - 5
+    hyst = float(cfg.get("hyst", 0.6)); persist = int(cfg.get("persist", 2))
     (comp / "emi_detector_axi.h").write_text(f"""#ifndef EMI_DETECTOR_AXI_H
 #define EMI_DETECTOR_AXI_H
 // EMI sensor-chain injection detector, board version (HGQ2 chain via hls4ml, bit_exact).
@@ -76,7 +79,12 @@ def make_detector(out: Path):
 //          Persistence (2 consecutive cycles, as in the Simulink SIL block) is applied by the caller.
 #define EMI_DET_N_IN {n_in}
 #define EMI_DET_N_OUT 5
-void emi_detector_axi(float feat[EMI_DET_N_IN], float logit[EMI_DET_N_OUT], unsigned int *flags);
+#define EMI_DET_N_HEAD {n_head}
+#define EMI_DET_N_AMP {n_amp}
+// v5: the network head is [5 logits, 5 signed normalized amplitudes]; the IP keeps the per-channel
+// persistence counter and hysteresis state (set after EMI_DET_PERSIST cycles >= thr, clear when p < hyst*thr),
+// flags = current flag word, amp = amplitudes (0 while a channel is not flagged).  reset = 1 clears the state.
+void emi_detector_axi(float feat[EMI_DET_N_IN], float logit[EMI_DET_N_OUT], float amp[EMI_DET_N_OUT], unsigned int *flags, unsigned int reset);
 #endif
 """)
     (comp / "emi_detector_axi.cpp").write_text(f"""#include "emi_detector_axi.h"
@@ -85,29 +93,44 @@ void emi_detector_axi(float feat[EMI_DET_N_IN], float logit[EMI_DET_N_OUT], unsi
 // standardization constants from artifacts/detector.json (fit on the clean training cycles)
 {carr("MU", mu)}
 {carr("INV_SD", inv)}
-// per-channel logit thresholds (1 % false-alarm budget, detector.json thr = {thr.tolist()})
+// per-channel logit thresholds (1 % false-alarm budget, detector.json thr = {thr.tolist()}) and the hysteresis
+// clear thresholds logit(hyst * thr), hyst = {hyst}; persistence {persist} cycles
 {carr("LOGIT_THR", lthr)}
+{carr("LOGIT_CLR", np.log((hyst * thr) / (1 - hyst * thr)).astype(np.float32))}
+static const unsigned int PERSIST = {persist};
 
-void emi_detector_axi(float feat[EMI_DET_N_IN], float logit[EMI_DET_N_OUT], unsigned int *flags) {{
+void emi_detector_axi(float feat[EMI_DET_N_IN], float logit[EMI_DET_N_OUT], float amp[EMI_DET_N_OUT], unsigned int *flags, unsigned int reset) {{
 #pragma HLS INTERFACE mode=s_axilite port=feat   bundle=control
 #pragma HLS INTERFACE mode=s_axilite port=logit  bundle=control
+#pragma HLS INTERFACE mode=s_axilite port=amp    bundle=control
 #pragma HLS INTERFACE mode=s_axilite port=flags  bundle=control
+#pragma HLS INTERFACE mode=s_axilite port=reset  bundle=control
 #pragma HLS INTERFACE mode=s_axilite port=return bundle=control
+    static unsigned int cnt[EMI_DET_N_OUT] = {{0, 0, 0, 0, 0}};
+    static unsigned int on[EMI_DET_N_OUT] = {{0, 0, 0, 0, 0}};
+#pragma HLS ARRAY_PARTITION variable=cnt complete dim=0
+#pragma HLS ARRAY_PARTITION variable=on complete dim=0
     features_t x[EMI_DET_N_IN];
 #pragma HLS ARRAY_PARTITION variable=x complete dim=0
-    result_t y[EMI_DET_N_OUT];
+    result_t y[EMI_DET_N_HEAD];
 #pragma HLS ARRAY_PARTITION variable=y complete dim=0
 STD: for (int i = 0; i < EMI_DET_N_IN; ++i) {{
-#pragma HLS UNROLL
-        x[i] = features_t((feat[i] - MU[i]) * INV_SD[i]);   // float affine, then the network's input quantizer (RND/SAT)
+#pragma HLS PIPELINE II=1
+        x[i] = features_t((feat[i] - MU[i]) * INV_SD[i]);   // float affine, then the network's input quantizer (RND/SAT); one shared float datapath
     }}
     emi_detector(x, y);
     unsigned int f = 0;
 OUT: for (int k = 0; k < EMI_DET_N_OUT; ++k) {{
-#pragma HLS UNROLL
+#pragma HLS PIPELINE II=1
         float v = y[k].to_float();
         logit[k] = v;
-        if (v >= LOGIT_THR[k]) f |= (1u << k);
+        unsigned int above = (v >= LOGIT_THR[k]) ? 1u : 0u;
+        unsigned int below = (v < LOGIT_CLR[k]) ? 1u : 0u;
+        if (reset) {{ cnt[k] = 0; on[k] = 0; }}
+        cnt[k] = above ? cnt[k] + 1 : 0;
+        on[k] = on[k] ? (below ? 0u : 1u) : (cnt[k] >= PERSIST ? 1u : 0u);
+        if (on[k]) f |= (1u << k);
+        amp[k] = (EMI_DET_N_AMP > 0 && on[k]) ? y[EMI_DET_N_OUT + (k < EMI_DET_N_AMP ? k : 0)].to_float() : 0.0f;
     }}
     *flags = f;
 }}
@@ -131,17 +154,26 @@ static bool read_rows(const char *path, int ncol, std::vector<std::vector<float>
 }
 
 int main() {
-    std::vector<std::vector<float> > X, Y;
+    std::vector<std::vector<float> > X, Y, T;
     if (!read_rows("tb_data/feat_raw.dat", EMI_DET_N_IN, X) || !read_rows("tb_data/ref_logits.dat", EMI_DET_N_OUT, Y)) return 1;
+    if (!read_rows("tb_data/thresholds.dat", 2 * EMI_DET_N_OUT + 1, T)) return 1;     // [thr_logit x5, clr_logit x5, persist]
+    float THR_LOGIT[EMI_DET_N_OUT], CLR_LOGIT[EMI_DET_N_OUT];
+    for (int k = 0; k < EMI_DET_N_OUT; ++k) { THR_LOGIT[k] = T[0][k]; CLR_LOGIT[k] = T[0][EMI_DET_N_OUT + k]; }
+    const unsigned int PERSIST_REF = (unsigned int)T[0][2 * EMI_DET_N_OUT];
     std::ofstream fo("tb_data/csim_results.log");
     double maxerr = 0, sumsq = 0; int nflag_mismatch = 0, n = 0;
+    // reference flag words: the same persistence / hysteresis rule applied to the host logits (rows are consecutive cycles)
+    unsigned int rcnt[EMI_DET_N_OUT] = {0, 0, 0, 0, 0}, ron[EMI_DET_N_OUT] = {0, 0, 0, 0, 0};
     for (size_t r = 0; r < X.size(); ++r) {
-        float logit[EMI_DET_N_OUT]; unsigned int flags = 0;
-        emi_detector_axi(&X[r][0], logit, &flags);
+        float logit[EMI_DET_N_OUT], amp[EMI_DET_N_OUT]; unsigned int flags = 0;
+        emi_detector_axi(&X[r][0], logit, amp, &flags, r == 0 ? 1u : 0u);
         unsigned int fref = 0;
         for (int k = 0; k < EMI_DET_N_OUT; ++k) {
             double e = std::fabs((double)logit[k] - Y[r][k]); if (e > maxerr) maxerr = e; sumsq += e * e; ++n;
-            if (Y[r][k] >= std::log(0.05 / 0.95)) fref |= (1u << k);
+            unsigned int above = Y[r][k] >= THR_LOGIT[k], below = Y[r][k] < CLR_LOGIT[k];
+            rcnt[k] = above ? rcnt[k] + 1 : 0;
+            ron[k] = ron[k] ? (below ? 0u : 1u) : (rcnt[k] >= PERSIST_REF ? 1u : 0u);
+            if (ron[k]) fref |= (1u << k);
             fo << logit[k] << (k + 1 < EMI_DET_N_OUT ? ' ' : '\n');
         }
         if (fref != flags) ++nflag_mismatch;
@@ -152,12 +184,18 @@ int main() {
 """)
     # reference vectors: dataset cycles (every 8th cycle, all sources) through the installed ONNX
     import onnxruntime as ort
-    D = np.load(ROOT / "data/cycles_dataset.npz")
-    X = np.nan_to_num(D["X"][::8, :n_in].astype(np.float32))
+    D = np.load(ROOT / "data/cycles_dataset.npz", allow_pickle=True)
+    names = [str(n) for n in D["feature_names"]]
+    X = np.full((D["X"][::8].shape[0], n_in), np.nan, np.float32)
+    for j, nm in enumerate(cfg["features"]):
+        if nm in names:
+            X[:, j] = D["X"][::8, names.index(nm)]
+    X = np.where(np.isfinite(X), X, mu).astype(np.float32)
     s = ort.InferenceSession(str(ROOT / "artifacts/detector_bitexact.onnx"), providers=["CPUExecutionProvider"])
     L = np.asarray(s.run(None, {s.get_inputs()[0].name: X})[0], np.float32)
     (comp / "tb_data").mkdir(exist_ok=True)
     np.savetxt(comp / "tb_data/feat_raw.dat", X, fmt="%.8g"); np.savetxt(comp / "tb_data/ref_logits.dat", L, fmt="%.7g")
+    np.savetxt(comp / "tb_data/thresholds.dat", np.concatenate([lthr, np.log((hyst * thr) / (1 - hyst * thr)), [persist]])[None, :], fmt="%.7g")
     write_cfg(comp, "emi_detector_axi", ["emi_detector_axi.cpp", "firmware/emi_detector.cpp"], ["tb_emi_detector.cpp"], "firmware/weights")
     (comp / "README.md").write_text(f"""# emi_detector (Vitis HLS component)
 
@@ -189,7 +227,7 @@ logits are within 0.05 and every flag word agrees. Local C simulation without Vi
 # ----------------------------------------------------------------------------- estimator
 def make_estimator(out: Path):
     comp = out / "harmonic_estimator"; comp.mkdir(parents=True, exist_ok=True)
-    copy_firmware(ROOT / "fpga/estimator_hls4ml/firmware", comp / "firmware")
+    copy_firmware(Path(FIRMWARE["estimator"]) if FIRMWARE.get("estimator") else ROOT / "fpga/estimator_hls4ml/firmware", comp / "firmware")
     (comp / "harmonic_estimator_axi.h").write_text("""#ifndef HARMONIC_ESTIMATOR_AXI_H
 #define HARMONIC_ESTIMATOR_AXI_H
 // HGQ2 Residual-BLS harmonic estimator (FFT_HGQ_BLS_FPGA contract), board version.
@@ -199,22 +237,19 @@ def make_estimator(out: Path):
 //         (ema_alpha = 1: the EMA, if wanted, is applied by the caller on enc[]).
 #define HE_N_IN 80
 #define HE_N_ENC 8
-#define HE_N_LEGACY 7
-void harmonic_estimator_axi(float wave[HE_N_IN], float enc[HE_N_ENC], float *peak, float legacy[HE_N_LEGACY]);
+// The legacy MPCC decode [A1,A3,A5,A7,delta3,delta5,delta7] (sqrt / atan2 in float) is done on the PS from enc[] and
+// peak (PS_notebook/libs/mpcc_r_overlay.py::decode_legacy); keeping it out of the IP saves about 30k LUT.
+void harmonic_estimator_axi(float wave[HE_N_IN], float enc[HE_N_ENC], float *peak);
 #endif
 """)
     (comp / "harmonic_estimator_axi.cpp").write_text("""#include <cmath>
 #include "harmonic_estimator_axi.h"
 #include "firmware/harmonic_estimator.h"
 
-static const float ORDER_SCALE[4] = {1.0f, 0.25f, 0.20f, 0.15f};
-static const float ORDERS[3] = {3.0f, 5.0f, 7.0f};
-
-void harmonic_estimator_axi(float wave[HE_N_IN], float enc[HE_N_ENC], float *peak, float legacy[HE_N_LEGACY]) {
+void harmonic_estimator_axi(float wave[HE_N_IN], float enc[HE_N_ENC], float *peak) {
 #pragma HLS INTERFACE mode=s_axilite port=wave   bundle=control
 #pragma HLS INTERFACE mode=s_axilite port=enc    bundle=control
 #pragma HLS INTERFACE mode=s_axilite port=peak   bundle=control
-#pragma HLS INTERFACE mode=s_axilite port=legacy bundle=control
 #pragma HLS INTERFACE mode=s_axilite port=return bundle=control
     // CycleNorm: A = max(|x|, 1e-6), x_norm = x / A
     float A = 1e-6f;
@@ -226,27 +261,17 @@ PEAK: for (int i = 0; i < HE_N_IN; ++i) {
     waveform_t x[HE_N_IN];
 #pragma HLS ARRAY_PARTITION variable=x complete dim=0
 NORM: for (int i = 0; i < HE_N_IN; ++i) {
-#pragma HLS UNROLL
-        x[i] = waveform_t(wave[i] * invA);          // ap_fixed<8,3,AP_RND,AP_SAT>: the network's input quantizer
+#pragma HLS PIPELINE II=1
+        x[i] = waveform_t(wave[i] * invA);          // ap_fixed<8,3,AP_RND,AP_SAT>: the network's input quantizer; one shared float multiplier
     }
     result_t y[HE_N_ENC];
 #pragma HLS ARRAY_PARTITION variable=y complete dim=0
     harmonic_estimator(x, y);
-    float amp[4], ph[4];
-DEC: for (int h = 0; h < 4; ++h) {
-#pragma HLS UNROLL
-        float re = y[2 * h].to_float(), im = y[2 * h + 1].to_float();
-        enc[2 * h] = re; enc[2 * h + 1] = im;
-        amp[h] = A * ORDER_SCALE[h] * std::sqrt(re * re + im * im);
-        ph[h] = std::atan2(im, re);
+OUT: for (int k = 0; k < HE_N_ENC; ++k) {
+#pragma HLS PIPELINE II=1
+        enc[k] = y[k].to_float();
     }
     *peak = A;
-    for (int h = 0; h < 4; ++h) legacy[h] = amp[h];
-REL: for (int k = 0; k < 3; ++k) {
-#pragma HLS UNROLL
-        float rel = ph[k + 1] - ORDERS[k] * ph[0];
-        legacy[4 + k] = std::atan2(std::sin(rel), std::cos(rel));
-    }
 }
 """)
     (comp / "tb_harmonic_estimator.cpp").write_text(r"""// C testbench: fixed-point estimator vs the host reference (artifacts/onnx_reference_test_id.npz).
@@ -273,21 +298,24 @@ int main() {
     std::ofstream fo("tb_data/csim_results.log");
     double maxerr = 0, sumsq = 0, maxpk = 0; int n = 0;
     for (size_t r = 0; r < X.size(); ++r) {
-        float enc[HE_N_ENC], peak, legacy[HE_N_LEGACY];
-        harmonic_estimator_axi(&X[r][0], enc, &peak, legacy);
+        float enc[HE_N_ENC], peak;
+        harmonic_estimator_axi(&X[r][0], enc, &peak);
         double ep = std::fabs((double)peak - S[r][0]) / S[r][0]; if (ep > maxpk) maxpk = ep;
         for (int k = 0; k < HE_N_ENC; ++k) {
             double e = std::fabs((double)enc[k] - Y[r][k]); if (e > maxerr) maxerr = e; sumsq += e * e; ++n;
             fo << enc[k] << ' ';
         }
-        fo << peak; for (int k = 0; k < HE_N_LEGACY; ++k) fo << ' ' << legacy[k]; fo << '\n';
+        fo << peak << '\n';
     }
     std::printf("harmonic_estimator: %zu windows  max |denc| %.4g  rms %.4g  (output LSB 1/32 = 0.03125)  peak rel err %.3g\n",
                 X.size(), maxerr, std::sqrt(sumsq / n), maxpk);
     return (maxerr <= 0.0625 && maxpk < 1e-5) ? 0 : 2;
 }
 """)
-    R = np.load(ROOT.parent / "FFT_HGQ_BLS_FPGA/artifacts/onnx_reference_test_id.npz")
+    ref = ROOT.parent / "FFT_HGQ_BLS_FPGA/artifacts/pv_mev_v2/residual_bls/onnx_reference_test_id.npz"   # v2 (PV_MEV windows) if present
+    if not ref.exists():
+        ref = ROOT.parent / "FFT_HGQ_BLS_FPGA/artifacts/onnx_reference_test_id.npz"
+    R = np.load(ref)
     x = R["x"].astype(np.float32); sc = R["scale"].astype(np.float32); y = R["y_onnx"].astype(np.float32)
     raw = x * sc[:, None]                                    # un-normalize: the wrapper redoes x / max|x|
     (comp / "tb_data").mkdir(exist_ok=True)
@@ -300,13 +328,13 @@ Board version of the HGQ2 Residual-BLS harmonic estimator (`FFT_HGQ_BLS_FPGA`, 8
 model behind the MPCC_D_M1 / MPCC_D_H1 variants), exported with hls4ml 1.3 (Vitis backend, `bit_exact=True`,
 io_parallel) from `EMI_DET_FPGA/fpga/estimator_hls4ml`, wrapped like `HLS_PRJ/mpcc`:
 
-- `harmonic_estimator_axi(float wave[80], float enc[8], float *peak, float legacy[7])`, one `s_axilite` bundle `control`.
+- `harmonic_estimator_axi(float wave[80], float enc[8], float *peak)`, one `s_axilite` bundle `control`.
 - `wave` is one grid cycle of the PFC current sampled at 4 kHz (raw amperes). The wrapper performs the contract's
   CycleNorm (`x / max|x|`, side channel `peak`) and the input quantizer `ap_fixed<8,3,AP_RND,AP_SAT>`.
-- `enc` = `[c1,s1,c3,s3,c5,s5,c7,s7]` (network output); `legacy` = `[A1,A3,A5,A7,delta3,delta5,delta7]` decoded exactly as
-  `harmonic_postprocess8_block` in `Simulation/PV_MEV/build_estimator.m` with `ema_alpha = 1` (apply the EMA on `enc` in
-  the caller if wanted). `A3..A7`, `delta3..7` feed `mpcc_hls` (`use_harmonic = 1`); the FFT anchor / watchdog fusion
-  (`hgq_fusion_alpha`, `hgq_min_ratio` in `init_paras.m`) stays on the PS.
+- `enc` = `[c1,s1,c3,s3,c5,s5,c7,s7]` (network output). The legacy MPCC vector `[A1,A3,A5,A7,delta3,delta5,delta7]`
+  (decode of `harmonic_postprocess8_block` in `Simulation/PV_MEV/build_estimator.m`, `ema_alpha = 1`) is computed on the
+  PS from `enc` and `peak` (`mpcc_r_overlay.decode_legacy`): it needs sqrt / atan2 in float, which cost about 30k LUT in
+  the IP. `A3..A7`, `delta3..7` feed `mpcc_r_hls`; the FFT anchor / watchdog fusion stays on the PS.
 
 Build (same flow as `mpcc`):
 
@@ -315,13 +343,23 @@ vitis-run --mode hls --cfg hls_config.cfg --work_dir harmonic_estimator --csim
 vitis-run --mode hls --cfg hls_config.cfg --work_dir harmonic_estimator --csynth
 ```
 
-`tb_data/` holds the {len(x)} ID windows of `FFT_HGQ_BLS_FPGA/artifacts/onnx_reference_test_id.npz` (un-normalized) with
+`tb_data/` holds the {len(x)} test_id windows of `{ref.relative_to(ROOT.parent)}` (un-normalized) with
 the host ONNX outputs; the testbench passes when every output is within 2 LSB (0.0625) of the reference.
 Local C simulation without Vitis: `EMI_DET_FPGA/scripts/csim_local.sh harmonic_estimator`.
 """)
     print("estimator component:", comp, "tb rows", len(x))
 
 
+FIRMWARE = {}
+
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(); ap.add_argument("--out", default=str(ROOT.parent / "HLS_PRJ")); a = ap.parse_args()
-    make_detector(Path(a.out)); make_estimator(Path(a.out))
+    ap = argparse.ArgumentParser(); ap.add_argument("--out", default=str(ROOT.parent / "HLS_PRJ"))
+    ap.add_argument("--detector-firmware", help="hls4ml firmware/ dir of the chosen detector point (scripts/hls4ml_sweep.py --firmware)")
+    ap.add_argument("--estimator-firmware", help="hls4ml firmware/ dir of the chosen estimator point")
+    ap.add_argument("--only", choices=["detector", "estimator"])
+    a = ap.parse_args()
+    FIRMWARE = {"detector": a.detector_firmware, "estimator": a.estimator_firmware}
+    if a.only != "estimator":
+        make_detector(Path(a.out))
+    if a.only != "detector":
+        make_estimator(Path(a.out))

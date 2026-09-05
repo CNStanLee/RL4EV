@@ -1,0 +1,676 @@
+{
+ "rf_test": {
+  "tag": "RF test-runs",
+  "rule": false,
+  "runs_detected": 51,
+  "runs_injected": 56,
+  "fa_pre": 17,
+  "clean_pre": 758,
+  "fa_post": 33,
+  "clean_post": 1240,
+  "latency_median": 1.0,
+  "latency_p90": 2.5,
+  "thr": [
+   0.15,
+   0.1,
+   0.3,
+   0.15,
+   0.15
+  ],
+  "per_channel": {
+   "Vdc": {
+    "recall": 0.9863013698630136,
+    "precision": 0.5333333333333333,
+    "support": 73
+   },
+   "Vac": {
+    "recall": 0.9395973154362416,
+    "precision": 0.7954545454545454,
+    "support": 149
+   },
+   "Iac": {
+    "recall": 0.803030303030303,
+    "precision": 0.8412698412698413,
+    "support": 132
+   },
+   "Vbat": {
+    "recall": 1.0,
+    "precision": 0.6918604651162791,
+    "support": 119
+   },
+   "Ibat": {
+    "recall": 0.8130841121495327,
+    "precision": 0.54375,
+    "support": 107
+   }
+  }
+ },
+ "rf_test_rule": {
+  "tag": "RF test-runs",
+  "rule": true,
+  "runs_detected": 50,
+  "runs_injected": 56,
+  "fa_pre": 2,
+  "clean_pre": 758,
+  "fa_post": 32,
+  "clean_post": 1240,
+  "latency_median": 2.0,
+  "latency_p90": 5.0,
+  "thr": [
+   0.15,
+   0.1,
+   0.3,
+   0.15,
+   0.15
+  ],
+  "per_channel": {
+   "Vdc": {
+    "recall": 0.9452054794520548,
+    "precision": 0.518796992481203,
+    "support": 73
+   },
+   "Vac": {
+    "recall": 0.912751677852349,
+    "precision": 0.85,
+    "support": 149
+   },
+   "Iac": {
+    "recall": 0.7651515151515151,
+    "precision": 0.8859649122807017,
+    "support": 132
+   },
+   "Vbat": {
+    "recall": 1.0,
+    "precision": 0.7041420118343196,
+    "support": 119
+   },
+   "Ibat": {
+    "recall": 0.822429906542056,
+    "precision": 0.5986394557823129,
+    "support": 107
+   }
+  }
+ },
+ "rf_phase1": {
+  "tag": "RF phase1",
+  "rule": false,
+  "runs_detected": 69,
+  "runs_injected": 78,
+  "fa_pre": 0,
+  "clean_pre": 486,
+  "fa_post": 71,
+  "clean_post": 1092,
+  "latency_median": 1.0,
+  "latency_p90": 2.299999999999997,
+  "thr": [
+   0.15,
+   0.1,
+   0.3,
+   0.15,
+   0.15
+  ],
+  "per_channel": {
+   "Vdc": {
+    "recall": 1.0,
+    "precision": 0.7003891050583657,
+    "support": 360
+   },
+   "Vac": {
+    "recall": 1.0,
+    "precision": 0.6976744186046512,
+    "support": 180
+   },
+   "Iac": {
+    "recall": 0.6444444444444445,
+    "precision": 0.9027237354085603,
+    "support": 360
+   },
+   "Vbat": {
+    "recall": 1.0,
+    "precision": 0.5504587155963303,
+    "support": 180
+   },
+   "Ibat": {
+    "recall": 1.0,
+    "precision": 0.5202312138728323,
+    "support": 180
+   }
+  }
+ },
+ "float_train": {
+  "tag": "float train",
+  "rule": false,
+  "runs_detected": 168,
+  "runs_injected": 169,
+  "fa_pre": 57,
+  "clean_pre": 2262,
+  "fa_post": 126,
+  "clean_post": 3467,
+  "latency_median": 1.0,
+  "latency_p90": 2.0,
+  "thr": [
+   0.1,
+   0.05,
+   0.15,
+   0.05,
+   0.05
+  ],
+  "per_channel": {
+   "Vdc": {
+    "recall": 0.9950372208436724,
+    "precision": 0.714795008912656,
+    "support": 403
+   },
+   "Vac": {
+    "recall": 0.9972677595628415,
+    "precision": 0.718503937007874,
+    "support": 366
+   },
+   "Iac": {
+    "recall": 0.9681050656660413,
+    "precision": 0.7445887445887446,
+    "support": 533
+   },
+   "Vbat": {
+    "recall": 0.9971671388101983,
+    "precision": 0.5415384615384615,
+    "support": 353
+   },
+   "Ibat": {
+    "recall": 0.997275204359673,
+    "precision": 0.4759427828348505,
+    "support": 367
+   }
+  }
+ },
+ "float_test": {
+  "tag": "float test-runs",
+  "rule": false,
+  "runs_detected": 52,
+  "runs_injected": 56,
+  "fa_pre": 48,
+  "clean_pre": 758,
+  "fa_post": 57,
+  "clean_post": 1240,
+  "latency_median": 1.0,
+  "latency_p90": 4.5,
+  "thr": [
+   0.1,
+   0.05,
+   0.15,
+   0.05,
+   0.05
+  ],
+  "per_channel": {
+   "Vdc": {
+    "recall": 0.8904109589041096,
+    "precision": 0.48507462686567165,
+    "support": 73
+   },
+   "Vac": {
+    "recall": 0.87248322147651,
+    "precision": 0.6220095693779905,
+    "support": 149
+   },
+   "Iac": {
+    "recall": 0.8712121212121212,
+    "precision": 0.46184738955823296,
+    "support": 132
+   },
+   "Vbat": {
+    "recall": 0.9831932773109243,
+    "precision": 0.49159663865546216,
+    "support": 119
+   },
+   "Ibat": {
+    "recall": 0.8598130841121495,
+    "precision": 0.3420074349442379,
+    "support": 107
+   }
+  }
+ },
+ "float_test_rule": {
+  "tag": "float test-runs",
+  "rule": true,
+  "runs_detected": 52,
+  "runs_injected": 56,
+  "fa_pre": 25,
+  "clean_pre": 758,
+  "fa_post": 49,
+  "clean_post": 1240,
+  "latency_median": 2.0,
+  "latency_p90": 5.5,
+  "thr": [
+   0.1,
+   0.05,
+   0.15,
+   0.05,
+   0.05
+  ],
+  "per_channel": {
+   "Vdc": {
+    "recall": 0.7945205479452054,
+    "precision": 0.5132743362831859,
+    "support": 73
+   },
+   "Vac": {
+    "recall": 0.8322147651006712,
+    "precision": 0.6739130434782609,
+    "support": 149
+   },
+   "Iac": {
+    "recall": 0.8333333333333334,
+    "precision": 0.47619047619047616,
+    "support": 132
+   },
+   "Vbat": {
+    "recall": 0.9495798319327731,
+    "precision": 0.5485436893203883,
+    "support": 119
+   },
+   "Ibat": {
+    "recall": 0.8037383177570093,
+    "precision": 0.38222222222222224,
+    "support": 107
+   }
+  }
+ },
+ "float_amp_test": {
+  "tag": "float test-runs",
+  "median_rel_err": [
+   0.43302851915359497,
+   0.35766807198524475,
+   0.5303436517715454,
+   0.4487859308719635,
+   0.27393555641174316
+  ]
+ },
+ "float_phase1": {
+  "tag": "float phase1",
+  "rule": false,
+  "runs_detected": 72,
+  "runs_injected": 78,
+  "fa_pre": 0,
+  "clean_pre": 486,
+  "fa_post": 79,
+  "clean_post": 1092,
+  "latency_median": 1.0,
+  "latency_p90": 1.0,
+  "thr": [
+   0.1,
+   0.05,
+   0.15,
+   0.05,
+   0.05
+  ],
+  "per_channel": {
+   "Vdc": {
+    "recall": 1.0,
+    "precision": 0.7171314741035857,
+    "support": 360
+   },
+   "Vac": {
+    "recall": 1.0,
+    "precision": 0.5389221556886228,
+    "support": 180
+   },
+   "Iac": {
+    "recall": 0.75,
+    "precision": 0.7648725212464589,
+    "support": 360
+   },
+   "Vbat": {
+    "recall": 1.0,
+    "precision": 0.5844155844155844,
+    "support": 180
+   },
+   "Ibat": {
+    "recall": 1.0,
+    "precision": 0.3435114503816794,
+    "support": 180
+   }
+  }
+ },
+ "float_phase1_rule": {
+  "tag": "float phase1",
+  "rule": true,
+  "runs_detected": 72,
+  "runs_injected": 78,
+  "fa_pre": 0,
+  "clean_pre": 486,
+  "fa_post": 75,
+  "clean_post": 1092,
+  "latency_median": 2.0,
+  "latency_p90": 2.0,
+  "thr": [
+   0.1,
+   0.05,
+   0.15,
+   0.05,
+   0.05
+  ],
+  "per_channel": {
+   "Vdc": {
+    "recall": 0.9333333333333333,
+    "precision": 0.7164179104477612,
+    "support": 360
+   },
+   "Vac": {
+    "recall": 0.9333333333333333,
+    "precision": 0.597864768683274,
+    "support": 180
+   },
+   "Iac": {
+    "recall": 0.7,
+    "precision": 0.84,
+    "support": 360
+   },
+   "Vbat": {
+    "recall": 0.9333333333333333,
+    "precision": 0.6536964980544747,
+    "support": 180
+   },
+   "Ibat": {
+    "recall": 0.9333333333333333,
+    "precision": 0.3407707910750507,
+    "support": 180
+   }
+  }
+ },
+ "q_init_test": {
+  "tag": "HGQ2 init test-runs",
+  "rule": false,
+  "runs_detected": 52,
+  "runs_injected": 56,
+  "fa_pre": 49,
+  "clean_pre": 758,
+  "fa_post": 61,
+  "clean_post": 1240,
+  "latency_median": 1.0,
+  "latency_p90": 4.5,
+  "thr": [
+   0.1,
+   0.05,
+   0.15,
+   0.05,
+   0.05
+  ],
+  "per_channel": {
+   "Vdc": {
+    "recall": 0.9041095890410958,
+    "precision": 0.4852941176470588,
+    "support": 73
+   },
+   "Vac": {
+    "recall": 0.87248322147651,
+    "precision": 0.625,
+    "support": 149
+   },
+   "Iac": {
+    "recall": 0.8712121212121212,
+    "precision": 0.4637096774193548,
+    "support": 132
+   },
+   "Vbat": {
+    "recall": 0.9831932773109243,
+    "precision": 0.4588235294117647,
+    "support": 119
+   },
+   "Ibat": {
+    "recall": 0.8504672897196262,
+    "precision": 0.3333333333333333,
+    "support": 107
+   }
+  }
+ },
+ "q_train": {
+  "tag": "HGQ2 QAT train",
+  "rule": false,
+  "runs_detected": 168,
+  "runs_injected": 169,
+  "fa_pre": 51,
+  "clean_pre": 2262,
+  "fa_post": 118,
+  "clean_post": 3467,
+  "latency_median": 1.0,
+  "latency_p90": 2.0,
+  "thr": [
+   0.1,
+   0.05,
+   0.2,
+   0.05,
+   0.05
+  ],
+  "per_channel": {
+   "Vdc": {
+    "recall": 0.9950372208436724,
+    "precision": 0.6961805555555556,
+    "support": 403
+   },
+   "Vac": {
+    "recall": 0.9972677595628415,
+    "precision": 0.7213438735177866,
+    "support": 366
+   },
+   "Iac": {
+    "recall": 0.9643527204502814,
+    "precision": 0.8384991843393148,
+    "support": 533
+   },
+   "Vbat": {
+    "recall": 1.0,
+    "precision": 0.5316265060240963,
+    "support": 353
+   },
+   "Ibat": {
+    "recall": 0.997275204359673,
+    "precision": 0.47843137254901963,
+    "support": 367
+   }
+  }
+ },
+ "q_test": {
+  "tag": "HGQ2 QAT test-runs",
+  "rule": false,
+  "runs_detected": 52,
+  "runs_injected": 56,
+  "fa_pre": 46,
+  "clean_pre": 758,
+  "fa_post": 50,
+  "clean_post": 1240,
+  "latency_median": 1.0,
+  "latency_p90": 4.5,
+  "thr": [
+   0.1,
+   0.05,
+   0.2,
+   0.05,
+   0.05
+  ],
+  "per_channel": {
+   "Vdc": {
+    "recall": 0.9041095890410958,
+    "precision": 0.4852941176470588,
+    "support": 73
+   },
+   "Vac": {
+    "recall": 0.87248322147651,
+    "precision": 0.6220095693779905,
+    "support": 149
+   },
+   "Iac": {
+    "recall": 0.8712121212121212,
+    "precision": 0.5251141552511416,
+    "support": 132
+   },
+   "Vbat": {
+    "recall": 0.9831932773109243,
+    "precision": 0.45703125,
+    "support": 119
+   },
+   "Ibat": {
+    "recall": 0.8878504672897196,
+    "precision": 0.34296028880866425,
+    "support": 107
+   }
+  }
+ },
+ "q_test_rule": {
+  "tag": "HGQ2 QAT test-runs",
+  "rule": true,
+  "runs_detected": 52,
+  "runs_injected": 56,
+  "fa_pre": 25,
+  "clean_pre": 758,
+  "fa_post": 41,
+  "clean_post": 1240,
+  "latency_median": 2.0,
+  "latency_p90": 5.5,
+  "thr": [
+   0.1,
+   0.05,
+   0.2,
+   0.05,
+   0.05
+  ],
+  "per_channel": {
+   "Vdc": {
+    "recall": 0.821917808219178,
+    "precision": 0.5405405405405406,
+    "support": 73
+   },
+   "Vac": {
+    "recall": 0.8389261744966443,
+    "precision": 0.6830601092896175,
+    "support": 149
+   },
+   "Iac": {
+    "recall": 0.8333333333333334,
+    "precision": 0.5263157894736842,
+    "support": 132
+   },
+   "Vbat": {
+    "recall": 0.9495798319327731,
+    "precision": 0.5159817351598174,
+    "support": 119
+   },
+   "Ibat": {
+    "recall": 0.8317757009345794,
+    "precision": 0.38197424892703863,
+    "support": 107
+   }
+  }
+ },
+ "q_amp_test": {
+  "tag": "HGQ2 QAT test-runs",
+  "median_rel_err": [
+   0.28504258394241333,
+   0.4075281322002411,
+   0.48355263471603394,
+   0.5694446563720703,
+   0.28234612941741943
+  ]
+ },
+ "q_phase1": {
+  "tag": "HGQ2 QAT phase1",
+  "rule": false,
+  "runs_detected": 72,
+  "runs_injected": 78,
+  "fa_pre": 0,
+  "clean_pre": 486,
+  "fa_post": 72,
+  "clean_post": 1092,
+  "latency_median": 1.0,
+  "latency_p90": 1.0,
+  "thr": [
+   0.1,
+   0.05,
+   0.2,
+   0.05,
+   0.05
+  ],
+  "per_channel": {
+   "Vdc": {
+    "recall": 1.0,
+    "precision": 0.7142857142857143,
+    "support": 360
+   },
+   "Vac": {
+    "recall": 1.0,
+    "precision": 0.5555555555555556,
+    "support": 180
+   },
+   "Iac": {
+    "recall": 0.75,
+    "precision": 0.8206686930091185,
+    "support": 360
+   },
+   "Vbat": {
+    "recall": 1.0,
+    "precision": 0.5750798722044729,
+    "support": 180
+   },
+   "Ibat": {
+    "recall": 1.0,
+    "precision": 0.3383458646616541,
+    "support": 180
+   }
+  }
+ },
+ "q_phase1_rule": {
+  "tag": "HGQ2 QAT phase1",
+  "rule": true,
+  "runs_detected": 72,
+  "runs_injected": 78,
+  "fa_pre": 0,
+  "clean_pre": 486,
+  "fa_post": 81,
+  "clean_post": 1092,
+  "latency_median": 2.0,
+  "latency_p90": 2.0,
+  "thr": [
+   0.1,
+   0.05,
+   0.2,
+   0.05,
+   0.05
+  ],
+  "per_channel": {
+   "Vdc": {
+    "recall": 0.9333333333333333,
+    "precision": 0.7148936170212766,
+    "support": 360
+   },
+   "Vac": {
+    "recall": 0.9333333333333333,
+    "precision": 0.6486486486486487,
+    "support": 180
+   },
+   "Iac": {
+    "recall": 0.7,
+    "precision": 0.8936170212765957,
+    "support": 360
+   },
+   "Vbat": {
+    "recall": 0.9333333333333333,
+    "precision": 0.6292134831460674,
+    "support": 180
+   },
+   "Ibat": {
+    "recall": 0.9333333333333333,
+    "precision": 0.340080971659919,
+    "support": 180
+   }
+  }
+ },
+ "q_amp_phase1": {
+  "tag": "HGQ2 QAT phase1",
+  "median_rel_err": [
+   0.110809326171875,
+   0.021584875881671906,
+   1.248046875,
+   0.532012939453125,
+   0.10024414211511612
+  ]
+ }
+}

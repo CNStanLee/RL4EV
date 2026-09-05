@@ -10,6 +10,9 @@
 | `scripts/build_dataset.py` | 从 `run_injection` 的时序 csv 组装逐周期数据集（npz）；来源为 `tests.csv` 用例 + 基线，或 `dataset/labels.csv` 随机运行 |
 | `scripts/quick_eval.py` | 随机森林可分性检查（按运行或按策略留出），逐类精确率 / 召回率、误报、检测延迟、特征重要性 |
 | `scripts/train_detector.py` | HGQ2 量化 MLP（默认 48-32，权重 kif 1/2/7，激活 1/4/7），`--float` 为浮点参考；输出 `model.keras`、`norm.json`、`report.json` |
+| `scripts/train_detector_v5.py` | v5 配方（2026-09-04 起）：随机森林软标签蒸馏、48 维输入（`features.FEATURE_NAMES_V3`，按名匹配旧 92 列数据集）、10 维头（5 logit + 5 逐通道有符号幅值）、2 周期持续 + 0.6 滞回评估、注入前 / 撤除后误报分开统计；输出 `chain_std.keras`、`detector.json`（含 `version`、`head`、`hyst`） |
+| `scripts/hls4ml_sweep.py` | 两个 HGQ2 模型的 hls4ml 资源 / 延迟扫描（Vitis 后端、bit_exact、逐层合法 ReuseFactor、`--pipeline` 去掉 dataflow FIFO），用 Vitis HLS 2022.2 综合并汇总成 csv；`--firmware` 导出选定点的固件到 `HLS_PRJ` 组件 |
+| `scripts/make_feat_vectors.py` | 为特征提取 IP `HLS_PRJ/emi_feat` 生成 200 × 12 周期缓冲与 48 特征参考向量 |
 | `data/` | 数据集 npz（未提交） |
 | `runs/` | 训练输出（未提交） |
 

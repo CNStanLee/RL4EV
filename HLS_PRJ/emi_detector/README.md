@@ -1,7 +1,7 @@
 # emi_detector (Vitis HLS component)
 
 Board version of the EMI sensor-chain injection detector (`EMI_DET_FPGA/runs/det_v4`, HGQ2 QDense
-[64, 64] chain, weights 2,7 / activations 4,7 bits KIF, 29806 parameters), exported with
+[64, 64] chain, weights 2,7 / activations 4,7 bits KIF, 32315 parameters), exported with
 hls4ml 1.3 (Vitis backend, `bit_exact=True`, io_parallel, ReuseFactor 1) and wrapped like `HLS_PRJ/mpcc`:
 
 - `emi_detector_axi(float feat[43], float logit[5], unsigned *flags)`, one `s_axilite` bundle `control`.

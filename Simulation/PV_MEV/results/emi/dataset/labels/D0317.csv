@@ -1,0 +1,2 @@
+run_id,VARIANT_NAME,op,n_inj,channel1,shape1,amp1,k1,f1,phase1,channel2,shape2,amp2,k2,f2,phase2,period,duty,t_on,dwell,noise_ch,noise_amp,chg_t,chg_I,vref_t,vref_dV,status
+D0317,MPCC_R,cc,2,Vbat,step,8.88732987411275,31.0683144158267,50,0,Vac,pulse,-21.7833337913749,171.178666738738,50,0,0.156220174479624,0.523857625986212,0.794187757212925,0.137569098260644,,0,0,20,0,0,OK

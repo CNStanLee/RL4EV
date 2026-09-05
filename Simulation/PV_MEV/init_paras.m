@@ -28,6 +28,9 @@ close all;
 
 %% System control
 ENABLE_HIL = 0;
+ENABLE_HIL_DET = 0;  % detector path over TCP 5020/5021 (build_hil.m); ENABLE_HIL_EST: estimator path 5030/5031
+ENABLE_HIL_EST = 0;
+HIL_HOST = '134.226.86.100';   % ZCU104 PS; '127.0.0.1' with PS_notebook/x86_pl_emulator.py
 
 %% General simulation paras
 Fnom= 50;               % System frequency (Hz)
@@ -133,17 +136,23 @@ mm_halfcycle_overlap = mm_halfcycle_points - 1;   % sliding half-cycle window
 try
     pe = pyenv;
     if pe.Status == "NotLoaded" && ~contains(pe.Executable, 'hgq2')
-        pyenv('Version', 'D:\Anaconda\envs\hgq2\python.exe');
+        if ispc
+            cands = {'D:\Anaconda\envs\hgq2\python.exe'};
+        else   % Linux box: conda env hgq2 (training/export), fallback matlab_onnx_py310 (onnxruntime only)
+            cands = {'/home/changhong/anaconda3/envs/hgq2/bin/python', '/home/changhong/anaconda3/envs/matlab_onnx_py310/bin/python'};
+        end
+        for c = cands, if isfile(c{1}), pyenv('Version', c{1}); break; end, end
     end
 catch
 end
 
 %% EMI-injection detector (build_detector.m); model from EMI_DET_FPGA/runs/<run>/model.onnx
-det_onnx_file      = 'D:/Prj/RL4EV/EMI_DET_FPGA/runs/det_v2_q/model.onnx';
+det_onnx_file      = fullfile(fileparts(fileparts(fileparts(mfilename('fullpath')))), 'EMI_DET_FPGA', 'artifacts', 'detector.onnx');   % informational; the block holds a literal path that OnnxRunner.resolve maps onto this checkout
 det_thr            = [0.5 0.5 0.5 0.5 0.5];   % per-channel sigmoid thresholds (run_injection passes detector.json values in DET.thr)
 if exist('DET', 'var') && isstruct(DET) && isfield(DET, 'thr') && numel(DET.thr) == 5, det_thr = double(DET.thr(:)'); end
 det_ema_alpha      = 0.1;                     % baseline EMA (features.EMA_ALPHA)
 det_persist        = 2;                       % consecutive cycles before a channel flag is raised
+det_hyst           = 0.6;                     % hysteresis: a flag clears when p < det_hyst * det_thr (detector v5)
 det_variant_onehot = [0 0 0 0 0 0];           % set below from VARIANT_NAME (CRPR MPCC_P MPCC_D MPCC_D_F1 MPCC_D_F10 MPCC_D_R)
 
 %% HGQ2 harmonic estimator (estimation_src 3 raw, 6 = FFT1 + HGQ2 fusion), see build_estimator.m
@@ -175,12 +184,22 @@ use_p_predict  = cfg_row.use_p_predict;  % 1: MPCC direct gating (bypasses PWM)
 use_harmonic   = cfg_row.use_harmonic;   % 1: subtract estimated 3/5/7th harmonics from Iref
 estimation_src = cfg_row.estimation_src; % see table above
 simu_time      = cfg_row.simu_time;      % model StopTime (s)
+% resilient MPCC (build_mitigation.m); columns are optional in config.csv
+use_detector    = 0; mitigation_mask = 0; det_force = 0;
+if ismember('use_detector', cfg_row.Properties.VariableNames),    use_detector    = double(cfg_row.use_detector);    end
+if ismember('mitigation_mask', cfg_row.Properties.VariableNames), mitigation_mask = double(cfg_row.mitigation_mask); end
+if ismember('det_force', cfg_row.Properties.VariableNames),       det_force       = double(cfg_row.det_force);       end
+if isnan(use_detector), use_detector = 0; end
+if isnan(mitigation_mask), mitigation_mask = 0; end
+if isnan(det_force), det_force = 0; end
+mit_t_ramp      = 0.06;                  % M7: corrections ramp out over 3 grid cycles after a flag clears
+det_t_arm       = 0.58;                  % mitigation armed after the start-up transient (snapshots are taken at 0.6 s)
 
 if use_d_predict && use_p_predict
     error('init_paras:variant', 'use_d_predict and use_p_predict cannot both be 1 (%s)', VARIANT_NAME);
 end
 det_vlist = ["CRPR" "MPCC_P" "MPCC_D" "MPCC_D_F1" "MPCC_D_F10" "MPCC_D_R"];
 det_variant_onehot = double(det_vlist == VARIANT_NAME);      % all-zero for variants unseen by the detector
-fprintf('[init_paras] variant %-11s Fc=%6.0f Hz  d=%d p=%d h=%d src=%d  simu_time=%g s\n', ...
-    VARIANT_NAME, Fc, use_d_predict, use_p_predict, use_harmonic, estimation_src, simu_time);
+fprintf('[init_paras] variant %-11s Fc=%6.0f Hz  d=%d p=%d h=%d src=%d  det=%d mask=%d force=%d  simu_time=%g s\n', ...
+    VARIANT_NAME, Fc, use_d_predict, use_p_predict, use_harmonic, estimation_src, use_detector, mitigation_mask, det_force, simu_time);
 clear cfg_dir cfg_file cfg_tbl cfg_row

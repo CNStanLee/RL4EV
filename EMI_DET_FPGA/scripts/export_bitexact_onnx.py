@@ -50,13 +50,14 @@ def main():
     mu = np.array(cfg["mu"], np.float32); inv = (1.0 / np.array(cfg["sd"], np.float32)).astype(np.float32)
     ab = tuple(int(b) for b in cfg["abits"].split(",")); i_bits, f_bits = ab
     chain = keras.models.load_model(run / "chain_std.keras", compile=False)
-    names = [f"dense{i}" for i in range(len(cfg["width"]))] + ["chan"]
-    n_in = len(cfg["features"])
+    v5 = int(cfg.get("version", 4)) >= 5            # v5: head = QDense(10) -> [5 logits, 5 amplitudes]
+    names = [f"dense{i}" for i in range(len(cfg["width"]))] + (["head"] if v5 else ["chan"])
+    n_in = len(cfg["features"]); n_amp = 5 if v5 else 1
     inits = [numpy_helper.from_array(mu, "mu"), numpy_helper.from_array(inv, "inv_sd"),
              numpy_helper.from_array(np.array(2.0 ** f_bits, np.float32), "scale"), numpy_helper.from_array(np.array(2.0 ** -f_bits, np.float32), "inv_scale"),
              numpy_helper.from_array(np.array(0.5, np.float32), "half"), numpy_helper.from_array(np.array(-(2.0 ** i_bits), np.float32), "q_lo"),
              numpy_helper.from_array(np.array(2.0 ** i_bits - 2.0 ** -f_bits, np.float32), "q_hi"),
-             numpy_helper.from_array(np.zeros((1, 10), np.float32), "zeros10"), numpy_helper.from_array(np.zeros((1, 1), np.float32), "zeros1")]
+             numpy_helper.from_array(np.zeros((1, 10), np.float32), "zeros10"), numpy_helper.from_array(np.zeros((1, n_amp), np.float32), "zeros1")]
     nodes = [helper.make_node("Sub", ["features", "mu"], ["x_c"]), helper.make_node("Mul", ["x_c", "inv_sd"], ["x_std"])]
     h = "x_std"
     for k, name in enumerate(names):
@@ -69,25 +70,42 @@ def main():
                   helper.make_node("Clip", [f"qu{k}", "q_lo", "q_hi"], [f"q{k}"]),
                   helper.make_node("Gemm", [f"q{k}", f"W{k}", f"b{k}"], [f"z{k}"])]
         h = f"z{k}"
-        if name != "chan":
+        if name not in ("chan", "head"):
             nodes += [helper.make_node("Relu", [h], [f"a{k}"])]; h = f"a{k}"
-    nodes += [helper.make_node("Identity", [h], ["chan_logits"]),
-              helper.make_node("Shape", ["features"], ["shp"]), helper.make_node("Slice", ["shp", "sl0", "sl1"], ["nb"]),
-              helper.make_node("Concat", ["nb", "c10"], ["shape10"], axis=0), helper.make_node("Concat", ["nb", "c1"], ["shape1"], axis=0),
-              helper.make_node("Expand", ["zeros10", "shape10"], ["logits"]), helper.make_node("Expand", ["zeros1", "shape1"], ["amp"])]
+    nodes += [helper.make_node("Shape", ["features"], ["shp"]), helper.make_node("Slice", ["shp", "sl0", "sl1"], ["nb"]),
+              helper.make_node("Concat", ["nb", "c10"], ["shape10"], axis=0),
+              helper.make_node("Expand", ["zeros10", "shape10"], ["logits"])]
+    if v5:
+        # the head's output quantizer (oq) is not enabled in the chain, so the raw accumulator is the output
+        nodes += [helper.make_node("Slice", [h, "i0", "i5", "ax1"], ["chan_logits"]),
+                  helper.make_node("Slice", [h, "i5", "i10", "ax1"], ["amp"])]
+        inits += [numpy_helper.from_array(np.array([0], np.int64), "i0"), numpy_helper.from_array(np.array([5], np.int64), "i5"),
+                  numpy_helper.from_array(np.array([10], np.int64), "i10"), numpy_helper.from_array(np.array([1], np.int64), "ax1")]
+    else:
+        nodes += [helper.make_node("Identity", [h], ["chan_logits"]),
+                  helper.make_node("Concat", ["nb", "c1"], ["shape1"], axis=0), helper.make_node("Expand", ["zeros1", "shape1"], ["amp"])]
     inits += [numpy_helper.from_array(np.array([0], np.int64), "sl0"), numpy_helper.from_array(np.array([1], np.int64), "sl1"),
               numpy_helper.from_array(np.array([10], np.int64), "c10"), numpy_helper.from_array(np.array([1], np.int64), "c1")]
     g = helper.make_graph(nodes, "emi_det_v4_bitexact", [helper.make_tensor_value_info("features", TensorProto.FLOAT, ["batch", n_in])],
                           [helper.make_tensor_value_info("chan_logits", TensorProto.FLOAT, ["batch", 5]),
                            helper.make_tensor_value_info("logits", TensorProto.FLOAT, ["batch", 10]),
-                           helper.make_tensor_value_info("amp", TensorProto.FLOAT, ["batch", 1])], initializer=inits)
+                           helper.make_tensor_value_info("amp", TensorProto.FLOAT, ["batch", n_amp])], initializer=inits)
     m = helper.make_model(g, opset_imports=[helper.make_opsetid("", 17)], producer_name="export_bitexact_onnx"); m.ir_version = 8
     onnx.checker.check_model(m); onnx.save(m, a.out)
     import onnxruntime as ort
     s = ort.InferenceSession(a.out, providers=["CPUExecutionProvider"])
-    D = np.load(a.data); X = np.nan_to_num(D["X"][:, :n_in].astype(np.float32))
-    ref = chain.predict((X - mu) * inv, batch_size=4096, verbose=0); got = s.run(None, {"features": X})
+    D = np.load(a.data, allow_pickle=True)
+    names = [str(n) for n in D["feature_names"]]
+    X = np.full((D["X"].shape[0], n_in), np.nan, np.float32)
+    for j, nm in enumerate(cfg["features"]):
+        if nm in names:
+            X[:, j] = D["X"][:, names.index(nm)]
+    X = np.where(np.isfinite(X), X, mu).astype(np.float32)     # missing / NaN features -> training mean (0 after standardization)
+    ref_all = chain.predict((X - mu) * inv, batch_size=4096, verbose=0); ref = ref_all[:, :5]
+    got = s.run(None, {"features": X})
     d = np.abs(np.asarray(got[0]) - ref); thr = np.array(cfg["thr"]); lt = np.log(thr / (1 - thr))
+    if v5:
+        d = np.maximum(d, np.abs(np.asarray(got[2]) - ref_all[:, 5:]))
     print(f"bit-exact ONNX vs Keras chain over {len(X)} cycles: max |dlogit| {d.max():.3g}  rows > 1e-3: {int((d.max(1) > 1e-3).sum())}  "
           f"flag disagreements {int(((np.asarray(got[0]) >= lt) != (ref >= lt)).sum())}  outputs {[np.asarray(o).shape[1] for o in got]}")
     print("written", a.out)
