@@ -45,7 +45,10 @@
 前三个是分析所需，后两个只在重算 THD 或重画电流波形时需要。
 按需下载，解压后目录结构与仓库内一致，脚本无需改路径。
 
-2026-09-05 的第二批（Linux 机上生成，`/mnt/data6/RL4EV_data_bundles/`，校验值 `SHA256SUMS_2026-09-05.txt`）：
+2026-09-05 的第二批，打成一个 zip（243 MB，SHA256 `0683ce03f7aa9e96bef54459a61f561d7aa5e9db64a2abe952ea1957655ad376`，内含 `SHA256SUMS_2026-09-05.txt`）：
+
+https://drive.google.com/file/d/1CKC42j9BdYCIpTBw753kKhEpezDVdHpM/view?usp=sharing
+
 
 | 分发包 | 内容 | 解压位置 |
 |---|---|---|
@@ -60,9 +63,13 @@
 
 ```bash
 pip install gdown
-gdown 186uhv86RkQAilBb9XWfCzl1BwmxdGY6W        # RL4EV_data_bundles.zip, 2.5 GB
-unzip RL4EV_data_bundles.zip && cd RL4EV_data_bundles && sha256sum -c SHA256SUMS.txt
+gdown 186uhv86RkQAilBb9XWfCzl1BwmxdGY6W        # 第一批 RL4EV_data_bundles.zip, 2.5 GB (SHA256 12c07cf8...)
+unzip RL4EV_data_bundles.zip && (cd RL4EV_data_bundles && sha256sum -c SHA256SUMS.txt)
+gdown 1CKC42j9BdYCIpTBw753kKhEpezDVdHpM        # 第二批 RL4EV_data_bundles_2026-09-05.zip, 243 MB (SHA256 0683ce03...)
+unzip RL4EV_data_bundles_2026-09-05.zip && (cd RL4EV_data_bundles_2026-09-05 && sha256sum -c SHA256SUMS_2026-09-05.txt)
 ```
+
+两批都已从 Drive 回下载校验过（2026-09-05）。
 
 **上传到 Google Drive**：本会话没有 Drive 授权（claude.ai 的 Google Drive 连接器需要交互式
 OAuth），所以分发包只生成在本地，需要你手动上传。上传后把共享链接填到上表下面：
