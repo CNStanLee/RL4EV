@@ -139,3 +139,46 @@ HGQ_MODEL/artifacts/**/*.h5
 # ---- Data bundles staged for external hosting --------------------------------
 *.tar.xz
 _upload/
+
+# ---- Separate manuscript repository -----------------------------------------
+# DAES_Special_Issue has its own origin; never add it as an accidental gitlink.
+DAES_Special_Issue/
+
+# ---- Local experiment logs and duplicate report exports ----------------------
+# Keep scripts, source models, input parameter MAT files and compact CSV/JSON
+# scorecards. Raw simulation histories and diagnostic dumps stay on disk.
+Simulation/**/exp/results/**/*.mat
+Simulation/**/exp/test.csv
+Simulation/PV_MEV/test.csv
+FFT_HGQ_BLS_FPGA/experiments/**/results*/**/*.mat
+FFT_HGQ_BLS_FPGA/experiments/**/report/*.docx
+FFT_HGQ_BLS_FPGA/experiments/**/report/*.pdf
+FFT_HGQ_BLS_FPGA/experiments/**/report/*.html
+*.slx.r*
+paper/*.pdf
+
+# ---- Regenerable hardware delivery and compiled libraries --------------------
+# Build sources and small HWH interface descriptions remain versioned.
+*.bit
+*.xsa
+*.dcp
+*.so
+*.o
+*.a
+*.vcd
+*.wdb
+*.wlf
+*.zip
+*.tar
+*.tar.gz
+*.7z
+
+# ---- Paper build and analysis previews ---------------------------------------
+*.aux
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+paper/**/build/
+paper/**/preview/

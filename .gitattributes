@@ -1,0 +1,8 @@
+# Hash-verified experimental sources must retain their original bytes.
+paper/daes_results/source/** -text -whitespace
+paper/daes_results/*.py text eol=lf
+paper/daes_results/*.md text eol=lf
+paper/daes_results/*.json text eol=lf
+paper/daes_results/requirements.txt text eol=lf
+paper/daes_results/derived/*.csv text eol=lf
+paper/daes_results/derived/*.json text eol=lf

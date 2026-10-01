@@ -23,7 +23,7 @@
 | `EMI_DET_FPGA/runs/det_v5/`、`data/cycles_v3_*.npz` | 6 MB | 检测器 v5（48 特征）模型、阈值与训练报告；补充数据的逐周期特征集 |
 | `EMI_DET_FPGA/runs/{resilience_report,random_sil_report,sil_report_v2,estimator_report_v2}/` | 2 MB | 韧性消融、随机工况、SIL、估计器报告与图（2026-09-05） |
 | `FFT_HGQ_BLS_FPGA/{data/pv_mev_windows_v2.npz,runs/pv_mev_v2,artifacts/pv_mev_v2}` | 10 MB | 估计器 v2：PV_MEV 真实波形训练集、模型、ONNX 与 hls4ml 固件 |
-| `PS_notebook/hardware/mpcc_r.{bit,hwh}` | 19 MB | ZCU104 MPCC_R overlay（Vivado 2022.2，`Vivado_PRJ/MPCC_R/build_bd.tcl` 可重建） |
+| `PS_notebook/hardware/mpcc_r.hwh` | 小体积 | ZCU104 MPCC_R 接口描述；约 19 MB 的 `.bit` 改为仓库外产物，可从第二批分发包取回或用 `Vivado_PRJ/MPCC_R/build_bd.tcl` 重建 |
 | `Simulation/PV_MEV/results/emi/scorecard.csv`（更新） | | 新模型上 CRPR / MPCC_P / MPCC_D / MPCC_D_H1 / MPCC_R / MPCC_R_ON 与逐位对照各行；旧 6 策略结果仍在 `scorecard_phase1.csv` |
 
 有了这些，不跑 MATLAB 也可以：复现全部指标表和结论、重训检测器、重跑 SIL 报告、
@@ -113,6 +113,13 @@ cd "$O" && sha256sum *.tar *.tar.xz > SHA256SUMS.txt
 
 ## 其它大文件说明
 
-`PS_notebook/` 里的两个比特流（`mpcc_hil.bit`、`system_wrapper.bit`，各 18 MB）是 ZCU104
-上板运行所需的交付物，保留在仓库中；它们已在历史里，占 git 包体积的大半。若以后要缩小
-仓库，唯一办法是重写历史，需要单独决定。
+2026-10-01 的整理将三个约 18.4 MiB 比特流、`.xsa`、`.dcp`、编译的 `.so`、
+Python 缓存和模型备份从当前 Git 索引移除，并更新忽略规则；本地文件保留，未重写历史。
+因此旧提交仍可取回这些交付物，仓库历史体积不会因当前提交删除而立即变小。
+新版 `mpcc_r.bit` 也在上面的第二批分发包中；上板前将匹配的 `.bit` 与已跟踪的
+`.hwh` 放在同一目录。源码、接口描述、训练所需的小数据集和实验记分卡继续跟踪。
+
+DAES 论文的紧凑结果包见 [`paper/daes_results/`](paper/daes_results/README.md)：
+最终 SIL、历史 HIL 与板端重放数据来自论文仓库的已提交证据版本，保留来源提交、
+原始路径、字节数和 SHA-256。实验 MAT 原始日志与重复导出的 PDF/DOCX/HTML 报告
+留在本地；CSV/JSON 记分卡、模型输入参数和复现脚本保留在 Git 中。

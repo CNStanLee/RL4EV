@@ -11,3 +11,8 @@
 | [`Vivado_PRJ/`](Vivado_PRJ/)、[`PS_notebook/`](PS_notebook/) | ZCU104 工程与 PYNQ 上板运行环境 |
 
 数据存放规则、仓库外分发包与重新生成方法见 [`DATA.md`](DATA.md)。
+
+DAES 论文的实验结果整理、证据口径和可复现图表脚本见
+[`paper/daes_results/README.md`](paper/daes_results/README.md)。
+该包保留小体积原始记分卡，分别报告最终 SIL、历史 HIL 与独立板端时序；
+论文仓库为 [DAES_Special_Issue](https://github.com/CNStanLee/DAES_Special_Issue)。

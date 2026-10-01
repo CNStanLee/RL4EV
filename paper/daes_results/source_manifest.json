@@ -1,0 +1,1378 @@
+[
+  {
+    "local": "source/matched_case_metrics.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/matched_case_metrics.csv",
+    "bytes": 20317,
+    "sha256": "48cd4f5ad0edda1f9196899faa3d342bb4fc76b199bf69acae89d244c0fe0be2"
+  },
+  {
+    "local": "source/attack_window_metrics.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/derived/attack_window_metrics.csv",
+    "bytes": 14863,
+    "sha256": "6935ef2a0c101a344638a9cce626d9e1e35eb7f65e38c2b56c2d3536b1fcdb22"
+  },
+  {
+    "local": "source/attack_membership.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "supplement/attack_data/attack_membership.csv",
+    "bytes": 1394,
+    "sha256": "2916a4e510004893d259d25863f42c8ca9cf90d83035ecc684a89d5f50e79050"
+  },
+  {
+    "local": "source/sweep_metrics.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "figures/comparisons/attack_sweeps/plotted_data.csv",
+    "bytes": 73641,
+    "sha256": "ff3c06cd9f5dfb07e6801002bf35a2b630f8d9b6dada4d167b1ca07f7c1946e1"
+  },
+  {
+    "local": "source/ids_benchmark.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/raw/runs_mlp_q_deployed_phase1.csv",
+    "bytes": 6520,
+    "sha256": "0b401768f94fdaf6dc8ced3767a8b14a556690c93d5e36803338a535cc0b19c8"
+  },
+  {
+    "local": "source/ids_random.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/raw/runs_mlp_q_deployed_random20.csv",
+    "bytes": 1070,
+    "sha256": "b84948b2fe7d3e0396af52f88ace2b78c9cbf9de221bc9d4ad09d4b57ccc1dab"
+  },
+  {
+    "local": "source/ids_channels.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/derived/unified_channels.csv",
+    "bytes": 491,
+    "sha256": "50b8290fb17324bd52d3bcfb965fd5e3686410c1acfcd252d7f371a0aea3c414"
+  },
+  {
+    "local": "source/hil_outcomes.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/hil_security_data/full_hil_outcomes.csv",
+    "bytes": 2160,
+    "sha256": "01b0b97a3347aed4af17b3e2e7130e39f6b247e21e88371a968f8f4da143e3eb"
+  },
+  {
+    "local": "source/equivalence.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/hil_security_data/data/derived/equivalence.csv",
+    "bytes": 12790,
+    "sha256": "afa4c33e849afd8f3d3ae60a2499d704829a10bfe703c61846f463269a78f723"
+  },
+  {
+    "local": "source/resources.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "figures/compact/hardware_tables/data/incremental_cost.csv",
+    "bytes": 545,
+    "sha256": "88f2484aa5ce8f905960143b93a8923d7a6855f0eb4580e0ecb9f61ea2b5e92c"
+  },
+  {
+    "local": "source/timing.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "figures/compact/hardware_tables/data/rt_sched_summary.csv",
+    "bytes": 786,
+    "sha256": "4ce834af549a35d609c6556423799926d862c1674604be3d3934390947535958"
+  },
+  {
+    "local": "source/limits.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "figures/comparisons/limits/plotted_data.csv",
+    "bytes": 10629,
+    "sha256": "c143ec55d46ad3c95f3948df2b55e1036b0ec82036fb1b7a03885b002e245f71"
+  },
+  {
+    "local": "source/archived_computed_values.json",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/computed_values.json",
+    "bytes": 4667,
+    "sha256": "b8b154b63f6664114086a2d07c76934f9cf8d12a2d16e7a867fe6aa37b2f13a9"
+  },
+  {
+    "local": "source/scorecards/E-AC-01a_MPCC_H6_L55.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-AC-01a_MPCC_H6_L55.csv",
+    "bytes": 1331,
+    "sha256": "bd1df7c155fcc643738b70992bc6483636907e5641f9d07b773976a75e2f7a04"
+  },
+  {
+    "local": "source/scorecards/E-AC-01a_MPCC_R6_RES.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-AC-01a_MPCC_R6_RES.csv",
+    "bytes": 1336,
+    "sha256": "9147b8e08f19df8d6d949b0dd4aa4d4d7903869263be536cce37ce7fce037a2b"
+  },
+  {
+    "local": "source/scorecards/E-AC-01b_MPCC_H6_L55.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-AC-01b_MPCC_H6_L55.csv",
+    "bytes": 1390,
+    "sha256": "6776422a722ab73cedcd117f36737f6db3406168ff987115fc767bdf02e2bb8d"
+  },
+  {
+    "local": "source/scorecards/E-AC-01b_MPCC_R6_RES.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-AC-01b_MPCC_R6_RES.csv",
+    "bytes": 1337,
+    "sha256": "8aab1dd836af065327405625e3f47e8e4e74dc8995922d4d87181995d50aef48"
+  },
+  {
+    "local": "source/scorecards/E-AC-02b_MPCC_H6_L55.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-AC-02b_MPCC_H6_L55.csv",
+    "bytes": 1327,
+    "sha256": "545a390fb799de4f6c6029710cd3ffe808b80c91aa5c8de2e4410c9db93607ac"
+  },
+  {
+    "local": "source/scorecards/E-AC-02b_MPCC_R6_RES.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-AC-02b_MPCC_R6_RES.csv",
+    "bytes": 1326,
+    "sha256": "7535fd443bd2f8fe794ee92c0344d6cbf98a96de3e4985dd012738a036b90292"
+  },
+  {
+    "local": "source/scorecards/E-AC-02h_MPCC_H6_L55.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-AC-02h_MPCC_H6_L55.csv",
+    "bytes": 1323,
+    "sha256": "010b02f2e0334b3aa5e4ac3c17719315cc1ba341bdc07f4da73e6b190d165929"
+  },
+  {
+    "local": "source/scorecards/E-AC-02h_MPCC_R6_RES.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-AC-02h_MPCC_R6_RES.csv",
+    "bytes": 1324,
+    "sha256": "daa7aed99c29c346c53fff06bd1a3947ecc7ac4793f7c01471d777f132b3a782"
+  },
+  {
+    "local": "source/scorecards/E-AC-02s_MPCC_H6_L55.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-AC-02s_MPCC_H6_L55.csv",
+    "bytes": 1381,
+    "sha256": "bfc9b54f528f99427569ecdf6697e18b29c5ca9bf0ade66b674aa87c293c4e9f"
+  },
+  {
+    "local": "source/scorecards/E-AC-02s_MPCC_R6_RES.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-AC-02s_MPCC_R6_RES.csv",
+    "bytes": 1381,
+    "sha256": "c12914aabc203116cf456b016a32c31aa5098eaadb3cbd34af948fb2da772627"
+  },
+  {
+    "local": "source/scorecards/E-BAT-01b_MPCC_H6_L55.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-BAT-01b_MPCC_H6_L55.csv",
+    "bytes": 1440,
+    "sha256": "0aa7455992b691be9bc7b2ac9f3d60bd6c1c6b53217467eb5a6ab8d49719fc0a"
+  },
+  {
+    "local": "source/scorecards/E-BAT-01b_MPCC_R6_RES.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-BAT-01b_MPCC_R6_RES.csv",
+    "bytes": 1426,
+    "sha256": "1583a60fd1ad64ae8c276f9f0e240d3ff27b850b561c43a89520bc0ea49ef856"
+  },
+  {
+    "local": "source/scorecards/E-BAT-01n_MPCC_H6_L55.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-BAT-01n_MPCC_H6_L55.csv",
+    "bytes": 1457,
+    "sha256": "e6e9501aef19d81b70517306e881ef4214ca50f4e447a8cbed4c59492c6ef1a3"
+  },
+  {
+    "local": "source/scorecards/E-BAT-01n_MPCC_R6_RES.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-BAT-01n_MPCC_R6_RES.csv",
+    "bytes": 1457,
+    "sha256": "e03c6b7ce1a1c6c776d7a71388ea1f772266574ff4706158382b3ab4dc9ff04e"
+  },
+  {
+    "local": "source/scorecards/E-BAT-02b_MPCC_H6_L55.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-BAT-02b_MPCC_H6_L55.csv",
+    "bytes": 1485,
+    "sha256": "d6244912ee0aa6c7b46f504cc07ccbb2ec1798c7c95a94f77e79326def4e3097"
+  },
+  {
+    "local": "source/scorecards/E-BAT-02b_MPCC_R6_RES.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-BAT-02b_MPCC_R6_RES.csv",
+    "bytes": 1455,
+    "sha256": "2997b1d0ac3fa3b07179a24252011cdd61a47fe2adee0ff8d70a0bbc6e661272"
+  },
+  {
+    "local": "source/scorecards/E-BAT-02c_MPCC_H6_L55.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-BAT-02c_MPCC_H6_L55.csv",
+    "bytes": 1395,
+    "sha256": "b6b90aec041e6a21843b28e36b29f438c329f340be428af6a7c5f775cebc626a"
+  },
+  {
+    "local": "source/scorecards/E-BAT-02c_MPCC_R6_RES.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-BAT-02c_MPCC_R6_RES.csv",
+    "bytes": 1386,
+    "sha256": "7f01c89f04695c871a93f8547f9c50602c10814cae8b3bb46ee4c4dac22a3e4d"
+  },
+  {
+    "local": "source/scorecards/E-DC-01b_MPCC_H6_L55.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-DC-01b_MPCC_H6_L55.csv",
+    "bytes": 1449,
+    "sha256": "504f587a80faddbd28fb7d9a16e9870fe5deb393f1a478ccdcd2c4a2e59e7816"
+  },
+  {
+    "local": "source/scorecards/E-DC-01b_MPCC_R6_RES.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-DC-01b_MPCC_R6_RES.csv",
+    "bytes": 1356,
+    "sha256": "03dabcb31f297c459ea365074f1c364e1c6380b2637c3b58f227a38908b099c5"
+  },
+  {
+    "local": "source/scorecards/E-DC-01c_MPCC_H6_L55.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-DC-01c_MPCC_H6_L55.csv",
+    "bytes": 1363,
+    "sha256": "7d9f3c96bfd074190bc094984a39ea2573079246d07f3635c7d96a374e71791a"
+  },
+  {
+    "local": "source/scorecards/E-DC-01c_MPCC_R6_RES.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-DC-01c_MPCC_R6_RES.csv",
+    "bytes": 1421,
+    "sha256": "86f5a7432a9337f44ca7edfe6822006c06c1e32d7a21b11a0a4b33a9a5cb2fe1"
+  },
+  {
+    "local": "source/scorecards/E-DC-02b_MPCC_H6_L55.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-DC-02b_MPCC_H6_L55.csv",
+    "bytes": 1441,
+    "sha256": "75541cdea542c5589c96b326394d2c89fcfe4238a19d3ac0def587f227e596a3"
+  },
+  {
+    "local": "source/scorecards/E-DC-02b_MPCC_R6_RES.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-DC-02b_MPCC_R6_RES.csv",
+    "bytes": 1429,
+    "sha256": "af086225f53534d4b298f61f34598b9bbab6107096af09a573c1b07cbc80c157"
+  },
+  {
+    "local": "source/scorecards/E-MUL-01_MPCC_H6_L55.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-MUL-01_MPCC_H6_L55.csv",
+    "bytes": 1446,
+    "sha256": "a1aaf2bb7f8164b1fb77062c80657143d0498828c87e1dc270ba8f1794b151d0"
+  },
+  {
+    "local": "source/scorecards/E-MUL-01_MPCC_R6_RES.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_data/data/new_ablation/scorecards/E-MUL-01_MPCC_R6_RES.csv",
+    "bytes": 1354,
+    "sha256": "8b30936b64693bf318af4ec77c358be7b9e56c9e089ee733bd97ca89ff6a3849"
+  },
+  {
+    "local": "source/scorecards/E-AC-01a_CRPR.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-01a_CRPR.csv",
+    "bytes": 1312,
+    "sha256": "40a2f05effdd19c72f182433d43a530b56f284323e2288b37e03378cfa0a798c"
+  },
+  {
+    "local": "source/scorecards/E-AC-01a_MPCC_D.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-01a_MPCC_D.csv",
+    "bytes": 1309,
+    "sha256": "bccd25c4e9610ad4d591d39d0a923b21aa9b12b80650086a3147c8ff7c7774cd"
+  },
+  {
+    "local": "source/scorecards/E-AC-01a_MPCC_D_F1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-01a_MPCC_D_F1.csv",
+    "bytes": 1315,
+    "sha256": "aabd52bd72f53d2899bad562a15643d5c7327271cb23d39ba8747a5ce769243a"
+  },
+  {
+    "local": "source/scorecards/E-AC-01a_MPCC_D_F10.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-01a_MPCC_D_F10.csv",
+    "bytes": 1314,
+    "sha256": "12c7896f1260969ea41df916fc03e75dbaa1ef8274ca407ec7ed4ba59d3659e0"
+  },
+  {
+    "local": "source/scorecards/E-AC-01a_MPCC_D_H1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-01a_MPCC_D_H1.csv",
+    "bytes": 1308,
+    "sha256": "0cff2a91508611fb2f3cb7cf5a1681581ed607218f8fdd94e924dc81021c7b33"
+  },
+  {
+    "local": "source/scorecards/E-AC-01a_MPCC_D_M1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-01a_MPCC_D_M1.csv",
+    "bytes": 1311,
+    "sha256": "5380902f6909df50e59c2c07e8db156c429e697998d0d98e1cfe4403ffae7b32"
+  },
+  {
+    "local": "source/scorecards/E-AC-01a_MPCC_D_R.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-01a_MPCC_D_R.csv",
+    "bytes": 1310,
+    "sha256": "66823a6bdd7c46579c19e045e74a7cc68a574b1abe5457ca671be54bbf266b12"
+  },
+  {
+    "local": "source/scorecards/E-AC-01a_MPCC_H6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-01a_MPCC_H6.csv",
+    "bytes": 1325,
+    "sha256": "824bd9f8fcc3d316565010b388dbf4e2d3aad09d37c5b3941e053a1a70c52e95"
+  },
+  {
+    "local": "source/scorecards/E-AC-01a_MPCC_P.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-01a_MPCC_P.csv",
+    "bytes": 1312,
+    "sha256": "d79a106fe29c098b1c83ee1aa66b6f4f47d1df360564233ceaba25af7f9ae2b3"
+  },
+  {
+    "local": "source/scorecards/E-AC-01a_MPCC_R6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-01a_MPCC_R6.csv",
+    "bytes": 1330,
+    "sha256": "137b7c1a37213a4ef2eeaafd653ef576dbc697c37626f32f33ad0169fffb8f15"
+  },
+  {
+    "local": "source/scorecards/E-AC-01b_CRPR.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-01b_CRPR.csv",
+    "bytes": 1313,
+    "sha256": "8751fe157a25f6f617fb0907ba83c91884b6c0812a67c9ab938b2fa6fe668e88"
+  },
+  {
+    "local": "source/scorecards/E-AC-01b_MPCC_D.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-01b_MPCC_D.csv",
+    "bytes": 1314,
+    "sha256": "5b1c9b792f49b21e75fcd0cdd1f3ead5997c66a62b4995380bc78e927f8fd14a"
+  },
+  {
+    "local": "source/scorecards/E-AC-01b_MPCC_D_F1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-01b_MPCC_D_F1.csv",
+    "bytes": 1358,
+    "sha256": "1d6197379d5be44caf0b0186871d0c4d80c6a9e511e192ba751aad2a5059f507"
+  },
+  {
+    "local": "source/scorecards/E-AC-01b_MPCC_D_F10.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-01b_MPCC_D_F10.csv",
+    "bytes": 1359,
+    "sha256": "c1a9628c726b3ba4980d425f59a5c3eeca5b0b8a88eb28a922f9db609ab49666"
+  },
+  {
+    "local": "source/scorecards/E-AC-01b_MPCC_D_H1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-01b_MPCC_D_H1.csv",
+    "bytes": 1361,
+    "sha256": "2c6a6703c834ffe84e9abfb35e9442b4feb2e69c47527dc35b8cf4aa1875ae48"
+  },
+  {
+    "local": "source/scorecards/E-AC-01b_MPCC_D_M1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-01b_MPCC_D_M1.csv",
+    "bytes": 1358,
+    "sha256": "e4698c2f4a33812c195199fb170812154fd12a34226c807a2fffea0c032feead"
+  },
+  {
+    "local": "source/scorecards/E-AC-01b_MPCC_D_R.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-01b_MPCC_D_R.csv",
+    "bytes": 1358,
+    "sha256": "3e20d7f7fdd9a504c9a6e46d969938eb8c9febb7f86ed87b8bd28738945a6b41"
+  },
+  {
+    "local": "source/scorecards/E-AC-01b_MPCC_H6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-01b_MPCC_H6.csv",
+    "bytes": 1364,
+    "sha256": "047e9231da014e0f03be2234d2be7d98d97e836cf0aa1e92fe308292908a15a3"
+  },
+  {
+    "local": "source/scorecards/E-AC-01b_MPCC_P.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-01b_MPCC_P.csv",
+    "bytes": 1314,
+    "sha256": "1ab7c83cad8fa3fa490cbee8949729f38f6bbf4e333acb4cf45d88c34e7243d1"
+  },
+  {
+    "local": "source/scorecards/E-AC-01b_MPCC_R6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-01b_MPCC_R6.csv",
+    "bytes": 1335,
+    "sha256": "71bd813da40cb0b950723842807c34b9d5e8250317bafc6d8093e159251b8cd1"
+  },
+  {
+    "local": "source/scorecards/E-AC-02b_CRPR.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02b_CRPR.csv",
+    "bytes": 1314,
+    "sha256": "4a5b3e9f8ea08f945df00472ebf14bb00b24dc24143922605cb86cef81243be4"
+  },
+  {
+    "local": "source/scorecards/E-AC-02b_MPCC_D.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02b_MPCC_D.csv",
+    "bytes": 1305,
+    "sha256": "f96128faca41e68a77355a6af07394e3a6ebc3694d8c4a6e2a0c6e0e7d111f12"
+  },
+  {
+    "local": "source/scorecards/E-AC-02b_MPCC_D_F1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02b_MPCC_D_F1.csv",
+    "bytes": 1309,
+    "sha256": "628a55d5dd6e219ac4c3317702f926b958d3a99d0899dd040c2c9e98cf336e3b"
+  },
+  {
+    "local": "source/scorecards/E-AC-02b_MPCC_D_F10.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02b_MPCC_D_F10.csv",
+    "bytes": 1311,
+    "sha256": "ad3a8ff87e052b0ba236993b9975ae41d04bc39d24d9e985451eb8e0bad448f0"
+  },
+  {
+    "local": "source/scorecards/E-AC-02b_MPCC_D_H1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02b_MPCC_D_H1.csv",
+    "bytes": 1308,
+    "sha256": "70f0ba2b4a6f7480cb41b5a5f973aac4e4c86065ae53fc4757203b3ffcd6159c"
+  },
+  {
+    "local": "source/scorecards/E-AC-02b_MPCC_D_M1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02b_MPCC_D_M1.csv",
+    "bytes": 1302,
+    "sha256": "ca433317c17f65ce810269b9fe4c1bbc4af3e1949d1a3804e805f9f415ff8d38"
+  },
+  {
+    "local": "source/scorecards/E-AC-02b_MPCC_D_R.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02b_MPCC_D_R.csv",
+    "bytes": 1309,
+    "sha256": "f37585deb992e577cd85e848c9f1f5e2b2cf4707a8f038667605530066f0374b"
+  },
+  {
+    "local": "source/scorecards/E-AC-02b_MPCC_H6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02b_MPCC_H6.csv",
+    "bytes": 1322,
+    "sha256": "54525ffaa6ef3902f4e83f852c8db72a22b4d0a0e0532cfe9784aa174e0515c8"
+  },
+  {
+    "local": "source/scorecards/E-AC-02b_MPCC_P.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02b_MPCC_P.csv",
+    "bytes": 1303,
+    "sha256": "f86a27ed256747ad4028b57e51657988acfbdad8d0cbdb68ad9f1d536c5b5c6a"
+  },
+  {
+    "local": "source/scorecards/E-AC-02b_MPCC_R6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02b_MPCC_R6.csv",
+    "bytes": 1321,
+    "sha256": "0d02de460019a5a60137962ecb41503fceb416a27309ab82d480df6658eba1c0"
+  },
+  {
+    "local": "source/scorecards/E-AC-02h_CRPR.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02h_CRPR.csv",
+    "bytes": 1335,
+    "sha256": "fd6fd4f0e923985487ba7933e52a0defa29f02bc0fd2ef357dd5593bf804b7e7"
+  },
+  {
+    "local": "source/scorecards/E-AC-02h_MPCC_D.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02h_MPCC_D.csv",
+    "bytes": 1304,
+    "sha256": "2a90cf32a085bf14a43d2ae3689c52f290a99778a1b7058a5636555447d44d19"
+  },
+  {
+    "local": "source/scorecards/E-AC-02h_MPCC_D_F1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02h_MPCC_D_F1.csv",
+    "bytes": 1308,
+    "sha256": "14306b92fc99d92a53b9d8e3697c60639e13730c38e57e8813eb93af519b42b3"
+  },
+  {
+    "local": "source/scorecards/E-AC-02h_MPCC_D_F10.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02h_MPCC_D_F10.csv",
+    "bytes": 1311,
+    "sha256": "6fd774551c3b052c54892c8d445447335911ea4ddc6cce667e8c6f110675b625"
+  },
+  {
+    "local": "source/scorecards/E-AC-02h_MPCC_D_H1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02h_MPCC_D_H1.csv",
+    "bytes": 1307,
+    "sha256": "7ef7b9b895a051b068b49b15395a783b665aaba4914dc1a18f1b0b3a29b6ef92"
+  },
+  {
+    "local": "source/scorecards/E-AC-02h_MPCC_D_M1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02h_MPCC_D_M1.csv",
+    "bytes": 1309,
+    "sha256": "b4a3abacece0845021388ad4e4e1f3d3f5875cfd868b9697adc4c5cf4a29ed00"
+  },
+  {
+    "local": "source/scorecards/E-AC-02h_MPCC_D_R.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02h_MPCC_D_R.csv",
+    "bytes": 1307,
+    "sha256": "8cef28eed746bc3c809b50878639e74ae798a05ef2829ce4939071297ae074b4"
+  },
+  {
+    "local": "source/scorecards/E-AC-02h_MPCC_H6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02h_MPCC_H6.csv",
+    "bytes": 1321,
+    "sha256": "862bc1fed90e317761d8f057044e495b49bf37eb5c7bda0224ee29e5934df8e6"
+  },
+  {
+    "local": "source/scorecards/E-AC-02h_MPCC_P.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02h_MPCC_P.csv",
+    "bytes": 1301,
+    "sha256": "e638c362a17469a29e7d838449406c416feb380a41e7cc10740ba5d556965838"
+  },
+  {
+    "local": "source/scorecards/E-AC-02h_MPCC_R6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02h_MPCC_R6.csv",
+    "bytes": 1324,
+    "sha256": "f326346806b9ab66a935c302cff948458628de9eb76961242dba9d4775c68bb2"
+  },
+  {
+    "local": "source/scorecards/E-AC-02s_CRPR.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02s_CRPR.csv",
+    "bytes": 1346,
+    "sha256": "3c0898c0ca01da6469c1f3c3f490c66f9599918eedec04eb79829b44066b35fc"
+  },
+  {
+    "local": "source/scorecards/E-AC-02s_MPCC_D.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02s_MPCC_D.csv",
+    "bytes": 1349,
+    "sha256": "6e850a34b998af4ab10d72ddba8cb3bcc8e6422c5a34bcd8fdc8bb9e51d2eba7"
+  },
+  {
+    "local": "source/scorecards/E-AC-02s_MPCC_D_F1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02s_MPCC_D_F1.csv",
+    "bytes": 1363,
+    "sha256": "fbbe6dfc3b2c0d5c6c5ca87215f136a7a9d582a9b385b308c2d508d06c77fa2e"
+  },
+  {
+    "local": "source/scorecards/E-AC-02s_MPCC_D_F10.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02s_MPCC_D_F10.csv",
+    "bytes": 1363,
+    "sha256": "9450ccee911caf4ca3ea51f8a5946e5b890baf8cc6d40e1d0d2076298307ca90"
+  },
+  {
+    "local": "source/scorecards/E-AC-02s_MPCC_D_H1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02s_MPCC_D_H1.csv",
+    "bytes": 1355,
+    "sha256": "22f19a9b532a8878a9077a74fb86d0286e93135f7eb048224d542eadc1e49880"
+  },
+  {
+    "local": "source/scorecards/E-AC-02s_MPCC_D_M1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02s_MPCC_D_M1.csv",
+    "bytes": 1349,
+    "sha256": "4082f3eb82717c502a1ccfcb29fc561108bbf0965d8781ff7be3ff2b4524fb65"
+  },
+  {
+    "local": "source/scorecards/E-AC-02s_MPCC_D_R.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02s_MPCC_D_R.csv",
+    "bytes": 1364,
+    "sha256": "3ea6001b6561193bfda3cd98938ed49b55358ab58ba8c8795af678600c495dee"
+  },
+  {
+    "local": "source/scorecards/E-AC-02s_MPCC_H6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02s_MPCC_H6.csv",
+    "bytes": 1377,
+    "sha256": "5076ddea0c1dca2c3b59ddfb3f803975dc283195c927c8a20c36f9320535406f"
+  },
+  {
+    "local": "source/scorecards/E-AC-02s_MPCC_P.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02s_MPCC_P.csv",
+    "bytes": 1346,
+    "sha256": "a36e76d1bb5c0cf2bfeefce909c6786eb8a6d01745da9bb021e956dff562e778"
+  },
+  {
+    "local": "source/scorecards/E-AC-02s_MPCC_R6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-AC-02s_MPCC_R6.csv",
+    "bytes": 1368,
+    "sha256": "d20737fec903582d87e106c8c096ee2c07b9561b00420960e26296481568eb29"
+  },
+  {
+    "local": "source/scorecards/E-BAT-01b_CRPR.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-01b_CRPR.csv",
+    "bytes": 1404,
+    "sha256": "147a2e31bc5d761d97c04653a64c6b012e54438acef831dd739e82cc52672852"
+  },
+  {
+    "local": "source/scorecards/E-BAT-01b_MPCC_D.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-01b_MPCC_D.csv",
+    "bytes": 1409,
+    "sha256": "39ba48ed6931088420ffecfbd7913fb97d999efde5df6c8a9ac454d23461618f"
+  },
+  {
+    "local": "source/scorecards/E-BAT-01b_MPCC_D_F1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-01b_MPCC_D_F1.csv",
+    "bytes": 1383,
+    "sha256": "6eeb5cd727baad37c5183b8ed7d0c0e38031e9a84a7651d0685629c3deb8a83f"
+  },
+  {
+    "local": "source/scorecards/E-BAT-01b_MPCC_D_F10.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-01b_MPCC_D_F10.csv",
+    "bytes": 1396,
+    "sha256": "eca632b5ede873a7140bfe96a48f678daa91cc90490293243bb806fadb508fca"
+  },
+  {
+    "local": "source/scorecards/E-BAT-01b_MPCC_D_H1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-01b_MPCC_D_H1.csv",
+    "bytes": 1415,
+    "sha256": "3f7943026f1489ff68364507ea3b6d89c1c72db9b7025e6cecffc5c17e3f3dc4"
+  },
+  {
+    "local": "source/scorecards/E-BAT-01b_MPCC_D_M1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-01b_MPCC_D_M1.csv",
+    "bytes": 1380,
+    "sha256": "438c83ee9b1744b0f2ee5121450f00e9505513b7090606d515d19872d9dab80d"
+  },
+  {
+    "local": "source/scorecards/E-BAT-01b_MPCC_D_R.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-01b_MPCC_D_R.csv",
+    "bytes": 1412,
+    "sha256": "477855f17c4a70ce54810aa7fff38fe6125ad81deb785a884bad14857c9c8f58"
+  },
+  {
+    "local": "source/scorecards/E-BAT-01b_MPCC_H6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-01b_MPCC_H6.csv",
+    "bytes": 1430,
+    "sha256": "ba60d4ebdef3ca1d1b2c073af1f41fd4c8db683a8a48b5b068f6b7981e53bde3"
+  },
+  {
+    "local": "source/scorecards/E-BAT-01b_MPCC_P.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-01b_MPCC_P.csv",
+    "bytes": 1407,
+    "sha256": "11953cdb3c05c7260b8b22b3bbad200c89b92e346ac88ae658edfae19390f68a"
+  },
+  {
+    "local": "source/scorecards/E-BAT-01b_MPCC_R6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-01b_MPCC_R6.csv",
+    "bytes": 1437,
+    "sha256": "a28e36930024231136fa2b8c17cc70d425ff2c3eb304bbc726646c81173c404d"
+  },
+  {
+    "local": "source/scorecards/E-BAT-01n_CRPR.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-01n_CRPR.csv",
+    "bytes": 1411,
+    "sha256": "5752e9ab25787ce8463c61bf553a5c12a595f93ae77522ae95fcb2a2a232433b"
+  },
+  {
+    "local": "source/scorecards/E-BAT-01n_MPCC_D.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-01n_MPCC_D.csv",
+    "bytes": 1437,
+    "sha256": "68944b05661370f1959000b6dee6604e15787e3b542c2d9587e12995c9a4c535"
+  },
+  {
+    "local": "source/scorecards/E-BAT-01n_MPCC_D_F1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-01n_MPCC_D_F1.csv",
+    "bytes": 1392,
+    "sha256": "a1a315e074ce7aa18d818c8d85160feb6e7efc85d45f73104dd12a4be77bba10"
+  },
+  {
+    "local": "source/scorecards/E-BAT-01n_MPCC_D_F10.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-01n_MPCC_D_F10.csv",
+    "bytes": 1417,
+    "sha256": "43ddba85ad549c28198e0c3a4b2b6222eb03565abdfa96c597227197852aa920"
+  },
+  {
+    "local": "source/scorecards/E-BAT-01n_MPCC_D_H1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-01n_MPCC_D_H1.csv",
+    "bytes": 1398,
+    "sha256": "f0b067ba74a881f2ad8713b5558817a9384361a6921154c45b8850364c9da7a3"
+  },
+  {
+    "local": "source/scorecards/E-BAT-01n_MPCC_D_M1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-01n_MPCC_D_M1.csv",
+    "bytes": 1395,
+    "sha256": "424d376f66730a7b9d667d22687103a9f5d0c09c72e0354330a0de3e5a1f14a3"
+  },
+  {
+    "local": "source/scorecards/E-BAT-01n_MPCC_D_R.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-01n_MPCC_D_R.csv",
+    "bytes": 1413,
+    "sha256": "e590571517c0e9ad405ea7ecd4545641820b03357ad52a654d27269f4124c28d"
+  },
+  {
+    "local": "source/scorecards/E-BAT-01n_MPCC_H6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-01n_MPCC_H6.csv",
+    "bytes": 1401,
+    "sha256": "4dc8e9b6ca900b0cc010526855128c49ae41960f37a03af681be875d2a512af6"
+  },
+  {
+    "local": "source/scorecards/E-BAT-01n_MPCC_P.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-01n_MPCC_P.csv",
+    "bytes": 1414,
+    "sha256": "14f75e806dffebdd541b033bb460bb14aba96c155e19f1e2c5bb0e5679b8f403"
+  },
+  {
+    "local": "source/scorecards/E-BAT-01n_MPCC_R6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-01n_MPCC_R6.csv",
+    "bytes": 1401,
+    "sha256": "815662882d01bf99f51cc7cd5e32c90507a39e107dc0d99ab094ec6d51284af0"
+  },
+  {
+    "local": "source/scorecards/E-BAT-02b_CRPR.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-02b_CRPR.csv",
+    "bytes": 1447,
+    "sha256": "d0e63152556e870b6cf7cc3e9cc12b038f156a432d80868012c2069b2d9090a9"
+  },
+  {
+    "local": "source/scorecards/E-BAT-02b_MPCC_D.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-02b_MPCC_D.csv",
+    "bytes": 1444,
+    "sha256": "0462830fd4c859ca10359880fed4659c9d92a7117eb3b30e767a2b04d0dd412d"
+  },
+  {
+    "local": "source/scorecards/E-BAT-02b_MPCC_D_F1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-02b_MPCC_D_F1.csv",
+    "bytes": 1424,
+    "sha256": "2d22651968d8592d8a2a0fb9fdf85b38cb9043623a930ad29ff61313853a6849"
+  },
+  {
+    "local": "source/scorecards/E-BAT-02b_MPCC_D_F10.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-02b_MPCC_D_F10.csv",
+    "bytes": 1440,
+    "sha256": "c18893481b524e053f52fd46495da3070ec6f1035e71f34a8c49514477609c29"
+  },
+  {
+    "local": "source/scorecards/E-BAT-02b_MPCC_D_H1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-02b_MPCC_D_H1.csv",
+    "bytes": 1432,
+    "sha256": "b14387fa184deddddac322faf96532c4cddb139c49fba1246691719a2a6704bd"
+  },
+  {
+    "local": "source/scorecards/E-BAT-02b_MPCC_D_M1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-02b_MPCC_D_M1.csv",
+    "bytes": 1423,
+    "sha256": "ea40f50c519d807df330012905ca86575e747224f1289ff088e38e2eaefcaa98"
+  },
+  {
+    "local": "source/scorecards/E-BAT-02b_MPCC_D_R.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-02b_MPCC_D_R.csv",
+    "bytes": 1423,
+    "sha256": "0718eab3c322a08d7dfa2b82f5c195c85c447ebe33a752a9609db6161c8363e8"
+  },
+  {
+    "local": "source/scorecards/E-BAT-02b_MPCC_H6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-02b_MPCC_H6.csv",
+    "bytes": 1448,
+    "sha256": "fb613edb3e4515921600e599baff51f1f90458c1cede5b7736c53884349019f1"
+  },
+  {
+    "local": "source/scorecards/E-BAT-02b_MPCC_P.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-02b_MPCC_P.csv",
+    "bytes": 1432,
+    "sha256": "05322ae2a31fb50b89f01db22ebd1db11727eba113daaf7b18ebaaba94bc7041"
+  },
+  {
+    "local": "source/scorecards/E-BAT-02b_MPCC_R6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-02b_MPCC_R6.csv",
+    "bytes": 1417,
+    "sha256": "cad710971d46f4458f64527daed15e98b57703b25fcc38487e0dac295749625c"
+  },
+  {
+    "local": "source/scorecards/E-BAT-02c_CRPR.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-02c_CRPR.csv",
+    "bytes": 1368,
+    "sha256": "7dd186222bee98bfc7228d7db89e42976ac7dd5b8e9f81030ba0efef370ab8c1"
+  },
+  {
+    "local": "source/scorecards/E-BAT-02c_MPCC_D.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-02c_MPCC_D.csv",
+    "bytes": 1376,
+    "sha256": "513b62254551819b31c7b0ade0bb75d6d30a09f33ee56dd76190dcaf14acb423"
+  },
+  {
+    "local": "source/scorecards/E-BAT-02c_MPCC_D_F1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-02c_MPCC_D_F1.csv",
+    "bytes": 1382,
+    "sha256": "48d4c2ba1616c977e6329f696c4d93164d99c957faadd84a928ca8e9fc49f596"
+  },
+  {
+    "local": "source/scorecards/E-BAT-02c_MPCC_D_F10.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-02c_MPCC_D_F10.csv",
+    "bytes": 1366,
+    "sha256": "7cc9c9efa8bfa5f3d03e8efd50a4ca854d2668bd078c2780eacd7de2275cbb9d"
+  },
+  {
+    "local": "source/scorecards/E-BAT-02c_MPCC_D_H1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-02c_MPCC_D_H1.csv",
+    "bytes": 1371,
+    "sha256": "3cd273edaf1528139984fdc1426f7f033f9cf8b9aaa84f6b83a54279aad8d50d"
+  },
+  {
+    "local": "source/scorecards/E-BAT-02c_MPCC_D_M1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-02c_MPCC_D_M1.csv",
+    "bytes": 1367,
+    "sha256": "85e9725661f19e1a6ffbc959f1b41af344546ae7b698ffe73712461149ff9fb2"
+  },
+  {
+    "local": "source/scorecards/E-BAT-02c_MPCC_D_R.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-02c_MPCC_D_R.csv",
+    "bytes": 1372,
+    "sha256": "8cabfdecfdb75aab99f17fc8dae2dc58e5b856ebf39f3f01c20330908852d653"
+  },
+  {
+    "local": "source/scorecards/E-BAT-02c_MPCC_H6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-02c_MPCC_H6.csv",
+    "bytes": 1387,
+    "sha256": "4d4f26a96e1198e64f1f9a502a31768a4e2c9d35d7b1a0bbb5cb3d37eaa134e4"
+  },
+  {
+    "local": "source/scorecards/E-BAT-02c_MPCC_P.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-02c_MPCC_P.csv",
+    "bytes": 1366,
+    "sha256": "47d8b536c61c5baa260df5e9f01f4ee47142eee5f238eac88665386b3566c847"
+  },
+  {
+    "local": "source/scorecards/E-BAT-02c_MPCC_R6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-BAT-02c_MPCC_R6.csv",
+    "bytes": 1416,
+    "sha256": "3a555b2c0df433c0e708d69ed3756c530f2d6f7901edeb2e8f741a7add0f6747"
+  },
+  {
+    "local": "source/scorecards/E-DC-01b_CRPR.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-01b_CRPR.csv",
+    "bytes": 1410,
+    "sha256": "87438f342cdf6dfbb379814804c3c0fd22148652d2052afd17016b7717fa3e05"
+  },
+  {
+    "local": "source/scorecards/E-DC-01b_MPCC_D.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-01b_MPCC_D.csv",
+    "bytes": 1393,
+    "sha256": "3d3d4c8044ae1781522833980418ced829c4a788753ab716426ce96858e4ba36"
+  },
+  {
+    "local": "source/scorecards/E-DC-01b_MPCC_D_F1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-01b_MPCC_D_F1.csv",
+    "bytes": 1380,
+    "sha256": "3fe498bbac1841933bf686c97a0d394f8e96dc4aaf6df90ea78b4a4f3745b880"
+  },
+  {
+    "local": "source/scorecards/E-DC-01b_MPCC_D_F10.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-01b_MPCC_D_F10.csv",
+    "bytes": 1381,
+    "sha256": "97fe90226042d29db364b85216500ce1a77f057e67f2a365c550b5bc3ac94901"
+  },
+  {
+    "local": "source/scorecards/E-DC-01b_MPCC_D_H1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-01b_MPCC_D_H1.csv",
+    "bytes": 1379,
+    "sha256": "ea7470b992a6af6c9bc99793cdd2762f56e160e88932ddac0ca9baecf12106d8"
+  },
+  {
+    "local": "source/scorecards/E-DC-01b_MPCC_D_M1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-01b_MPCC_D_M1.csv",
+    "bytes": 1389,
+    "sha256": "8c4623108cbbcda7cb9c7146b079439c802dadfd8e4871f0e0fb9fc357860db2"
+  },
+  {
+    "local": "source/scorecards/E-DC-01b_MPCC_D_R.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-01b_MPCC_D_R.csv",
+    "bytes": 1379,
+    "sha256": "f83847a54ef731c88f6f7a0f607ad50fbdc41ecc52aad2ad5d0f251798942a5d"
+  },
+  {
+    "local": "source/scorecards/E-DC-01b_MPCC_H6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-01b_MPCC_H6.csv",
+    "bytes": 1405,
+    "sha256": "8fdfa030c245be7b4823c3e297dafd92260267897835072b22977a154ca7caa5"
+  },
+  {
+    "local": "source/scorecards/E-DC-01b_MPCC_P.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-01b_MPCC_P.csv",
+    "bytes": 1416,
+    "sha256": "3323166febb9ec4f97dd7dcefda95fef8247767d2335c011460412dc6fdf8511"
+  },
+  {
+    "local": "source/scorecards/E-DC-01b_MPCC_R6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-01b_MPCC_R6.csv",
+    "bytes": 1368,
+    "sha256": "d17713afb1c687e541e51127b0df9ca5815eb0c04331ff0da4dcdadbc3797e53"
+  },
+  {
+    "local": "source/scorecards/E-DC-01c_CRPR.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-01c_CRPR.csv",
+    "bytes": 1403,
+    "sha256": "29965d1121642d45a8c1a4577daf3570409374f6401a34f6c27ab000a663e29d"
+  },
+  {
+    "local": "source/scorecards/E-DC-01c_MPCC_D.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-01c_MPCC_D.csv",
+    "bytes": 1338,
+    "sha256": "261e644bd9b629b73b7e107e03e94e96b9c3b3431da13460466b89c608e9d43d"
+  },
+  {
+    "local": "source/scorecards/E-DC-01c_MPCC_D_F1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-01c_MPCC_D_F1.csv",
+    "bytes": 1325,
+    "sha256": "05213ad95054bae59f5c16cddda150b268c66c059a8b956cd462b27a3fd229ff"
+  },
+  {
+    "local": "source/scorecards/E-DC-01c_MPCC_D_F10.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-01c_MPCC_D_F10.csv",
+    "bytes": 1337,
+    "sha256": "e450f17a5c808258e319d29404bf395f25e22722f906984cc2be99952b71eaa8"
+  },
+  {
+    "local": "source/scorecards/E-DC-01c_MPCC_D_H1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-01c_MPCC_D_H1.csv",
+    "bytes": 1338,
+    "sha256": "ef19fbf6c2e1c5a8fc372dbc733375f6fa16cdb43e1aae626fe9a579c3dd8c31"
+  },
+  {
+    "local": "source/scorecards/E-DC-01c_MPCC_D_M1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-01c_MPCC_D_M1.csv",
+    "bytes": 1325,
+    "sha256": "9f6b9c005dac509e07aeb3228693064487b690058c389e22bc855c4c431b4e99"
+  },
+  {
+    "local": "source/scorecards/E-DC-01c_MPCC_D_R.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-01c_MPCC_D_R.csv",
+    "bytes": 1333,
+    "sha256": "6283f5fb249905875c186711e82027a1617c484c9abdd6deeeda0c5d78d0bbdc"
+  },
+  {
+    "local": "source/scorecards/E-DC-01c_MPCC_H6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-01c_MPCC_H6.csv",
+    "bytes": 1352,
+    "sha256": "351c1d30066378fae2ac47edc8f3a3b840dc85ef6a21fa7293abd11fadf7f218"
+  },
+  {
+    "local": "source/scorecards/E-DC-01c_MPCC_P.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-01c_MPCC_P.csv",
+    "bytes": 1330,
+    "sha256": "92ab067713e10c667ab8f525345d476303a53ba56e3b040acaeb1c78570a9cdc"
+  },
+  {
+    "local": "source/scorecards/E-DC-01c_MPCC_R6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-01c_MPCC_R6.csv",
+    "bytes": 1369,
+    "sha256": "119ea500f00b374d790c18a47b9073940fa4b03c6d1e2ef0ac99a16f87adc92e"
+  },
+  {
+    "local": "source/scorecards/E-DC-02b_CRPR.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-02b_CRPR.csv",
+    "bytes": 1359,
+    "sha256": "adfd236feb0d92b37deb9cba9db30f769a2e744364a81bf4dfc737dd7fb8665e"
+  },
+  {
+    "local": "source/scorecards/E-DC-02b_MPCC_D.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-02b_MPCC_D.csv",
+    "bytes": 1357,
+    "sha256": "38bb60e8db1888c6fa669816705eb14dae2ef734f60462711a61af85b24ec30e"
+  },
+  {
+    "local": "source/scorecards/E-DC-02b_MPCC_D_F1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-02b_MPCC_D_F1.csv",
+    "bytes": 1359,
+    "sha256": "a82aac6063248e4f5dcc4466c1c68b38e801e6830a04d27db524e49a5023f7ae"
+  },
+  {
+    "local": "source/scorecards/E-DC-02b_MPCC_D_F10.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-02b_MPCC_D_F10.csv",
+    "bytes": 1345,
+    "sha256": "0590140e7be681ad333552f8cdb34a7ca1bf8f7b1ec8bd926e743a62c8784e54"
+  },
+  {
+    "local": "source/scorecards/E-DC-02b_MPCC_D_H1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-02b_MPCC_D_H1.csv",
+    "bytes": 1360,
+    "sha256": "fdb029aef286b2e8dce07dfc2e26d5ca16f1f301b8c9415850e7fbabdaab149e"
+  },
+  {
+    "local": "source/scorecards/E-DC-02b_MPCC_D_M1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-02b_MPCC_D_M1.csv",
+    "bytes": 1359,
+    "sha256": "40bc2c4d55537d81c4c8b4cccfcc01792c09646b35ff418654c16e1e171d2d3e"
+  },
+  {
+    "local": "source/scorecards/E-DC-02b_MPCC_D_R.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-02b_MPCC_D_R.csv",
+    "bytes": 1347,
+    "sha256": "9dab880e2968c95bf3edacc98f587817ba5a1628c95c060c79e9bebfc588fc2f"
+  },
+  {
+    "local": "source/scorecards/E-DC-02b_MPCC_H6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-02b_MPCC_H6.csv",
+    "bytes": 1376,
+    "sha256": "68ba4ba9251c6f67a964df731415289b700e58ae713ea469a8ea6c74f3a6eeff"
+  },
+  {
+    "local": "source/scorecards/E-DC-02b_MPCC_P.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-02b_MPCC_P.csv",
+    "bytes": 1359,
+    "sha256": "dcbdfb7277df356c80a1b4242d5117ed5811614f139399ed0c76c86184c36707"
+  },
+  {
+    "local": "source/scorecards/E-DC-02b_MPCC_R6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-DC-02b_MPCC_R6.csv",
+    "bytes": 1389,
+    "sha256": "9e02a680dc708f400e461ba7b2e269495b3b8b8d518f8d4c1322355ca6c993b7"
+  },
+  {
+    "local": "source/scorecards/E-MUL-01_CRPR.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-MUL-01_CRPR.csv",
+    "bytes": 1408,
+    "sha256": "6512bf48a1b51ac3d4f6fa70a5557a7077dea7dfc5988dc31b577a0794d4beba"
+  },
+  {
+    "local": "source/scorecards/E-MUL-01_MPCC_D.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-MUL-01_MPCC_D.csv",
+    "bytes": 1394,
+    "sha256": "8602bfb9738c280aa8500feae4b44734a5200407b87f1c58bb319fa3069c7c12"
+  },
+  {
+    "local": "source/scorecards/E-MUL-01_MPCC_D_F1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-MUL-01_MPCC_D_F1.csv",
+    "bytes": 1375,
+    "sha256": "516db69755bb5539fdcd6ded781970a6a1499d95fa27db49c0ef455c134d8641"
+  },
+  {
+    "local": "source/scorecards/E-MUL-01_MPCC_D_F10.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-MUL-01_MPCC_D_F10.csv",
+    "bytes": 1393,
+    "sha256": "3b4bba8eede26ddcfe4e4a5672c38078e7dd483c66ca97e8bbf5c2fde32fb7fd"
+  },
+  {
+    "local": "source/scorecards/E-MUL-01_MPCC_D_H1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-MUL-01_MPCC_D_H1.csv",
+    "bytes": 1401,
+    "sha256": "79924e728327081b2b6d2735c09b1eebd4ea140c4258a33fa91c86a6d4d05da9"
+  },
+  {
+    "local": "source/scorecards/E-MUL-01_MPCC_D_M1.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-MUL-01_MPCC_D_M1.csv",
+    "bytes": 1369,
+    "sha256": "be02f43f9f64291307d2630145f1842ebaee21ce212b9b976eacb88437c499a7"
+  },
+  {
+    "local": "source/scorecards/E-MUL-01_MPCC_D_R.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-MUL-01_MPCC_D_R.csv",
+    "bytes": 1373,
+    "sha256": "448145ffc78fe25d72642ac3053174f1c167c9e1f30bf7831ec2101ffaaa732a"
+  },
+  {
+    "local": "source/scorecards/E-MUL-01_MPCC_H6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-MUL-01_MPCC_H6.csv",
+    "bytes": 1404,
+    "sha256": "a135527f5790b1708ac4e3f26a47480fccb3081379b097c3bf2acf0593255269"
+  },
+  {
+    "local": "source/scorecards/E-MUL-01_MPCC_P.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-MUL-01_MPCC_P.csv",
+    "bytes": 1386,
+    "sha256": "75bf328518e670d622684741579ee8478922050a151bae4b2a78bd9dad18f55c"
+  },
+  {
+    "local": "source/scorecards/E-MUL-01_MPCC_R6.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/work_comparison_data/data/scorecards/E-MUL-01_MPCC_R6.csv",
+    "bytes": 1362,
+    "sha256": "40c73f1145f6e1b58bd0f82eaf5fe9cd9ebfac38851a41132f3e156fe086e89e"
+  },
+  {
+    "local": "source/ids_original_table.tex",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "tables/core_detector.tex",
+    "bytes": 1059,
+    "sha256": "6ab2467be53b55ef8b1ad2daba15a240c2537d8aa024bf520ffa25eed530a82a"
+  },
+  {
+    "local": "source/benign_stress.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "figures/compact/hardware_tables/data/benign_paired.csv",
+    "bytes": 3791,
+    "sha256": "60a1f620880c6342290df1755e35a9f762bbd8a226c15181b9d88fbc36eb9211"
+  },
+  {
+    "local": "source/mismatch.csv",
+    "repository": "https://github.com/CNStanLee/DAES_Special_Issue",
+    "commit": "1e48d62cf1b89eead880d25070b389af3a06423b",
+    "path": "figures/compact/hardware_tables/data/mismatch.csv",
+    "bytes": 6207,
+    "sha256": "ea48de068591b57f9a931f1630ad17aa13d976db8f190021c5f3b44e519e5d7c"
+  }
+]

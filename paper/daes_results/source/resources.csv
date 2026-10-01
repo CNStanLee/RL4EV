@@ -1,0 +1,10 @@
+block,LUT,LUT_pct,FF,FF_pct,RAMB36,RAMB18,DSP,DSP_pct
+mpcc_r_hls,10701,4.6,7266,1.6,1,1,54,3.1
+emi_feat_hls,30937,13.4,23643,5.1,7,7,147,8.5
+emi_detector_axi,13318,5.8,13178,2.9,16,5,143,8.3
+harmonic_estimator_axi,23968,10.4,25874,5.6,36,7,459,26.6
+axi_smc+gpio+timer+misc,1204,0.5,1309,0.3,0,0,0,0.0
+total_design,80128,34.8,71270,15.5,60,20,803,46.5
+MPCC-only (mpcc_r + fabric),11905,5.2,8575,1.9,1,1,54,3.1
++ detection (emi_feat + detector),44255,19.2,36821,8.0,23,12,290,16.8
++ harmonic estimator,23968,10.4,25874,5.6,36,7,459,26.6

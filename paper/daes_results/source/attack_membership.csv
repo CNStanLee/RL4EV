@@ -1,0 +1,16 @@
+case,cohort,channel,shape,amp,k,f,phase,channel2,amp2,t_on,dwell,power11,thd11,complete_hil,hil_scope
+E-DC-01b,main13,Vdc,step,50,0,50,0,,0,0.7,0.3,True,True,True,earlier response
+E-DC-01c,main13,Vdc,step,100,0,50,0,,0,0.7,0.3,True,False,True,earlier response
+E-DC-02b,main13,Vdc,ramp,-100,1000,50,0,,0,0.7,0.3,True,True,True,earlier response
+E-AC-01a,main13,Vac,step,17,0,50,0,,0,0.7,0.3,True,True,True,earlier response
+E-AC-01b,main13,Vac,step,34,0,50,0,,0,0.7,0.3,True,True,False,not in seven full pairs
+E-AC-02b,main13,Iac,step,5,0,50,0,,0,0.7,0.3,True,True,True,earlier response
+E-AC-02s,main13,Iac,sine,10,0,50,90,,0,0.7,0.3,True,True,False,not in seven full pairs
+E-AC-02h,main13,Iac,hall,4,0,100,0,,0,0.7,0.3,True,True,False,not in seven full pairs
+E-MUL-01,main13,Vdc,step,50,0,50,0,Iac,5,0.7,0.3,True,True,False,not in seven full pairs
+E-BAT-01b,main13,Ibat,step,5,0,50,0,,0,0.7,0.3,False,True,True,earlier response
+E-BAT-02b,main13,Vbat,step,10,0,50,0,,0,0.7,0.3,True,True,True,earlier response
+E-BAT-02c,main13,Vbat,step,20,0,50,0,,0,0.7,0.3,True,False,False,not in seven full pairs
+E-BAT-01n,main13,Ibat,step,-5,0,50,0,,0,0.7,0.3,False,True,False,not in seven full pairs
+E-MUL-02,coordinated_stress,Vdc,step,50,0,50,0,Vbat,43,0.7,0.3,False,False,False,not in seven full pairs
+E-MUL-03,coordinated_stress,Vdc,step,50,0,50,0,Vbat,22,0.7,0.3,False,False,False,not in seven full pairs
