@@ -1,0 +1,9 @@
+configuration,variant,power11_pp,energy_kJ,latches,joint
+Complete MPCC-R,MPCC_R,0.0003655840365,2.489279763,2,10
+"Oracle, immediate",MPCC_R_OR,5.485391548e-07,0.5502938611,1,11
+"Oracle, 60 ms",MPCC_R_OR3,3.257900445e-06,2.208220586,2,10
+Without both safeguards,MPCC_R_v5,0.0003880250394,2.444279854,4,8
+Without reference limit,MPCC_R_noM11,0.0003880250394,2.50496097,5,7
+Without predictor correction,MPCC_R_noM14,2.501014327,2.81435071,2,10
+Permanent 55 A cap on H,MPCC_H_L55,32.16356358,7.559327109,1,5
+"Residual detector, same policy",MPCC_R_RES,19.47916038,5.426156812,3,7

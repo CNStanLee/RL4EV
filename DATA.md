@@ -1,5 +1,10 @@
 # 数据存储与分发
 
+2026-10-01 同步前本地备份中的全部模型和数据已作为独立快照纳入 Git，
+见 [`reproducibility/README.md`](reproducibility/README.md)。论文仓库也保存
+相同快照。这一固定归档包含备份里的硬件交付物和缓存；日常生成的大文件仍按
+下面的规则分发。
+
 本仓库只放源码、模型、小体积派生产物和文档。PV_MEV 注入实验产生约 3 GB 波形日志，
 不进 git；它们全部可由 `Simulation/PV_MEV/run_injection.m` 重新生成，也打包成了下面的
 分发包。规则写在 `.gitignore` 的 “Simulation data” 段。

@@ -1,0 +1,30 @@
+{
+  "source_files_verified": 172,
+  "source_bytes": 374615,
+  "matched_scorecards_verified": 117,
+  "added_ablation_scorecards_verified": 26,
+  "power_cases": 13,
+  "power_subset_exclusions": [
+    "E-BAT-01b",
+    "E-BAT-01n"
+  ],
+  "thd_cases": 11,
+  "thd_subset_exclusions": [
+    "E-BAT-02c",
+    "E-DC-01c"
+  ],
+  "bus_error_reduction_pct": 98.67954606720374,
+  "power_error_reduction_pct": 86.37799342130366,
+  "final_SIL_joint": [
+    5,
+    10
+  ],
+  "IDS_any_hit_pct": 98.07692307692308,
+  "full_HIL_pairs": 7,
+  "full_HIL_joint": 5,
+  "HIL_max_power_difference_pp": 0.0,
+  "HIL_max_bus_difference_V": 0.0024427337681912,
+  "HIL_max_THD_difference_pp": 0.0179161728434102,
+  "HIL_latch_pairs_equal": true,
+  "evidence_scope": "Archived experiments; final SIL policy, historical HIL and independent local replay remain separate."
+}

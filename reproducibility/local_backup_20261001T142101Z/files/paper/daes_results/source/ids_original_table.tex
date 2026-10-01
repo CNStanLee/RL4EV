@@ -1,0 +1,20 @@
+\begin{table}[!htbp]
+\centering
+\caption{IDS evaluation cohorts and observed false flags.}\label{tab:core-detector}
+{\fontsize{8}{9.2}\selectfont\setlength{\tabcolsep}{5pt}
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lrr@{}}
+\toprule
+Metric & Benchmark & Random \\
+\midrule
+Attacked / benign runs & 104 / 0 & 17 / 3 \\
+Pre-attack flagged cycles & 0/520 & 1/142 \\
+Benign flagged cycles & -- & 3/106 \\
+Benign runs with flags & -- & 1/3 \\
+Post-attack flagged cycles & 192 & 14 \\
+\bottomrule
+\end{tabular*}}
+\par\smallskip
+\begin{minipage}{\linewidth}\raggedright
+{\fontsize{7.5}{8.5}\selectfont An any-channel flag counts once per cycle after priority processing. The random cohort separates 142 pre-attack cycles from 106 cycles in three benign runs. The benchmark repeats 13 attacks under eight controllers. Neither cohort is used for fitting or early stopping. Post-attack counts may include persistence; their cycle denominators were not exported. These short records do not estimate a deployment false-alarm rate.\par}
+\end{minipage}
+\end{table}

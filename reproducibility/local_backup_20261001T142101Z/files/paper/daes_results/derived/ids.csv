@@ -1,0 +1,3 @@
+cohort,attacked,benign,any_hit,exact,detected_by_40ms,median_ms,max_ms,pre_flags,benign_flags,post_flags
+Benchmark,104,0,102,40,99,40,120,0,0,192
+Random,17,3,17,5,14,33.73295475,89.42730596,1,3,14

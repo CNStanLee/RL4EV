@@ -16,3 +16,7 @@ DAES 论文的实验结果整理、证据口径和可复现图表脚本见
 [`paper/daes_results/README.md`](paper/daes_results/README.md)。
 该包保留小体积原始记分卡，分别报告最终 SIL、历史 HIL 与独立板端时序；
 论文仓库为 [DAES_Special_Issue](https://github.com/CNStanLee/DAES_Special_Issue)。
+
+2026-10-01 同步前的本地模型、实验数据和论文初稿完整快照见
+[`reproducibility/README.md`](reproducibility/README.md)，代码与论文仓库均保存
+相同的原始文件及 SHA-256 校验清单。

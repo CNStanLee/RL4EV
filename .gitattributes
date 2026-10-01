@@ -6,3 +6,6 @@ paper/daes_results/*.json text eol=lf
 paper/daes_results/requirements.txt text eol=lf
 paper/daes_results/derived/*.csv text eol=lf
 paper/daes_results/derived/*.json text eol=lf
+
+# Local backup payloads and patches retain the bytes recorded in SHA256SUMS.
+reproducibility/local_backup_20261001T142101Z/** -text -whitespace

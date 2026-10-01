@@ -1,0 +1,191 @@
+{
+  "controllers": [
+    {
+      "controller": "PR",
+      "power11_pp": 25.465675607515383,
+      "power13_pp": 25.50551592653753,
+      "bus13_V": 44.566345592079976,
+      "latched": 4,
+      "joint": 5
+    },
+    {
+      "controller": "MPCC-P",
+      "power11_pp": 29.702647808190147,
+      "power13_pp": 29.090646250185404,
+      "bus13_V": 23.800600346286732,
+      "latched": 6,
+      "joint": 5
+    },
+    {
+      "controller": "MPCC-D",
+      "power11_pp": 29.7089142537715,
+      "power13_pp": 29.09594862721578,
+      "bus13_V": 23.951052335635797,
+      "latched": 2,
+      "joint": 5
+    },
+    {
+      "controller": "MPCC-H",
+      "power11_pp": 29.661243340292785,
+      "power13_pp": 29.05561170042609,
+      "bus13_V": 23.985507827178555,
+      "latched": 3,
+      "joint": 5
+    },
+    {
+      "controller": "MPCC-R",
+      "power11_pp": 0.00036558403653621304,
+      "power13_pp": 3.957957337312507,
+      "bus13_V": 0.3167175814051356,
+      "latched": 2,
+      "joint": 10
+    }
+  ],
+  "detector": [
+    {
+      "set": "phase1",
+      "n": 104,
+      "benign": 0,
+      "any": 102,
+      "exact": 40,
+      "median_ms": 40.00000000000004,
+      "max_ms": 120.0,
+      "fa": 0,
+      "pre_or_benign_cycles": 520,
+      "fa_post": 192,
+      "benign_with_flags": 0
+    },
+    {
+      "set": "random20",
+      "n": 17,
+      "benign": 3,
+      "any": 17,
+      "exact": 5,
+      "median_ms": 33.73295474864801,
+      "max_ms": 89.42730596072701,
+      "fa": 4,
+      "pre_or_benign_cycles": 248,
+      "fa_post": 14,
+      "benign_with_flags": 1
+    }
+  ],
+  "oracle": [
+    {
+      "name": "MPCC-R (complete design)",
+      "variant": "MPCC_R",
+      "oracle_delay_ms": null,
+      "main_table": true,
+      "power11_pp": 0.0003655840365362119,
+      "energy_kJ": 2.4892797631768215,
+      "latched": 2,
+      "joint": 10
+    },
+    {
+      "name": "Oracle (0 ms)",
+      "variant": "MPCC_R_OR",
+      "oracle_delay_ms": 0,
+      "main_table": true,
+      "power11_pp": 5.485391547856786e-07,
+      "energy_kJ": 0.5502938610834587,
+      "latched": 1,
+      "joint": 11
+    },
+    {
+      "name": "Oracle (20 ms)",
+      "variant": "MPCC_R_OR1",
+      "oracle_delay_ms": 20,
+      "main_table": false,
+      "power11_pp": 5.764820363135021e-06,
+      "energy_kJ": 1.7274167486891863,
+      "latched": 1,
+      "joint": 11
+    },
+    {
+      "name": "Oracle (40 ms)",
+      "variant": "MPCC_R_OR2",
+      "oracle_delay_ms": 40,
+      "main_table": false,
+      "power11_pp": 9.767189277970993e-07,
+      "energy_kJ": 2.0698919587160955,
+      "latched": 2,
+      "joint": 10
+    },
+    {
+      "name": "Oracle (60 ms)",
+      "variant": "MPCC_R_OR3",
+      "oracle_delay_ms": 60,
+      "main_table": true,
+      "power11_pp": 3.2579004454191818e-06,
+      "energy_kJ": 2.2082205855898365,
+      "latched": 2,
+      "joint": 10
+    },
+    {
+      "name": "Without both handover safeguards",
+      "variant": "MPCC_R_v5",
+      "oracle_delay_ms": null,
+      "main_table": true,
+      "power11_pp": 0.0003880250393628637,
+      "energy_kJ": 2.4442798536742742,
+      "latched": 4,
+      "joint": 8
+    },
+    {
+      "name": "Without reference limit",
+      "variant": "MPCC_R_noM11",
+      "oracle_delay_ms": null,
+      "main_table": true,
+      "power11_pp": 0.0003880250393628637,
+      "energy_kJ": 2.504960969544391,
+      "latched": 5,
+      "joint": 7
+    },
+    {
+      "name": "Without predictor correction",
+      "variant": "MPCC_R_noM14",
+      "oracle_delay_ms": null,
+      "main_table": true,
+      "power11_pp": 2.5010143269778173,
+      "energy_kJ": 2.814350709711091,
+      "latched": 2,
+      "joint": 10
+    },
+    {
+      "name": "Baseline + permanent 55 A cap",
+      "variant": "MPCC_H_L55",
+      "oracle_delay_ms": null,
+      "main_table": true,
+      "power11_pp": 32.16356358274897,
+      "energy_kJ": 7.559327108723996,
+      "latched": 1,
+      "joint": 5
+    },
+    {
+      "name": "Residual detector + same correction",
+      "variant": "MPCC_R_RES",
+      "oracle_delay_ms": null,
+      "main_table": true,
+      "power11_pp": 19.479160375280347,
+      "energy_kJ": 5.426156812155045,
+      "latched": 3,
+      "joint": 7
+    }
+  ],
+  "new_ablation": {
+    "MPCC_H_L55": {
+      "source_variant": "MPCC_H6_L55",
+      "power11_pp": 32.16356358274897,
+      "power13_pp": 30.555698731266865,
+      "bus13_V": 22.81875392373437,
+      "scorecards_verified": 13
+    },
+    "MPCC_R_RES": {
+      "source_variant": "MPCC_R6_RES",
+      "power11_pp": 19.479160375280347,
+      "power13_pp": 20.440003037723265,
+      "bus13_V": 16.812315892034572,
+      "scorecards_verified": 13
+    }
+  },
+  "source_hashes_verified": 33
+}
