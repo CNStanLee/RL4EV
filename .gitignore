@@ -60,8 +60,9 @@ HLS_PRJ/**/*.so
 vitis_hls.log
 
 # ---- AMD/Xilinx Vivado -------------------------------------------------------
-# MPCC_R: the project directory is rebuilt by build_bd.tcl; the bitstream / hwh copy in PS_notebook/hardware is tracked
+# MPCC_R and MPCC: the project directories are rebuilt by build_bd.tcl; bitstreams are not tracked, the hwh copies are
 Vivado_PRJ/MPCC_R/MPCC_R/
+Vivado_PRJ/MPCC/MPCC_tcl/
 Vivado_PRJ/MPCC_R/out/*.bit
 Vivado_PRJ/MPCC_R/out/*.xsa
 # FFT_HGQ_BLS training runs: keep the v2 PV_MEV retraining (model, history), drop the hls4ml build tree

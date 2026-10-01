@@ -22,8 +22,10 @@
 % snapshot); EVT (fields chg_t, chg_I, vref_t, vref_dV) adds benign transients
 % for the detector dataset.
 %
-% Only VARIANT_NAME, INJ, CHG_OP, EVT and xInitial survive the workspace reset below.
-clearvars -except VARIANT_NAME INJ CHG_OP EVT DET xInitial
+% HIL (fields mpcc, det, est, host; run_injection opts.hil) selects the ZCU104 / x86-emulator TCP paths of build_hil.m.
+% Only VARIANT_NAME, INJ, CHG_OP, EVT, DET, HIL and xInitial survive the workspace reset below.
+clearvars -except VARIANT_NAME INJ CHG_OP EVT DET RES xInitial HIL GRID MM HOLDMASK
+if ~exist('HOLDMASK', 'var') || isempty(HOLDMASK), HOLDMASK = [0 0; 2 0]; end   % tick-hold mask [t hold] (review-2 point 6), zeros = no held tick
 close all;
 
 %% System control
@@ -31,6 +33,12 @@ ENABLE_HIL = 0;
 ENABLE_HIL_DET = 0;  % detector path over TCP 5020/5021 (build_hil.m); ENABLE_HIL_EST: estimator path 5030/5031
 ENABLE_HIL_EST = 0;
 HIL_HOST = '134.226.86.100';   % ZCU104 PS; '127.0.0.1' with PS_notebook/x86_pl_emulator.py
+if exist('HIL', 'var') && isstruct(HIL)          % docs/HIL_TEST_PLAN.md: run_injection(..., struct('hil', struct('mpcc',1,'det',1,'est',1,'host','...')))
+    if isfield(HIL, 'mpcc'), ENABLE_HIL = double(HIL.mpcc); end
+    if isfield(HIL, 'det'), ENABLE_HIL_DET = double(HIL.det); end
+    if isfield(HIL, 'est'), ENABLE_HIL_EST = double(HIL.est); end
+    if isfield(HIL, 'host') && ~isempty(HIL.host), HIL_HOST = char(HIL.host); end
+end
 
 %% General simulation paras
 Fnom= 50;               % System frequency (Hz)
@@ -100,6 +108,20 @@ chg_par      = [L_chg Voc Rint Ts_chg I_SIGN t_chg_on];
 chg_ctrl_par = [Icc Vcv V_hys T_hys Kp_v_chg Ki_v_chg Kp_i_chg Ki_i_chg Ts_chg D_max_chg t_chg_on k_chg];
 
 %% Protection monitor thresholds (plan section 3.3), real quantities only
+grid_var_step = 0; grid_var_t0 = 0.7; grid_h5 = 0; grid_h7 = 0; grid_df = 0;   % programmable utility source (build_supp 'grid')
+if exist('GRID', 'var') && isstruct(GRID)          % run_injection 'benign': amplitude step (pu) at t0, frequency offset (Hz), 5th / 7th harmonic (pu)
+    if isfield(GRID, 'amp_step'), grid_var_step = GRID.amp_step; end
+    if isfield(GRID, 'df'), grid_df = GRID.df; end
+    if isfield(GRID, 't0'), grid_var_t0 = GRID.t0; end
+    if isfield(GRID, 'h5'), grid_h5 = GRID.h5; end
+    if isfield(GRID, 'h7'), grid_h7 = GRID.h7; end
+end
+chg_eff = 1;                              % charger conversion efficiency in the plant (model-mismatch test, build_supp 'mismatch')
+if exist('MM', 'var') && isstruct(MM)     % run_injection opts.mm: struct('chg_eff', 0.95, 'Rint', 0.75, 'L_chg', 0.5e-3)
+    if isfield(MM, 'chg_eff'), chg_eff = MM.chg_eff; end
+    if isfield(MM, 'Rint'), Rint = MM.Rint; end
+    if isfield(MM, 'L_chg'), L_chg = MM.L_chg; end
+end
 prot_thr = [300 450 65 355 25 2e-3 0.55];   % [UV_V OV_V OC_A BOV_V BOC_A hold_s t_arm_s]
 
 %% Sensor-chain injection (plan section 3.2); INJ from run_injection.m
@@ -189,9 +211,17 @@ use_detector    = 0; mitigation_mask = 0; det_force = 0;
 if ismember('use_detector', cfg_row.Properties.VariableNames),    use_detector    = double(cfg_row.use_detector);    end
 if ismember('mitigation_mask', cfg_row.Properties.VariableNames), mitigation_mask = double(cfg_row.mitigation_mask); end
 if ismember('det_force', cfg_row.Properties.VariableNames),       det_force       = double(cfg_row.det_force);       end
+if ismember('Limit_V', cfg_row.Properties.VariableNames) && ~isnan(double(cfg_row.Limit_V)), Limit_V = double(cfg_row.Limit_V); end   % per-variant voltage-loop limit (ablation MPCC_H6_L55)
+det_src            = 0;                       % 0: quantised network (ONNX); 1: joint-residual logistic detector (artifacts/residual.json), same decision rule and corrections
+if ismember('det_src', cfg_row.Properties.VariableNames) && ~isnan(double(cfg_row.det_src)), det_src = double(cfg_row.det_src); end
+res_par            = zeros(1, 53);
+if det_src == 1 && exist('RES', 'var') && isstruct(RES), det_thr = double(RES.thr(:)'); res_par = double(RES.par(:)'); end
 if isnan(use_detector), use_detector = 0; end
 if isnan(mitigation_mask), mitigation_mask = 0; end
 if isnan(det_force), det_force = 0; end
+k_soft = 0; if bitand(uint32(mitigation_mask), uint32(4096)) > 0, k_soft = 400; end   % M12: charger reference slew (A/s) at every re-engagement
+chg_ctrl_par(13) = k_soft;
+if ismember('det_persist', cfg_row.Properties.VariableNames) && ~isnan(double(cfg_row.det_persist)), det_persist = double(cfg_row.det_persist); end   % MPCC_R_P1: single-cycle persistence
 mit_t_ramp      = 0.06;                  % M7: corrections ramp out over 3 grid cycles after a flag clears
 det_t_arm       = 0.58;                  % mitigation armed after the start-up transient (snapshots are taken at 0.6 s)
 

@@ -7,7 +7,8 @@ and compares with the host references (the same files the Vitis csim used):
   emi_feat_hls          HLS_PRJ/emi_feat/tb_data/buf_raw.dat            -> ref_feat.dat      (rel 1e-3 / abs 1e-2)
   emi_detector_axi      HLS_PRJ/emi_detector/tb_data/feat_raw.dat       -> ref_logits.dat    (|dlogit| < 0.05, flag words equal)
   harmonic_estimator    HLS_PRJ/harmonic_estimator/tb_data/wave_raw.dat -> ref_enc.dat       (<= 2 LSB = 0.0625)
-  mpcc_r_hls            synthetic grid cycle, flags = 0                 -> host float model  (identity path, |dD| < 1e-5)
+  mpcc_r_hls            synthetic grid cycle, flags = 0                 -> host float model  (identity path, |dD| <= 1e-5 * max(1, |D|):
+                        at the exact current zero crossing the unsaturated D is ~5e5, where one float32 ulp is 0.03)
 and prints the PS-side latency of each IP (ap_start -> ap_done, includes AXI-Lite traffic).
 """
 from __future__ import annotations
@@ -31,7 +32,7 @@ def mpcc_ref(i_L, i_ref, V_in, Ts, L, Vo, th, A3, A5, A7, p3, p5, p7, use_h, sta
     L = max(L, 1e-9); Ts = max(Ts, 1e-9); Vo = max(abs(Vo), 1.0)
     ui = abs(i_L); ui_safe = max(ui, 1e-6)
     sgn = 1.0 if V_in > 0 else -1.0
-    iref_s = sgn * abs(i_ref)
+    iref_s = sgn * i_ref              # sign kept (PV_MEV D_predict; IP fixed 2026-09-05)
     plant_gain = sgn * L / (Vo * Ts)
     D_ff = 1.0 - abs(V_in) / Vo
     if use_h:
@@ -88,8 +89,9 @@ def main():
         vin = Vamp * math.sin(th); iL = Iamp * math.sin(th) + 0.5 * math.sin(3 * th)
         frame = [iL, Iamp, vin, Ts, L, Vo, th, 1.5, 0.8, 0.4, 0.3, -0.5, 1.0, 1]
         D, dbg = ov.mpcc_r(frame, flags=0, amp_iac=0.0, mask=511)
-        worst = max(worst, abs(D - mpcc_ref(*frame[:13], True, st)))
-    print(f"mpcc_r (flags=0): {min(a.n, 800)} ticks  max |dD| vs float reference {worst:.3g}  -> {'ok' if worst < 1e-4 else 'FAIL'}"); ok &= worst < 1e-4
+        ref = mpcc_ref(*frame[:13], True, st)
+        worst = max(worst, abs(D - ref) / max(1.0, abs(ref)))
+    print(f"mpcc_r (flags=0): {min(a.n, 800)} ticks  max rel |dD| vs float reference {worst:.3g}  -> {'ok' if worst < 1e-5 else 'FAIL'}"); ok &= worst < 1e-5
     print(ov.report())
     print("SELFTEST", "PASS" if ok else "FAIL")
 

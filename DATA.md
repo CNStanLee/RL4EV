@@ -67,7 +67,7 @@ https://drive.google.com/file/d/1CKC42j9BdYCIpTBw753kKhEpezDVdHpM/view?usp=shari
 | `emi_campaign2_ts_10kHz_2026-09-05.tar.xz` | 新模型（检测器 v5 + 估计器 v2 + Mitigation）上的 13 用例 × {CRPR, MPCC_P, MPCC_D, MPCC_D_H1, MPCC_R, MPCC_R_OFF, MPCC_R_ON, MPCC_R_m0..m8} 的 10 kHz 时序（无 1 MHz 电流） | `Simulation/PV_MEV/results/emi/` |
 | `emi_dataset_supp_ts_10kHz_2026-09-05.tar.xz` | 随机运行 D0241 到 D0320（Iac 专项 / 双通道 / 良性补充 48 次，随机工况 SIL 40 次） | 同上 |
 | `emi_snapshots_2026-09-05.tar.xz` | 新模型的 20 个 0.6 s 快照（4 策略 CC / CV、MPCC_R 变种） | 同上 |
-| `mpcc_r.bit`、`system_wrapper.xsa` | ZCU104 比特流与硬件平台文件 | `PS_notebook/hardware/`、`Vivado_PRJ/MPCC_R/out/` |
+| `mpcc_r.bit`、`system_wrapper.xsa` | ZCU104 比特流与硬件平台文件（2026-09-05 03:38 生成，早于 `i_ref` 符号修正；论文硬件对应修正后的版本，按 `Vivado_PRJ/README.md` 重建） | `PS_notebook/hardware/`、`Vivado_PRJ/MPCC_R/out/` |
 
 注意：旧模型的 13 用例时序（第一批 `emi_campaign_ts_10kHz.tar.xz`）与新模型同名，在 Linux 机上解压到了 `results/emi/ts_v1/`（git 忽略），不要覆盖 `ts/`。
 

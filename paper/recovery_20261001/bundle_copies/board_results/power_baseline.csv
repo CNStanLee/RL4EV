@@ -1,0 +1,7 @@
+configuration,n,P12V_mean_W,P12V_max_W,INT_mean_W,INT_max_W,P1V2_W,P1V8_W,P3V3_W
+"controller-only bitstream, idle",32,10.68809375,10.9,1.5,1.5,0.2822265625,0.28125,2.25
+"controller-only bitstream, mpcc_r loop",70,10.7982,11.037,1.5,1.5,0.28169642857142857,0.28125,2.25
+"full bitstream, idle",32,11.01690625,11.262,1.75,1.75,0.2578125,0.28125,2.25
+"full bitstream, three loops",70,11.388042857142857,11.625,2.0,2.0,0.2955357142857143,0.28125,2.25
+"defence increment, idle",0,0.32881249999999973,,0.25,,,,
+"defence increment, active",0,0.5898428571428571,,0.5,,,,

@@ -20,7 +20,9 @@ static void mpcc_core(float i_L, float i_ref, float V_in, float Ts, float L_in, 
     float ui_L = abs_float(i_L);
     float ui_L_safe = ui_L > 1.0e-6f ? ui_L : 1.0e-6f;
     float line_sign = (V_in > 0.0f) ? 1.0f : -1.0f;
-    float i_ref_signed = line_sign * abs_float(i_ref);
+    // keep the sign of i_ref (PV_MEV D_predict): a negative reference from the voltage loop must reduce the current
+    // (D -> 0), not demand |i_ref| -- rectifying it drove the bus into OV on the +100 V Vdc step in HIL (2026-09-05)
+    float i_ref_signed = line_sign * i_ref;
     float plant_gain = line_sign * L / (Vo * Ts_eff);
     float D_ff = 1.0f - abs_float(V_in) / Vo;
     if (use_harmonic) {

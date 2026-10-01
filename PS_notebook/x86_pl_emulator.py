@@ -15,6 +15,7 @@ appear only on the board are then attributable to the board.
 from __future__ import annotations
 
 import argparse
+import os
 import json
 import math
 import sys
@@ -48,7 +49,10 @@ class MpccR:
         L = max(L_in, 1e-9); Ts = max(Ts, 1e-9); Vo = max(abs(V_o), 1.0)
         ui = abs(i_L); ui_safe = max(ui, 1e-6)
         sgn = 1.0 if V_in > 0 else -1.0
-        iref_s = f(sgn * abs(i_ref))
+        if os.environ.get("MPCC_ABS_IREF"):       # reproduce the pre-fix IP (rectified reference) for the HIL-defect figure
+            iref_s = f(sgn * abs(i_ref))
+        else:
+            iref_s = f(sgn * i_ref)          # sign kept, as PV_MEV D_predict (IP fixed 2026-09-05)
         plant_gain = f(sgn * L / (Vo * Ts))
         D_ff = f(1.0 - abs(V_in) / Vo)
         if use_h:

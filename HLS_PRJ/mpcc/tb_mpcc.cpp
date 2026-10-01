@@ -49,8 +49,9 @@ static void mpcc_reference(
     float line_sign =
         V_in > 0.0f ? 1.0f : -1.0f;
 
+    // the sign of i_ref is kept, as in mpcc_hls.cpp and PV_MEV D_predict (HIL finding of 2026-09-05)
     float i_ref_signed =
-        line_sign * abs_sw(i_ref);
+        line_sign * i_ref;
 
     float plant_gain =
         line_sign * L / (Vo * Ts_eff);

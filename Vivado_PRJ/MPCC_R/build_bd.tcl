@@ -1,5 +1,5 @@
 # Vivado 2022.2 block design for ZCU104: PS + the four MPCC_R HLS IPs (plan step 4, F2/F3).
-#   vivado -mode batch -source build_bd.tcl -tclargs <ip_repo_dir> [run_impl=1]
+#   vivado -mode batch -source build_bd.tcl -tclargs <ip_repo_dir> [1|0]     (second argument: run implementation, default 1)
 # <ip_repo_dir> holds the exported HLS IPs (one sub-directory per component, Vitis HLS 2022.2
 # `export_design -format ip_catalog`): mpcc_r_hls, emi_feat_hls, emi_detector_axi, harmonic_estimator_axi.
 # Address map (AXI-Lite, 64 KiB each, HPM0 FPD):

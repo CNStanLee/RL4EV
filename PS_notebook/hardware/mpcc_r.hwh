@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Sat Sep  5 03:20:57 2026" VIVADOVERSION="2022.2">
+<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Thu Oct  1 20:10:19 2026" VIVADOVERSION="2022.2">
 
   <SYSTEMINFO ARCH="zynquplus" BOARD="xilinx.com:zcu104:part0:1.1" DEVICE="xczu7ev" NAME="system" PACKAGE="ffvc1156" SPEEDGRADE="-2"/>
 
@@ -2042,7 +2042,7 @@
         </BUSINTERFACE>
       </BUSINTERFACES>
     </MODULE>
-    <MODULE COREREVISION="2114771990" FULLNAME="/emi_detector_axi_0" HWVERSION="1.0" INSTANCE="emi_detector_axi_0" IPTYPE="PERIPHERAL" IS_ENABLE="1" MODCLASS="PERIPHERAL" MODTYPE="emi_detector_axi" VLNV="xilinx.com:hls:emi_detector_axi:1.0">
+    <MODULE COREREVISION="2114810466" FULLNAME="/emi_detector_axi_0" HWVERSION="1.0" INSTANCE="emi_detector_axi_0" IPTYPE="PERIPHERAL" IS_ENABLE="1" MODCLASS="PERIPHERAL" MODTYPE="emi_detector_axi" VLNV="xilinx.com:hls:emi_detector_axi:1.0">
       <DOCUMENTS/>
       <ADDRESSBLOCKS>
         <ADDRESSBLOCK ACCESS="read-write" INTERFACE="s_axi_control" NAME="Reg" RANGE="65536" USAGE="register">
@@ -2520,7 +2520,7 @@
         </BUSINTERFACE>
       </BUSINTERFACES>
     </MODULE>
-    <MODULE COREREVISION="2114771994" FULLNAME="/emi_feat_hls_0" HWVERSION="1.0" INSTANCE="emi_feat_hls_0" IPTYPE="PERIPHERAL" IS_ENABLE="1" MODCLASS="PERIPHERAL" MODTYPE="emi_feat_hls" VLNV="xilinx.com:hls:emi_feat_hls:1.0">
+    <MODULE COREREVISION="2114810466" FULLNAME="/emi_feat_hls_0" HWVERSION="1.0" INSTANCE="emi_feat_hls_0" IPTYPE="PERIPHERAL" IS_ENABLE="1" MODCLASS="PERIPHERAL" MODTYPE="emi_feat_hls" VLNV="xilinx.com:hls:emi_feat_hls:1.0">
       <DOCUMENTS/>
       <ADDRESSBLOCKS>
         <ADDRESSBLOCK ACCESS="read-write" INTERFACE="s_axi_control" NAME="Reg" RANGE="65536" USAGE="register">
@@ -2940,7 +2940,7 @@
         </BUSINTERFACE>
       </BUSINTERFACES>
     </MODULE>
-    <MODULE COREREVISION="2114771992" FULLNAME="/harmonic_estimator_axi_0" HWVERSION="1.0" INSTANCE="harmonic_estimator_axi_0" IPTYPE="PERIPHERAL" IS_ENABLE="1" MODCLASS="PERIPHERAL" MODTYPE="harmonic_estimator_axi" VLNV="xilinx.com:hls:harmonic_estimator_axi:1.0">
+    <MODULE COREREVISION="2114810468" FULLNAME="/harmonic_estimator_axi_0" HWVERSION="1.0" INSTANCE="harmonic_estimator_axi_0" IPTYPE="PERIPHERAL" IS_ENABLE="1" MODCLASS="PERIPHERAL" MODTYPE="harmonic_estimator_axi" VLNV="xilinx.com:hls:harmonic_estimator_axi:1.0">
       <DOCUMENTS/>
       <ADDRESSBLOCKS>
         <ADDRESSBLOCK ACCESS="read-write" INTERFACE="s_axi_control" NAME="Reg" RANGE="65536" USAGE="register">
@@ -3390,7 +3390,7 @@
         </BUSINTERFACE>
       </BUSINTERFACES>
     </MODULE>
-    <MODULE COREREVISION="2114771993" FULLNAME="/mpcc_r_hls_0" HWVERSION="1.0" INSTANCE="mpcc_r_hls_0" IPTYPE="PERIPHERAL" IS_ENABLE="1" MODCLASS="PERIPHERAL" MODTYPE="mpcc_r_hls" VLNV="xilinx.com:hls:mpcc_r_hls:1.0">
+    <MODULE COREREVISION="2114810466" FULLNAME="/mpcc_r_hls_0" HWVERSION="1.0" INSTANCE="mpcc_r_hls_0" IPTYPE="PERIPHERAL" IS_ENABLE="1" MODCLASS="PERIPHERAL" MODTYPE="mpcc_r_hls" VLNV="xilinx.com:hls:mpcc_r_hls:1.0">
       <DOCUMENTS/>
       <ADDRESSBLOCKS>
         <ADDRESSBLOCK ACCESS="read-write" INTERFACE="s_axi_control" NAME="Reg" RANGE="65536" USAGE="register">

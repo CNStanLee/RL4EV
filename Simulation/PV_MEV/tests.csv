@@ -12,3 +12,34 @@ E-BAT-01b,Ibat,step,5,0,50,0,0.1,0.5,0.70,0.30,20,,,,P1,battery current chain: r
 E-BAT-02b,Vbat,step,10,0,50,0,0.1,0.5,0.70,0.30,20,,,,P1,battery voltage chain: early CV; P_charge halves
 E-BAT-02c,Vbat,step,20,0,50,0,0.1,0.5,0.70,0.30,20,,,,P2,battery voltage chain: charging stops; PFC no-load
 E-BAT-01n,Ibat,step,-5,0,50,0,0.1,0.5,0.70,0.30,20,,,,P2,battery current chain negative: real Ibat 25 A = BOC
+E-GN-01,Vdc,gain,0.10,0,50,0,0.1,0.5,0.70,0.30,20,,,,G,gain family: Vdc chain reads +10 % (real bus regulated to 364 V)
+E-GN-01b,Vdc,gain,-0.10,0,50,0,0.1,0.5,0.70,0.30,20,,,,G,gain family: Vdc chain reads -10 % (real bus 444 V)
+E-GN-02,Vac,gain,0.10,0,50,0,0.1,0.5,0.70,0.30,20,,,,G,gain family: Vac chain +10 % (feed-forward error)
+E-GN-03,Iac,gain,-0.20,0,50,0,0.1,0.5,0.70,0.30,20,,,,G,gain family: Iac chain reads -20 % (real current +25 %)
+E-GN-03b,Iac,gain,0.20,0,50,0,0.1,0.5,0.70,0.30,20,,,,G,gain family: Iac chain reads +20 % (real current -17 %)
+E-GN-04,Vbat,gain,0.05,0,50,0,0.1,0.5,0.70,0.30,20,,,,G,gain family: Vbat chain +5 % (early CV)
+E-GN-05,Ibat,gain,-0.20,0,50,0,0.1,0.5,0.70,0.30,20,,,,G,gain family: Ibat chain reads -20 % (real 25 A = BOC)
+E-SW-DC20,Vdc,step,20,0,50,0,0.1,0.5,0.70,0.30,20,,,,S,amplitude sweep Vdc step +20 V
+E-SW-DC35,Vdc,step,35,0,50,0,0.1,0.5,0.70,0.30,20,,,,S,amplitude sweep Vdc step +35 V
+E-SW-DC75,Vdc,step,75,0,50,0,0.1,0.5,0.70,0.30,20,,,,S,amplitude sweep Vdc step +75 V
+E-SW-DCn50,Vdc,step,-50,0,50,0,0.1,0.5,0.70,0.30,20,,,,S,amplitude sweep Vdc step -50 V (real 450 V = OV edge)
+E-SW-AC8,Vac,step,8,0,50,0,0.1,0.5,0.70,0.30,20,,,,S,amplitude sweep Vac step +8 V
+E-SW-AC25,Vac,step,25,0,50,0,0.1,0.5,0.70,0.30,20,,,,S,amplitude sweep Vac step +25 V
+E-SW-AC45,Vac,step,45,0,50,0,0.1,0.5,0.70,0.30,20,,,,S,amplitude sweep Vac step +45 V
+E-SW-IAC1,Iac,step,1,0,50,0,0.1,0.5,0.70,0.30,20,,,,S,amplitude sweep Iac step +1 A
+E-SW-IAC2.5,Iac,step,2.5,0,50,0,0.1,0.5,0.70,0.30,20,,,,S,amplitude sweep Iac step +2.5 A
+E-SW-IAC7.5,Iac,step,7.5,0,50,0,0.1,0.5,0.70,0.30,20,,,,S,amplitude sweep Iac step +7.5 A
+E-SW-IAC10,Iac,step,10,0,50,0,0.1,0.5,0.70,0.30,20,,,,S,amplitude sweep Iac step +10 A
+E-SW-VB5,Vbat,step,5,0,50,0,0.1,0.5,0.70,0.30,20,,,,S,amplitude sweep Vbat step +5 V
+E-SW-VB15,Vbat,step,15,0,50,0,0.1,0.5,0.70,0.30,20,,,,S,amplitude sweep Vbat step +15 V
+E-SW-VB25,Vbat,step,25,0,50,0,0.1,0.5,0.70,0.30,20,,,,S,amplitude sweep Vbat step +25 V
+E-SW-IB2,Ibat,step,2,0,50,0,0.1,0.5,0.70,0.30,20,,,,S,amplitude sweep Ibat step +2 A
+E-SW-IB8,Ibat,step,8,0,50,0,0.1,0.5,0.70,0.30,20,,,,S,amplitude sweep Ibat step +8 A
+E-RP-250,Vdc,ramp,-100,250,50,0,0.1,0.5,0.70,0.30,20,,,,R,bus-chain ramp -100 V at 250 V/s (real bus reaches OV limit after 200 ms)
+E-RP-500,Vdc,ramp,-100,500,50,0,0.1,0.5,0.70,0.30,20,,,,R,bus-chain ramp -100 V at 500 V/s (100 ms to the OV limit)
+E-RP-2000,Vdc,ramp,-100,2000,50,0,0.1,0.5,0.70,0.30,20,,,,R,bus-chain ramp -100 V at 2000 V/s (25 ms to the OV limit)
+E-RP-4000,Vdc,ramp,-100,4000,50,0,0.1,0.5,0.70,0.30,20,,,,R,bus-chain ramp -100 V at 4000 V/s (12.5 ms to the OV limit)
+E-MUL-02,Vdc,step,50,0,50,0,0.1,0.5,0.70,0.30,20,Vbat,step,43,P2,coordinated: Vdc +50 V with Vbat +43 V (= 50 * D_dc) so that the buck identity residual cancels
+E-MUL-03,Vdc,step,50,0,50,0,0.1,0.5,0.70,0.30,20,Vbat,step,22,P2,coordinated: Vdc +50 V with Vbat +22 V (half cancellation of the residual)
+E-RP-50,Vdc,ramp,-100,50,50,0,0.1,0.5,0.70,0.30,20,,,,P2,slow drift 50 V/s (-15 V by the end of the dwell): baseline-reference absorption test
+E-RP-100,Vdc,ramp,-100,100,50,0,0.1,0.5,0.70,0.30,20,,,,P2,slow drift 100 V/s (-30 V by the end of the dwell)

@@ -74,7 +74,8 @@ void mpcc_hls(
         line_sign = -1.0f;
     }
 
-    float i_ref_signed = line_sign * abs_float(i_ref);
+    // keep the sign of i_ref (PV_MEV D_predict; see HLS_PRJ/mpcc_r for the HIL finding of 2026-09-05)
+    float i_ref_signed = line_sign * i_ref;
 
     float plant_gain =
         line_sign * L / (Vo * Ts_eff);

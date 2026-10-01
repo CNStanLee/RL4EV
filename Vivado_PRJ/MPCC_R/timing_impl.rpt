@@ -1,14 +1,14 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
----------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------
 | Tool Version      : Vivado v.2022.2 (lin64) Build 3671981 Fri Oct 14 04:59:54 MDT 2022
-| Date              : Sat Sep  5 03:38:20 2026
+| Date              : Thu Oct  1 20:29:00 2026
 | Host              : changhong-Dell-Pro-Max-Tower-T2-FCT2250 running 64-bit Ubuntu 22.04.5 LTS
-| Command           : report_timing_summary -file /mnt/data6/playground/OLD_BRANCH/RL4EV/Vivado_PRJ/MPCC_R/timing_impl.rpt
+| Command           : report_timing_summary -file <RL4EV>/Vivado_PRJ/MPCC_R/timing_impl.rpt
 | Design            : system_wrapper
 | Device            : xczu7ev-ffvc1156
 | Speed File        : -2  PRODUCTION 1.30 05-15-2022
 | Temperature Grade : E
----------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------
 
 Timing Summary Report
 
@@ -137,7 +137,7 @@ Table of Contents
 
     WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints  
     -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
-      2.004        0.000                      0               264990        0.009        0.000                      0               264990        3.500        0.000                       0                 72983  
+      2.958        0.000                      0               264919        0.009        0.000                      0               264919        3.500        0.000                       0                 72951  
 
 
 All user specified timing constraints are met.
@@ -160,7 +160,7 @@ clk_pl_0  {0.000 5.000}      10.000          100.000
 
 Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints  
 -----             -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
-clk_pl_0            2.004        0.000                      0               264990        0.009        0.000                      0               264990        3.500        0.000                       0                 72983  
+clk_pl_0            2.958        0.000                      0               264919        0.009        0.000                      0               264919        3.500        0.000                       0                 72951  
 
 
 ------------------------------------------------------------------------------------------------
@@ -191,7 +191,7 @@ Path Group    From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing 
 From Clock:  clk_pl_0
   To Clock:  clk_pl_0
 
-Setup :            0  Failing Endpoints,  Worst Slack        2.004ns,  Total Violation        0.000ns
+Setup :            0  Failing Endpoints,  Worst Slack        2.958ns,  Total Violation        0.000ns
 Hold  :            0  Failing Endpoints,  Worst Slack        0.009ns,  Total Violation        0.000ns
 PW    :            0  Failing Endpoints,  Worst Slack        3.500ns,  Total Violation        0.000ns
 ---------------------------------------------------------------------------------------------------
@@ -199,26 +199,26 @@ PW    :            0  Failing Endpoints,  Worst Slack        3.500ns,  Total Vio
 
 Max Delay Paths
 --------------------------------------------------------------------------------------
-Slack (MET) :             2.004ns  (required time - arrival time)
-  Source:                 system_i/emi_detector_axi_0/inst/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_17_9_5_3_0_config6_s_fu_579/w_index1_reg_976_reg[0]/C
+Slack (MET) :             2.958ns  (required time - arrival time)
+  Source:                 system_i/harmonic_estimator_axi_0/inst/grp_harmonic_estimator_fu_497/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_12_6_5_3_0_config7_s_fu_964/w_index1_reg_860_reg[2]/C
                             (rising edge-triggered cell FDRE clocked by clk_pl_0  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            system_i/emi_detector_axi_0/inst/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_17_9_5_3_0_config6_s_fu_579/mul_mul_11ns_9s_20_4_1_U301/emi_detector_axi_mul_mul_11ns_9s_20_4_1_DSP48_2_U/p_reg_reg/DSP_A_B_DATA_INST/A[1]
+  Destination:            system_i/harmonic_estimator_axi_0/inst/grp_harmonic_estimator_fu_497/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_12_6_5_3_0_config7_s_fu_964/mac_muladd_7s_7ns_17s_17_4_1_U305/harmonic_estimator_axi_mac_muladd_7s_7ns_17s_17_4_1_DSP48_2_U/p_reg_reg/DSP_A_B_DATA_INST/A[3]
                             (rising edge-triggered cell DSP_A_B_DATA clocked by clk_pl_0  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk_pl_0
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk_pl_0 rise@10.000ns - clk_pl_0 rise@0.000ns)
-  Data Path Delay:        7.277ns  (logic 0.484ns (6.651%)  route 6.793ns (93.349%))
-  Logic Levels:           5  (LUT6=2 MUXF7=2 MUXF8=1)
-  Clock Path Skew:        -0.321ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.747ns = ( 11.747 - 10.000 ) 
-    Source Clock Delay      (SCD):    2.165ns
+  Data Path Delay:        6.588ns  (logic 0.305ns (4.630%)  route 6.283ns (95.370%))
+  Logic Levels:           3  (LUT6=1 MUXF7=1 MUXF8=1)
+  Clock Path Skew:        -0.068ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.944ns = ( 11.944 - 10.000 ) 
+    Source Clock Delay      (SCD):    2.109ns
     Clock Pessimism Removal (CPR):    0.097ns
   Clock Uncertainty:      0.130ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
     Discrete Jitter          (DJ):    0.250ns
     Phase Error              (PE):    0.000ns
-  Clock Net Delay (Source):      1.957ns (routing 0.569ns, distribution 1.388ns)
-  Clock Net Delay (Destination): 1.579ns (routing 0.512ns, distribution 1.067ns)
+  Clock Net Delay (Source):      1.901ns (routing 0.569ns, distribution 1.332ns)
+  Clock Net Delay (Destination): 1.776ns (routing 0.512ns, distribution 1.264ns)
 
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
@@ -228,28 +228,22 @@ Slack (MET) :             2.004ns  (required time - arrival time)
                          net (fo=1, routed)           0.180     0.180    system_i/zynq_ultra_ps_e_0/inst/pl_clk_unbuffered[0]
     BUFG_PS_X0Y80        BUFG_PS (Prop_BUFG_PS_I_O)
                                                       0.028     0.208 r  system_i/zynq_ultra_ps_e_0/inst/buffer_pl_clk_0.PL_CLK_0_BUFG/O
-    X1Y2 (CLOCK_ROOT)    net (fo=77048, routed)       1.957     2.165    system_i/emi_detector_axi_0/inst/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_17_9_5_3_0_config6_s_fu_579/ap_clk
-    SLICE_X66Y244        FDRE                                         r  system_i/emi_detector_axi_0/inst/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_17_9_5_3_0_config6_s_fu_579/w_index1_reg_976_reg[0]/C
+    X1Y2 (CLOCK_ROOT)    net (fo=77016, routed)       1.901     2.109    system_i/harmonic_estimator_axi_0/inst/grp_harmonic_estimator_fu_497/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_12_6_5_3_0_config7_s_fu_964/ap_clk
+    SLICE_X71Y164        FDRE                                         r  system_i/harmonic_estimator_axi_0/inst/grp_harmonic_estimator_fu_497/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_12_6_5_3_0_config7_s_fu_964/w_index1_reg_860_reg[2]/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X66Y244        FDRE (Prop_GFF_SLICEL_C_Q)
-                                                      0.079     2.244 r  system_i/emi_detector_axi_0/inst/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_17_9_5_3_0_config6_s_fu_579/w_index1_reg_976_reg[0]/Q
-                         net (fo=354, routed)         1.677     3.922    system_i/emi_detector_axi_0/inst/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_17_9_5_3_0_config6_s_fu_579/mul_mul_11ns_7s_18_4_1_U303/emi_detector_axi_mul_mul_11ns_7s_18_4_1_DSP48_3_U/Q[0]
-    SLICE_X81Y352        LUT6 (Prop_C6LUT_SLICEM_I2_O)
-                                                      0.123     4.045 r  system_i/emi_detector_axi_0/inst/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_17_9_5_3_0_config6_s_fu_579/mul_mul_11ns_7s_18_4_1_U303/emi_detector_axi_mul_mul_11ns_7s_18_4_1_DSP48_3_U/p_reg_reg_i_603/O
-                         net (fo=1, routed)           0.021     4.066    system_i/emi_detector_axi_0/inst/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_17_9_5_3_0_config6_s_fu_579/mul_mul_11ns_7s_18_4_1_U303/emi_detector_axi_mul_mul_11ns_7s_18_4_1_DSP48_3_U/mux_646_11_1_1_U239/mux_1_29[1]
-    SLICE_X81Y352        MUXF7 (Prop_F7MUX_CD_SLICEM_I1_O)
-                                                      0.061     4.127 r  system_i/emi_detector_axi_0/inst/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_17_9_5_3_0_config6_s_fu_579/mul_mul_11ns_7s_18_4_1_U303/emi_detector_axi_mul_mul_11ns_7s_18_4_1_DSP48_3_U/p_reg_reg_i_274/O
-                         net (fo=1, routed)           0.000     4.127    system_i/emi_detector_axi_0/inst/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_17_9_5_3_0_config6_s_fu_579/mul_mul_11ns_7s_18_4_1_U303/emi_detector_axi_mul_mul_11ns_7s_18_4_1_DSP48_3_U/mux_646_11_1_1_U239/mux_2_14[1]
-    SLICE_X81Y352        MUXF8 (Prop_F8MUX_BOT_SLICEM_I0_O)
-                                                      0.030     4.157 r  system_i/emi_detector_axi_0/inst/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_17_9_5_3_0_config6_s_fu_579/mul_mul_11ns_7s_18_4_1_U303/emi_detector_axi_mul_mul_11ns_7s_18_4_1_DSP48_3_U/p_reg_reg_i_110/O
-                         net (fo=1, routed)           0.552     4.709    system_i/emi_detector_axi_0/inst/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_17_9_5_3_0_config6_s_fu_579/mul_mul_11ns_7s_18_4_1_U303/emi_detector_axi_mul_mul_11ns_7s_18_4_1_DSP48_3_U/mux_646_11_1_1_U239/mux_3_7[1]
-    SLICE_X74Y315        LUT6 (Prop_C6LUT_SLICEM_I0_O)
-                                                      0.123     4.832 r  system_i/emi_detector_axi_0/inst/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_17_9_5_3_0_config6_s_fu_579/mul_mul_11ns_7s_18_4_1_U303/emi_detector_axi_mul_mul_11ns_7s_18_4_1_DSP48_3_U/p_reg_reg_i_31/O
-                         net (fo=1, routed)           0.021     4.853    system_i/emi_detector_axi_0/inst/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_17_9_5_3_0_config6_s_fu_579/mul_mul_11ns_7s_18_4_1_U303/emi_detector_axi_mul_mul_11ns_7s_18_4_1_DSP48_3_U/mux_646_11_1_1_U239/mux_5_1[1]
-    SLICE_X74Y315        MUXF7 (Prop_F7MUX_CD_SLICEM_I1_O)
-                                                      0.068     4.921 r  system_i/emi_detector_axi_0/inst/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_17_9_5_3_0_config6_s_fu_579/mul_mul_11ns_7s_18_4_1_U303/emi_detector_axi_mul_mul_11ns_7s_18_4_1_DSP48_3_U/p_reg_reg_i_10/O
-                         net (fo=64, routed)          4.522     9.442    system_i/emi_detector_axi_0/inst/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_17_9_5_3_0_config6_s_fu_579/mul_mul_11ns_9s_20_4_1_U301/emi_detector_axi_mul_mul_11ns_9s_20_4_1_DSP48_2_U/p_reg_reg/A[1]
-    DSP48E2_X4Y14        DSP_A_B_DATA                                 r  system_i/emi_detector_axi_0/inst/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_17_9_5_3_0_config6_s_fu_579/mul_mul_11ns_9s_20_4_1_U301/emi_detector_axi_mul_mul_11ns_9s_20_4_1_DSP48_2_U/p_reg_reg/DSP_A_B_DATA_INST/A[1]
+    SLICE_X71Y164        FDRE (Prop_GFF2_SLICEM_C_Q)
+                                                      0.079     2.188 r  system_i/harmonic_estimator_axi_0/inst/grp_harmonic_estimator_fu_497/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_12_6_5_3_0_config7_s_fu_964/w_index1_reg_860_reg[2]/Q
+                         net (fo=62, routed)          1.072     3.260    system_i/harmonic_estimator_axi_0/inst/grp_harmonic_estimator_fu_497/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_12_6_5_3_0_config7_s_fu_964/mac_muladd_6s_7ns_17s_17_4_1_U368/harmonic_estimator_axi_mac_muladd_6s_7ns_17s_17_4_1_DSP48_3_U/Q[2]
+    SLICE_X88Y147        MUXF8 (Prop_F8MUX_BOT_SLICEM_S_O)
+                                                      0.074     3.334 r  system_i/harmonic_estimator_axi_0/inst/grp_harmonic_estimator_fu_497/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_12_6_5_3_0_config7_s_fu_964/mac_muladd_6s_7ns_17s_17_4_1_U368/harmonic_estimator_axi_mac_muladd_6s_7ns_17s_17_4_1_DSP48_3_U/p_reg_reg_i_65/O
+                         net (fo=1, routed)           0.508     3.842    system_i/harmonic_estimator_axi_0/inst/grp_harmonic_estimator_fu_497/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_12_6_5_3_0_config7_s_fu_964/mac_muladd_6s_7ns_17s_17_4_1_U368/harmonic_estimator_axi_mac_muladd_6s_7ns_17s_17_4_1_DSP48_3_U/mux_646_7_1_1_U304/mux_3_2[3]
+    SLICE_X76Y154        LUT6 (Prop_D6LUT_SLICEL_I1_O)
+                                                      0.089     3.931 r  system_i/harmonic_estimator_axi_0/inst/grp_harmonic_estimator_fu_497/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_12_6_5_3_0_config7_s_fu_964/mac_muladd_6s_7ns_17s_17_4_1_U368/harmonic_estimator_axi_mac_muladd_6s_7ns_17s_17_4_1_DSP48_3_U/p_reg_reg_i_32/O
+                         net (fo=1, routed)           0.009     3.940    system_i/harmonic_estimator_axi_0/inst/grp_harmonic_estimator_fu_497/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_12_6_5_3_0_config7_s_fu_964/mac_muladd_6s_7ns_17s_17_4_1_U368/harmonic_estimator_axi_mac_muladd_6s_7ns_17s_17_4_1_DSP48_3_U/mux_646_7_1_1_U304/mux_5_0[3]
+    SLICE_X76Y154        MUXF7 (Prop_F7MUX_CD_SLICEL_I0_O)
+                                                      0.063     4.003 r  system_i/harmonic_estimator_axi_0/inst/grp_harmonic_estimator_fu_497/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_12_6_5_3_0_config7_s_fu_964/mac_muladd_6s_7ns_17s_17_4_1_U368/harmonic_estimator_axi_mac_muladd_6s_7ns_17s_17_4_1_DSP48_3_U/p_reg_reg_i_4/O
+                         net (fo=64, routed)          4.694     8.697    system_i/harmonic_estimator_axi_0/inst/grp_harmonic_estimator_fu_497/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_12_6_5_3_0_config7_s_fu_964/mac_muladd_7s_7ns_17s_17_4_1_U305/harmonic_estimator_axi_mac_muladd_7s_7ns_17s_17_4_1_DSP48_2_U/p_reg_reg/A[3]
+    DSP48E2_X7Y134       DSP_A_B_DATA                                 r  system_i/harmonic_estimator_axi_0/inst/grp_harmonic_estimator_fu_497/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_12_6_5_3_0_config7_s_fu_964/mac_muladd_7s_7ns_17s_17_4_1_U305/harmonic_estimator_axi_mac_muladd_7s_7ns_17s_17_4_1_DSP48_2_U/p_reg_reg/DSP_A_B_DATA_INST/A[3]
   -------------------------------------------------------------------    -------------------
 
                          (clock clk_pl_0 rise edge)
@@ -258,17 +252,17 @@ Slack (MET) :             2.004ns  (required time - arrival time)
                          net (fo=1, routed)           0.143    10.143    system_i/zynq_ultra_ps_e_0/inst/pl_clk_unbuffered[0]
     BUFG_PS_X0Y80        BUFG_PS (Prop_BUFG_PS_I_O)
                                                       0.025    10.168 r  system_i/zynq_ultra_ps_e_0/inst/buffer_pl_clk_0.PL_CLK_0_BUFG/O
-    X1Y2 (CLOCK_ROOT)    net (fo=77048, routed)       1.579    11.747    system_i/emi_detector_axi_0/inst/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_17_9_5_3_0_config6_s_fu_579/mul_mul_11ns_9s_20_4_1_U301/emi_detector_axi_mul_mul_11ns_9s_20_4_1_DSP48_2_U/p_reg_reg/CLK
-    DSP48E2_X4Y14        DSP_A_B_DATA                                 r  system_i/emi_detector_axi_0/inst/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_17_9_5_3_0_config6_s_fu_579/mul_mul_11ns_9s_20_4_1_U301/emi_detector_axi_mul_mul_11ns_9s_20_4_1_DSP48_2_U/p_reg_reg/DSP_A_B_DATA_INST/CLK
-                         clock pessimism              0.097    11.844    
-                         clock uncertainty           -0.130    11.714    
-    DSP48E2_X4Y14        DSP_A_B_DATA (Setup_DSP_A_B_DATA_DSP48E2_CLK_A[1])
-                                                     -0.268    11.446    system_i/emi_detector_axi_0/inst/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_17_9_5_3_0_config6_s_fu_579/mul_mul_11ns_9s_20_4_1_U301/emi_detector_axi_mul_mul_11ns_9s_20_4_1_DSP48_2_U/p_reg_reg/DSP_A_B_DATA_INST
+    X1Y2 (CLOCK_ROOT)    net (fo=77016, routed)       1.776    11.944    system_i/harmonic_estimator_axi_0/inst/grp_harmonic_estimator_fu_497/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_12_6_5_3_0_config7_s_fu_964/mac_muladd_7s_7ns_17s_17_4_1_U305/harmonic_estimator_axi_mac_muladd_7s_7ns_17s_17_4_1_DSP48_2_U/p_reg_reg/CLK
+    DSP48E2_X7Y134       DSP_A_B_DATA                                 r  system_i/harmonic_estimator_axi_0/inst/grp_harmonic_estimator_fu_497/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_12_6_5_3_0_config7_s_fu_964/mac_muladd_7s_7ns_17s_17_4_1_U305/harmonic_estimator_axi_mac_muladd_7s_7ns_17s_17_4_1_DSP48_2_U/p_reg_reg/DSP_A_B_DATA_INST/CLK
+                         clock pessimism              0.097    12.041    
+                         clock uncertainty           -0.130    11.911    
+    DSP48E2_X7Y134       DSP_A_B_DATA (Setup_DSP_A_B_DATA_DSP48E2_CLK_A[3])
+                                                     -0.256    11.655    system_i/harmonic_estimator_axi_0/inst/grp_harmonic_estimator_fu_497/grp_dense_resource_rf_leq_nin_ap_ufixed_ap_fixed_12_6_5_3_0_config7_s_fu_964/mac_muladd_7s_7ns_17s_17_4_1_U305/harmonic_estimator_axi_mac_muladd_7s_7ns_17s_17_4_1_DSP48_2_U/p_reg_reg/DSP_A_B_DATA_INST
   -------------------------------------------------------------------
-                         required time                         11.446    
-                         arrival time                          -9.442    
+                         required time                         11.655    
+                         arrival time                          -8.697    
   -------------------------------------------------------------------
-                         slack                                  2.004    
+                         slack                                  2.958    
 
 
 
@@ -277,21 +271,21 @@ Slack (MET) :             2.004ns  (required time - arrival time)
 Min Delay Paths
 --------------------------------------------------------------------------------------
 Slack (MET) :             0.009ns  (arrival time - required time)
-  Source:                 system_i/emi_feat_hls_0/inst/fdiv_32ns_32ns_32_9_no_dsp_1_U193/emi_feat_hls_fdiv_32ns_32ns_32_9_no_dsp_1_ip_u/inst/i_synth/DIV_OP.SPD.OP/MANT_DIV/RT[4].MANT_DEL/i_pipe/opt_has_pipe.first_q_reg[1]/C
+  Source:                 system_i/mpcc_r_hls_0/inst/control_s_axi_U/int_Ts_reg[1]/C
                             (rising edge-triggered cell FDRE clocked by clk_pl_0  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            system_i/emi_feat_hls_0/inst/fdiv_32ns_32ns_32_9_no_dsp_1_U193/emi_feat_hls_fdiv_32ns_32ns_32_9_no_dsp_1_ip_u/inst/i_synth/DIV_OP.SPD.OP/MANT_DIV/RT[9].MANT_DEL/i_pipe/opt_has_pipe.first_q_reg[1]/D
+  Destination:            system_i/mpcc_r_hls_0/inst/Ts_read_reg_2221_reg[1]/D
                             (rising edge-triggered cell FDRE clocked by clk_pl_0  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk_pl_0
   Path Type:              Hold (Min at Slow Process Corner)
   Requirement:            0.000ns  (clk_pl_0 rise@0.000ns - clk_pl_0 rise@0.000ns)
-  Data Path Delay:        0.143ns  (logic 0.059ns (41.314%)  route 0.084ns (58.686%))
+  Data Path Delay:        0.173ns  (logic 0.059ns (34.186%)  route 0.114ns (65.814%))
   Logic Levels:           0  
-  Clock Path Skew:        0.071ns (DCD - SCD - CPR)
-    Destination Clock Delay (DCD):    2.167ns
-    Source Clock Delay      (SCD):    1.870ns
-    Clock Pessimism Removal (CPR):    0.226ns
-  Clock Net Delay (Source):      1.702ns (routing 0.512ns, distribution 1.190ns)
-  Clock Net Delay (Destination): 1.959ns (routing 0.569ns, distribution 1.390ns)
+  Clock Path Skew:        0.101ns (DCD - SCD - CPR)
+    Destination Clock Delay (DCD):    2.140ns
+    Source Clock Delay      (SCD):    1.865ns
+    Clock Pessimism Removal (CPR):    0.174ns
+  Clock Net Delay (Source):      1.697ns (routing 0.512ns, distribution 1.185ns)
+  Clock Net Delay (Destination): 1.932ns (routing 0.569ns, distribution 1.363ns)
 
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
@@ -301,13 +295,13 @@ Slack (MET) :             0.009ns  (arrival time - required time)
                          net (fo=1, routed)           0.143     0.143    system_i/zynq_ultra_ps_e_0/inst/pl_clk_unbuffered[0]
     BUFG_PS_X0Y80        BUFG_PS (Prop_BUFG_PS_I_O)
                                                       0.025     0.168 r  system_i/zynq_ultra_ps_e_0/inst/buffer_pl_clk_0.PL_CLK_0_BUFG/O
-    X1Y2 (CLOCK_ROOT)    net (fo=77048, routed)       1.702     1.870    system_i/emi_feat_hls_0/inst/fdiv_32ns_32ns_32_9_no_dsp_1_U193/emi_feat_hls_fdiv_32ns_32ns_32_9_no_dsp_1_ip_u/inst/i_synth/DIV_OP.SPD.OP/MANT_DIV/RT[4].MANT_DEL/i_pipe/aclk
-    SLICE_X26Y282        FDRE                                         r  system_i/emi_feat_hls_0/inst/fdiv_32ns_32ns_32_9_no_dsp_1_U193/emi_feat_hls_fdiv_32ns_32ns_32_9_no_dsp_1_ip_u/inst/i_synth/DIV_OP.SPD.OP/MANT_DIV/RT[4].MANT_DEL/i_pipe/opt_has_pipe.first_q_reg[1]/C
+    X1Y2 (CLOCK_ROOT)    net (fo=77016, routed)       1.697     1.865    system_i/mpcc_r_hls_0/inst/control_s_axi_U/ap_clk
+    SLICE_X80Y94         FDRE                                         r  system_i/mpcc_r_hls_0/inst/control_s_axi_U/int_Ts_reg[1]/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X26Y282        FDRE (Prop_CFF2_SLICEL_C_Q)
-                                                      0.059     1.929 r  system_i/emi_feat_hls_0/inst/fdiv_32ns_32ns_32_9_no_dsp_1_U193/emi_feat_hls_fdiv_32ns_32ns_32_9_no_dsp_1_ip_u/inst/i_synth/DIV_OP.SPD.OP/MANT_DIV/RT[4].MANT_DEL/i_pipe/opt_has_pipe.first_q_reg[1]/Q
-                         net (fo=6, routed)           0.084     2.013    system_i/emi_feat_hls_0/inst/fdiv_32ns_32ns_32_9_no_dsp_1_U193/emi_feat_hls_fdiv_32ns_32ns_32_9_no_dsp_1_ip_u/inst/i_synth/DIV_OP.SPD.OP/MANT_DIV/RT[9].MANT_DEL/i_pipe/opt_has_pipe.first_q_reg[22]_0[1]
-    SLICE_X26Y281        FDRE                                         r  system_i/emi_feat_hls_0/inst/fdiv_32ns_32ns_32_9_no_dsp_1_U193/emi_feat_hls_fdiv_32ns_32ns_32_9_no_dsp_1_ip_u/inst/i_synth/DIV_OP.SPD.OP/MANT_DIV/RT[9].MANT_DEL/i_pipe/opt_has_pipe.first_q_reg[1]/D
+    SLICE_X80Y94         FDRE (Prop_DFF_SLICEL_C_Q)
+                                                      0.059     1.924 r  system_i/mpcc_r_hls_0/inst/control_s_axi_U/int_Ts_reg[1]/Q
+                         net (fo=4, routed)           0.114     2.037    system_i/mpcc_r_hls_0/inst/Ts[1]
+    SLICE_X81Y93         FDRE                                         r  system_i/mpcc_r_hls_0/inst/Ts_read_reg_2221_reg[1]/D
   -------------------------------------------------------------------    -------------------
 
                          (clock clk_pl_0 rise edge)
@@ -316,14 +310,14 @@ Slack (MET) :             0.009ns  (arrival time - required time)
                          net (fo=1, routed)           0.180     0.180    system_i/zynq_ultra_ps_e_0/inst/pl_clk_unbuffered[0]
     BUFG_PS_X0Y80        BUFG_PS (Prop_BUFG_PS_I_O)
                                                       0.028     0.208 r  system_i/zynq_ultra_ps_e_0/inst/buffer_pl_clk_0.PL_CLK_0_BUFG/O
-    X1Y2 (CLOCK_ROOT)    net (fo=77048, routed)       1.959     2.167    system_i/emi_feat_hls_0/inst/fdiv_32ns_32ns_32_9_no_dsp_1_U193/emi_feat_hls_fdiv_32ns_32ns_32_9_no_dsp_1_ip_u/inst/i_synth/DIV_OP.SPD.OP/MANT_DIV/RT[9].MANT_DEL/i_pipe/aclk
-    SLICE_X26Y281        FDRE                                         r  system_i/emi_feat_hls_0/inst/fdiv_32ns_32ns_32_9_no_dsp_1_U193/emi_feat_hls_fdiv_32ns_32ns_32_9_no_dsp_1_ip_u/inst/i_synth/DIV_OP.SPD.OP/MANT_DIV/RT[9].MANT_DEL/i_pipe/opt_has_pipe.first_q_reg[1]/C
-                         clock pessimism             -0.226     1.941    
-    SLICE_X26Y281        FDRE (Hold_FFF2_SLICEL_C_D)
-                                                      0.062     2.003    system_i/emi_feat_hls_0/inst/fdiv_32ns_32ns_32_9_no_dsp_1_U193/emi_feat_hls_fdiv_32ns_32ns_32_9_no_dsp_1_ip_u/inst/i_synth/DIV_OP.SPD.OP/MANT_DIV/RT[9].MANT_DEL/i_pipe/opt_has_pipe.first_q_reg[1]
+    X1Y2 (CLOCK_ROOT)    net (fo=77016, routed)       1.932     2.140    system_i/mpcc_r_hls_0/inst/ap_clk
+    SLICE_X81Y93         FDRE                                         r  system_i/mpcc_r_hls_0/inst/Ts_read_reg_2221_reg[1]/C
+                         clock pessimism             -0.174     1.966    
+    SLICE_X81Y93         FDRE (Hold_GFF2_SLICEM_C_D)
+                                                      0.062     2.028    system_i/mpcc_r_hls_0/inst/Ts_read_reg_2221_reg[1]
   -------------------------------------------------------------------
-                         required time                         -2.003    
-                         arrival time                           2.013    
+                         required time                         -2.028    
+                         arrival time                           2.037    
   -------------------------------------------------------------------
                          slack                                  0.009    
 

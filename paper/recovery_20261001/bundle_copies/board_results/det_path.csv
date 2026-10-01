@@ -1,0 +1,5 @@
+stage,n,median_us,p99_us,max_us
+2400-word feature buffer write (PS -> BRAM),1000,310.20500000000004,319.6356,344.99
+emi_feat IP (ap_start -> ap_done),1000,31.11,31.97,37.28
+detector IP (ap_start -> ap_done),1000,26.92,27.840899999999998,35.06
+total per 20 ms cycle,1000,369.0,377.57509999999996,403.5

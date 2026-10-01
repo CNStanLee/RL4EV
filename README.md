@@ -10,6 +10,11 @@
 | [`HLS_PRJ/`](HLS_PRJ/) | Vitis HLS 组件：`mpcc`（预测控制）、`emi_detector`、`harmonic_estimator` |
 | [`Vivado_PRJ/`](Vivado_PRJ/)、[`PS_notebook/`](PS_notebook/) | ZCU104 工程与 PYNQ 上板运行环境 |
 
+FPGA 复现：`HLS_PRJ/build_all.sh`（Vitis HLS 2022.2，C 仿真 + 综合 + 导出 IP）→ `Vivado_PRJ/*/build_bd.tcl`（Vivado 2022.2，比特流）→
+[`PS_notebook/README.md`](PS_notebook/README.md)（上板自检、HIL 服务、实时性重放）。步骤与复核结果见
+[`HLS_PRJ/README.md`](HLS_PRJ/README.md) 和 [`Vivado_PRJ/README.md`](Vivado_PRJ/README.md)；重建的实现资源与论文资源表逐项相同。
+2026-09-05 之后未入库工作的恢复情况见 [`paper/recovery_20261001/README.md`](paper/recovery_20261001/README.md)。
+
 数据存放规则、仓库外分发包与重新生成方法见 [`DATA.md`](DATA.md)。
 
 DAES 论文的实验结果整理、证据口径和可复现图表脚本见

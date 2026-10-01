@@ -1,0 +1,11 @@
+0
+== A53 unpinned
+feature(C)     n=2000 median=60.29 us p99=66.74 us max=121.4 us
+network(f32)   n=2000 median=38.22 us p99=39.29 us max=61.7 us
+mpcc_r tick    n=200000 median=1.13 us p99=1.18 us max=23.9 us
+checksum -1591306.423
+== A53 pinned core 2, SCHED_FIFO 80
+feature(C)     n=2000 median=60.40 us p99=66.41 us max=121.1 us
+network(f32)   n=2000 median=38.87 us p99=41.76 us max=51.0 us
+mpcc_r tick    n=200000 median=1.14 us p99=1.18 us max=21.3 us
+checksum -1591306.423

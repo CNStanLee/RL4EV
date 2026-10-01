@@ -13,12 +13,19 @@ function out = run_injection(mode, tests, variants, opts)
 %   run_injection('smoke', [], 'CRPR')          snapshot continuity check (0.6 -> 0.72 s
 %                                               from snapshot vs. straight 0 -> 0.72 s)
 %   run_injection('baseline', [], V, struct('op','cv'))   CV-segment snapshot (Voc 345 V)
+%   run_injection('benign', ids, variants, opts)          no-attack disturbances for the false-alarm study
+%                                               (grid amplitude / frequency steps, charging and Vref
+%                                               steps, measurement noise): ids from benign_table(),
+%                                               'all' for every row -> results/emi/benign/
 %   run_injection('dataset', [k0 k1], variants, opts)      detector dataset: runs D<k0>..D<k1>
 %                                               with randomized injections / benign events
 %                                               (seeded by k), results/emi/dataset/, labels.csv
 %
 % opts: stop_time (override 1.3), force (rerun even if the result exists),
-%       tag (suffix for smoke files), op ('cc' | 'cv' operating point).
+%       tag (suffix for smoke files), op ('cc' | 'cv' operating point),
+%       hil (struct mpcc/det/est/host/dir, docs/HIL_TEST_PLAN.md): enable the TCP paths of build_hil.m
+%       (ZCU104 PS or x86_pl_emulator.py); results then go to results/emi/<dir> (default 'hil'; own
+%       scorecard.csv, columns hil_mode / hil_host), snapshots are shared with the SIL runs.
 % One summary row per run -> results/emi/<test>_<variant>.csv; 10 kHz time
 % series -> results/emi/ts/<test>_<variant>.csv; 1 MHz Iac -> ..._iac.mat.
 % Several MATLAB processes can share the matrix: a run whose summary file
@@ -26,12 +33,22 @@ function out = run_injection(mode, tests, variants, opts)
 if nargin < 2, tests = []; end
 if nargin < 3, variants = []; end
 if nargin < 4, opts = struct(); end
-opts = defaults(opts, struct('stop_time', 1.3, 'force', false, 'tag', '', 'op', 'cc', 'save_iac', true));
+opts = defaults(opts, struct('stop_time', 1.3, 'force', false, 'tag', '', 'op', 'cc', 'save_iac', true, 'hil', [], 'mm', []));
+if isfield(opts, 'hold') && ~isempty(opts.hold), HM = load(fullfile(fileparts(mfilename('fullpath')), 'results', 'emi', 'holdmasks.mat')); assignin('base', 'HOLDMASK', HM.(char(opts.hold))); else, evalin('base', 'clear HOLDMASK'); end   % measured PS schedule hold mask
+if ~isempty(opts.mm), assignin('base', 'MM', opts.mm); else, evalin('base', 'clear MM'); end   % plant model mismatch (init_paras)
 save_iac_enabled(opts.save_iac);   % write_ts: 1 MHz Iac .mat (about 10 MB per run); the THD metrics are computed in memory either way
 
 mdl  = 'PV_MEV';
 mdir = fileparts(mfilename('fullpath')); cd(mdir); addpath(mdir);
-rdir = fullfile(mdir, 'results', 'emi'); sdir = fullfile(rdir, 'snapshots'); tdir = fullfile(rdir, 'ts');
+edir = fullfile(mdir, 'results', 'emi'); sdir = fullfile(edir, 'snapshots'); rdir = edir;
+if ~isempty(opts.hil)
+    assignin('base', 'HIL', opts.hil); rdir = fullfile(edir, 'hil');
+    if isfield(opts.hil, 'dir') && ~isempty(opts.hil.dir), rdir = fullfile(edir, char(opts.hil.dir)); end   % e.g. 'hil_x86' for the emulator
+    fprintf('[hil] %s host %s\n', hil_tag(opts.hil), hil_host(opts.hil));
+else
+    evalin('base', 'clear HIL');
+end
+tdir = fullfile(rdir, 'ts');
 for d = {rdir, sdir, tdir}, if ~exist(d{1}, 'dir'), mkdir(d{1}); end, end
 
 cfg = readtable(fullfile(mdir, 'config.csv'), 'TextType', 'string');
@@ -52,12 +69,12 @@ switch lower(mode)
             row = T(T.test_id == ids{i}, :);
             for v = 1:numel(variants)
                 name = string(variants{v});
-                fsum = fullfile(rdir, sprintf('%s_%s.csv', row.test_id, name));
+                fsum = fullfile(rdir, sprintf('%s_%s%s.csv', row.test_id, name, op_sfx(opts)));
                 if exist(fsum, 'file') && ~opts.force, fprintf('[skip] %s\n', fsum); continue; end
                 try, run_case(mdl, row, name, opts, rdir, sdir, tdir);
                 catch ME
                     fprintf(2, '[%s %s] FAILED: %s\n', row.test_id, name, getReport(ME, 'extended', 'hyperlinks', 'off'));
-                    write_failed(fsum, row, name, ME.message); close_system(mdl, 0);
+                    write_failed(fsum, row, name, ME.message); close_system(mdl, 0); hil_tcp('reset');
                 end
             end
         end
@@ -68,6 +85,8 @@ switch lower(mode)
         out = resummarize(rdir, tdir);
     case 'dataset'
         out = run_dataset(mdl, tests, variants, opts, rdir, sdir);
+    case 'benign'
+        out = run_benign(mdl, tests, variants, opts, edir, sdir);
     case 'smoke'
         out = smoke(mdl, string(variants{1}), sdir, rdir, opts);
     otherwise
@@ -80,7 +99,7 @@ function ids = select_tests(T, tests)
 if isempty(tests) || (ischar(tests) && strcmpi(tests, 'all')), ids = cellstr(T.test_id'); return; end
 if ischar(tests) || isstring(tests)
     t = string(tests);
-    if any(t == ["P1", "P2"]), ids = cellstr(T.test_id(T.priority == t)'); return; end
+    if any(t == unique(string(T.priority))'), ids = cellstr(T.test_id(T.priority == t)'); return; end   % P1 / P2 / G (gain) / S (sweep)
     ids = cellstr(t);
 else
     ids = cellstr(tests);
@@ -90,6 +109,44 @@ for i = 1:numel(ids)
 end
 end
 
+function sfx = op_sfx(opts)
+sfx = ''; if isfield(opts, 'op') && strcmpi(opts.op, 'cv'), sfx = '_cv'; end
+if isfield(opts, 'mm') && ~isempty(opts.mm) && isfield(opts.mm, 'tag'), sfx = [sfx '_' char(opts.mm.tag)]; end
+if isfield(opts, 'hold') && ~isempty(opts.hold), sfx = [sfx '_' char(opts.hold)]; end
+end
+
+function tf = hil_active()
+tf = logical(evalin('base', 'exist(''HIL'', ''var'')'));
+end
+
+function s = ifelse_str(c, a, b)
+if c, s = a; else, s = b; end
+end
+
+function f = snap_file(sdir, name, sfx)
+% <variant><sfx>.mat; shared by SIL and HIL runs (build_hil.m v2 keeps the structure identical)
+f = fullfile(sdir, sprintf('%s%s.mat', name, sfx));
+end
+
+function r = tcp_stats(r)
+% per-path TCP round-trip statistics of the run just simulated (hil_tcp.m), then close the clients
+st = hil_tcp('stats'); names = struct('p5010', 'mpcc', 'p5020', 'det', 'p5030', 'est');
+for f = fieldnames(st)'
+    v = st.(f{1}); nm = names.(f{1});
+    r.(sprintf('tcp_%s_frames', nm)) = v.n; r.(sprintf('tcp_%s_rtt_mean_ms', nm)) = 1e3 * v.t / max(v.n, 1); r.(sprintf('tcp_%s_rtt_max_ms', nm)) = 1e3 * v.tmax;
+end
+hil_tcp('reset');
+end
+
+function s = hil_tag(h)
+n = {}; for f = {'mpcc', 'det', 'est'}, if isfield(h, f{1}) && h.(f{1}), n{end + 1} = f{1}; end, end %#ok<AGROW>
+s = strjoin(n, '+'); if isempty(s), s = 'none'; end
+end
+
+function s = hil_host(h)
+s = '134.226.86.100'; if isfield(h, 'host') && ~isempty(h.host), s = char(h.host); end
+end
+
 function o = defaults(o, d)
 f = fieldnames(d);
 for i = 1:numel(f), if ~isfield(o, f{i}) || isempty(o.(f{i})), o.(f{i}) = d.(f{i}); end, end
@@ -97,7 +154,7 @@ end
 
 function INJ = inj_from_row(row)
 ch = containers.Map({'', 'Vdc', 'Vac', 'Iac', 'Vbat', 'Ibat'}, {0, 1, 2, 3, 4, 5});
-sh = containers.Map({'', 'step', 'ramp', 'sine', 'tri', 'pulse', 'hall'}, {1, 1, 2, 3, 4, 5, 6});
+sh = containers.Map({'', 'step', 'ramp', 'sine', 'tri', 'pulse', 'hall', 'noise', 'gain'}, {1, 1, 2, 3, 4, 5, 6, 7, 8});
 c2 = ''; s2 = ''; a2 = 0;
 if ismember('channel2', row.Properties.VariableNames)
     c2 = string(row.channel2); s2 = string(row.shape2); a2 = row.amp2;
@@ -112,10 +169,13 @@ INJ = struct('channel', [ch(char(row.channel)) ch(c2)], 'shape', [sh(char(row.sh
 end
 
 % =========================================================================
-function prepare(mdl, name, INJ, op, EVT)
-% op: 'cc' (Voc 335 V) or 'cv' (Voc 345 V); EVT: benign-event struct or []
+function prepare(mdl, name, INJ, op, EVT, GRID)
+% op: 'cc' (Voc 335 V) or 'cv' (Voc 345 V); EVT: benign-event struct or []; GRID: struct('Vscale', 1, 'dF', 0) applied to
+% the utility source (a step at the snapshot time when it differs from nominal; always reset to nominal otherwise)
 if nargin < 4 || isempty(op), op = 'cc'; end
 if nargin < 5, EVT = []; end
+if nargin < 6 || isempty(GRID), GRID = struct('entity', 'None', 'step', 0, 't0', 0.7, 'h5', 0, 'h7', 0); end
+evalin('base', 'clear GRID');
 CHG_OP = struct(); if strcmpi(op, 'cv'), CHG_OP.Voc = 345; end
 assignin('base', 'VARIANT_NAME', name);
 assignin('base', 'INJ', INJ);
@@ -123,13 +183,29 @@ assignin('base', 'CHG_OP', CHG_OP);
 assignin('base', 'EVT', EVT);
 dj = fullfile(fileparts(fileparts(fileparts(mfilename('fullpath')))), 'EMI_DET_FPGA', 'artifacts', 'detector.json');
 if isfile(dj), j = jsondecode(fileread(dj)); assignin('base', 'DET', struct('thr', j.thr(:)')); end
+rj = fullfile(fileparts(fileparts(fileparts(mfilename('fullpath')))), 'EMI_DET_FPGA', 'artifacts', 'residual.json');
+if isfile(rj), j = jsondecode(fileread(rj)); assignin('base', 'RES', struct('thr', j.thr(:)', 'par', j.par(:)')); end
 evalin('base', 'init_paras');
 load_system(mdl);
-if ~evalin('base', 'ENABLE_HIL')
-    tcp = {'/EV System/PFC Control/Enabled Subsystem', '/EV System/PFC Control/HIL TCP Receive1', ...
-           '/EV System/PFC Control/HIL TCP Send1', '/EV System/PFC Control/Original vs HIL Predict'};
-    for k = 1:numel(tcp), try, set_param([mdl tcp{k}], 'Commented', 'on'); catch, end, end
+% programmable utility source (build_supp 'grid'): numeric parameters only (the popups are frozen in the snapshot).
+% GRID fields: entity ('None' | 'Amplitude' | 'Frequency'), step (pu amplitude step at t0, or Hz offset from the run start
+% for 'Frequency'), t0, h5 / h7 (5th / 7th harmonic amplitude in pu from t0)
+if ~isfield(GRID, 'entity'), GRID.entity = 'None'; end
+if ~isfield(GRID, 'step'), GRID.step = 0; end
+if ~isfield(GRID, 't0'), GRID.t0 = 0.7; end
+if ~isfield(GRID, 'h5'), GRID.h5 = 0; end
+if ~isfield(GRID, 'h7'), GRID.h7 = 0; end
+amp_step = 0; df = 0;
+if strcmp(GRID.entity, 'Amplitude'), amp_step = GRID.step; elseif strcmp(GRID.entity, 'Frequency'), df = GRID.step; end
+% the model InitFcn (init_paras) resets the grid variables at every sim start: pass the values through the GRID struct,
+% which survives its clearvars (like INJ / HIL)
+assignin('base', 'GRID', struct('amp_step', amp_step, 'df', df, 't0', GRID.t0, 'h5', GRID.h5, 'h7', GRID.h7));
+% HIL (build_hil.m v2): the TCP round trips are MATLAB Function blocks calling hil_tcp.m; the switches ENABLE_HIL* are
+% read from the base workspace, the model structure is the same for SIL and HIL (shared snapshots).  Legacy HIL blocks off.
+for b = {'/EV System/PFC Control/Enabled Subsystem', '/EV System/PFC Control/Original vs HIL Predict'}
+    try, set_param([mdl b{1}], 'Commented', 'on'); catch, end
 end
+hil_tcp('reset');
 set_logging(mdl, evalin('base', 'Ts_Power'));
 end
 
@@ -150,6 +226,10 @@ L = { ...
 if getSimulinkBlockHandle([pc '/Mitigation']) ~= -1                    % MPCC_R (build_mitigation.m): [g_vdc dVf phys_ok Vamp g_iac hold]
     L(end + 1, :) = {[pc '/Mitigation'], 7, 'mit_dbg', ''};
 end
+if getSimulinkBlockHandle([pc '/EMI Detector/hil_sel_flags']) ~= -1    % build_hil.m: flag word decided on the board (0 without HIL)
+    L(end + 1, :) = {[pc '/EMI Detector/hil_sel_flags'], 1, 'det_hil_flags', ''};
+    L(end + 1, :) = {[pc '/EMI Detector/hil_det_sw'], 1, 'det_used', ''};   % the 20 raw outputs emi_decide consumed (board's when ENABLE_HIL_DET)
+end
 for i = 1:size(L, 1)
     ph = get_param(L{i, 1}, 'PortHandles'); h = ph.Outport(L{i, 2});
     set_param(h, 'DataLogging', 'on', 'DataLoggingNameMode', 'Custom', 'DataLoggingName', L{i, 3});
@@ -164,13 +244,15 @@ function make_snapshot(mdl, name, sdir, rdir, opts)
 tsnap = 0.6; if nargin > 4 && isfield(opts, 'snap_time') && ~isempty(opts.snap_time), tsnap = opts.snap_time; end
 op = 'cc'; if nargin > 4 && isfield(opts, 'op') && ~isempty(opts.op), op = lower(opts.op); end
 sfx = ''; if strcmp(op, 'cv'), sfx = '_cv'; end
-prepare(mdl, name, struct(), op);
+GRID = []; if nargin > 4 && isfield(opts, 'grid') && ~isempty(opts.grid), GRID = opts.grid; sfx = [sfx grid_sfx({GRID.entity, GRID.step})]; end
+if nargin > 4 && isfield(opts, 'mm') && ~isempty(opts.mm) && isfield(opts.mm, 'tag'), sfx = [sfx '_' char(opts.mm.tag)]; end   % plant-mismatch snapshot: the controller is calibrated at the plant it runs on (M10 baseline)   % e.g. struct('entity','Frequency','step',-0.5)
+prepare(mdl, name, struct(), op, [], GRID);
 fprintf('[%s%s] baseline 0 -> %g s ...\n', name, sfx, tsnap); t0 = tic;
 so = sim(mdl, 'StopTime', num2str(tsnap), 'SaveFinalState', 'on', 'SaveOperatingPoint', 'on', ...
     'FinalStateName', 'xFinal', 'SignalLogging', 'on', 'SignalLoggingName', 'logsout', 'ReturnWorkspaceOutputs', 'on');
-wall = toc(t0);
+wall = toc(t0); hil_tcp('reset');
 xFinal = so.xFinal; %#ok<NASGU>
-save(fullfile(sdir, sprintf('%s%s.mat', name, sfx)), 'xFinal');
+save(snap_file(sdir, name, sfx), 'xFinal');
 % baseline metrics over the last 100 ms
 S = extract(so.logsout);
 m = metrics_window(S, [tsnap - 0.1, tsnap]);
@@ -188,25 +270,33 @@ end
 % =========================================================================
 function run_case(mdl, row, name, opts, rdir, sdir, tdir)
 INJ = inj_from_row(row);
-snap = fullfile(sdir, sprintf('%s.mat', name));
-if ~exist(snap, 'file'), error('snapshot missing: %s (run baseline first)', snap); end
+snap = snap_file(sdir, name, ifelse_str(strcmpi(opts.op, 'cv'), '_cv', ''));     % nominal snapshot for model-mismatch runs unless a calibrated one exists
+if ~isempty(opts.mm) && isfield(opts.mm, 'tag') && exist(snap_file(sdir, name, [ifelse_str(strcmpi(opts.op, 'cv'), '_cv', '') '_' char(opts.mm.tag)]), 'file')
+    snap = snap_file(sdir, name, [ifelse_str(strcmpi(opts.op, 'cv'), '_cv', '') '_' char(opts.mm.tag)]); fprintf('[snapshot] calibrated at the mismatched plant: %s\n', snap);
+end
+if ~exist(snap, 'file'), error('snapshot missing: %s (run baseline first, with the same opts.op / opts.hil)', snap); end
 s = load(snap); assignin('base', 'xInitial', s.xFinal);
-prepare(mdl, name, INJ);
+prepare(mdl, name, INJ, opts.op);
+if ~isempty(opts.mm), set_param(mdl, 'OperatingPointContentsChecksumMismatchMsg', 'warning'); end   % plant parameters differ from the snapshot
 fprintf('[%s %s] 0.6 -> %g s ...\n', row.test_id, name, opts.stop_time); t0 = tic;
 so = sim(mdl, 'LoadInitialState', 'on', 'InitialState', 'xInitial', 'StopTime', num2str(opts.stop_time), ...
     'SignalLogging', 'on', 'SignalLoggingName', 'logsout', 'ReturnWorkspaceOutputs', 'on');
 wall = toc(t0);
 S = extract(so.logsout);
 r = summarize(S, row, name, INJ);
-r.sim_wall_s = wall; r.status = "OK";
-writetable(struct2table(r), fullfile(rdir, sprintf('%s_%s.csv', row.test_id, name)));
-write_ts(S, fullfile(tdir, sprintf('%s_%s', row.test_id, name)));
+r.sim_wall_s = wall; r.status = "OK"; r.op = string(opts.op);
+r.mm = ""; if ~isempty(opts.mm) && isfield(opts.mm, 'tag'), r.mm = string(opts.mm.tag); end
+r.hold = ""; if isfield(opts, 'hold') && ~isempty(opts.hold), r.hold = string(opts.hold); end   % plant-mismatch tag (review point 8)
+if evalin('base', 'exist(''HIL'', ''var'')'), h = evalin('base', 'HIL'); r.hil_mode = string(hil_tag(h)); r.hil_host = string(hil_host(h)); r = tcp_stats(r); end
+writetable(struct2table(r), fullfile(rdir, sprintf('%s_%s%s.csv', row.test_id, name, op_sfx(opts))));
+write_ts(S, fullfile(tdir, sprintf('%s_%s%s', row.test_id, name, op_sfx(opts))));
 fprintf('[%s %s] done %.0f s: dVdc=%+.1f V I_dc=%+.2f A THD50 %.2f->%.2f%% PF=%.4f Pchg %.2f->%.2f kW trip=%d t_rec=%.0f ms\n', ...
     row.test_id, name, wall, r.dVdc_V, r.I_dc_A, r.THD50_pre_pct, r.THD50_dur_pct, r.PF_dur, r.P_charge_pre_kW, r.P_charge_dur_kW, r.trip, r.t_rec_ms);
 close_system(mdl, 0);
 end
 
 function write_failed(fsum, row, name, msg)
+msg = regexprep(char(msg), '<[^>]*>', ''); msg = regexprep(msg, '[\s,"'']+', ' '); msg = msg(1:min(end, 400));   % one clean line for readtable
 r = struct('test_id', row.test_id, 'VARIANT_NAME', name, 'status', "FAILED", 'note', string(msg));
 writetable(struct2table(r), fsum);
 end
@@ -230,7 +320,7 @@ for k = krange(1):krange(2)
     fsum = fullfile(ddir, sprintf('%s_%s.csv', run_id, name));
     if exist(fsum, 'file') && ~opts.force, fprintf('[skip] %s\n', fsum); continue; end
     try
-        snap = fullfile(sdir, sprintf('%s%s.mat', name, L.snap_sfx));
+        snap = snap_file(sdir, name, L.snap_sfx);
         s = load(snap); assignin('base', 'xInitial', s.xFinal);
         prepare(mdl, name, L.INJ, L.op, L.EVT);
         % record 0.3 s of recovery after the bias is removed (post window of summarize)
@@ -255,6 +345,78 @@ for k = krange(1):krange(2)
     close_system(mdl, 0);
 end
 T = merge_labels(ldir, ddir);
+end
+
+function sfx = grid_sfx(g)
+% snapshot suffix for a steady off-nominal grid condition (frequency offset): the snapshot itself is taken at that frequency
+sfx = ''; if strcmp(g{1}, 'Frequency') && g{2} ~= 0, sfx = sprintf('_f%s%02d', ifelse_str(g{2} < 0, 'm', 'p'), round(abs(g{2}) * 10)); end
+end
+
+function T = benign_table()
+% id, description, INJ noise (channel, amp), EVT (chg_t chg_I vref_t vref_dV), GRID (entity, step, h5, h7); events at 0.7 s
+T = {'B-GRID-VM10', 'grid amplitude -10 % step at 0.7 s', 0, 0, [0 20 0 0], {'Amplitude', -0.10, 0, 0}; ...
+     'B-GRID-VP10', 'grid amplitude +10 % step', 0, 0, [0 20 0 0], {'Amplitude', 0.10, 0, 0}; ...
+     'B-GRID-VM20', 'grid amplitude -20 % step (deep sag)', 0, 0, [0 20 0 0], {'Amplitude', -0.20, 0, 0}; ...
+     'B-GRID-FM05', 'grid frequency 49.5 Hz (steady, own snapshot)', 0, 0, [0 20 0 0], {'Frequency', -0.5, 0, 0}; ...
+     'B-GRID-FP05', 'grid frequency 50.5 Hz (steady, own snapshot)', 0, 0, [0 20 0 0], {'Frequency', 0.5, 0, 0}; ...
+     'B-GRID-H5', 'grid 5th harmonic 3 % from 0.7 s', 0, 0, [0 20 0 0], {'None', 0, 0.03, 0}; ...
+     'B-GRID-H57', 'grid 5th 3 % + 7th 2 % from 0.7 s', 0, 0, [0 20 0 0], {'None', 0, 0.03, 0.02}; ...
+     'B-CHG-05', 'charging current setpoint 20 -> 5 A at 0.7 s', 0, 0, [0.7 5 0 0], {'None', 0, 0, 0}; ...
+     'B-CHG-15', 'charging current setpoint 20 -> 15 A at 0.7 s', 0, 0, [0.7 15 0 0], {'None', 0, 0, 0}; ...
+     'B-VREF-P20', 'bus reference +20 V at 0.7 s', 0, 0, [0 20 0.7 20], {'None', 0, 0, 0}; ...
+     'B-VREF-M20', 'bus reference -20 V at 0.7 s', 0, 0, [0 20 0.7 -20], {'None', 0, 0, 0}; ...
+     'B-NOISE-VDC', 'Vdc measurement noise 4 V (uniform) 0.7 to 1.0 s', 1, 4, [0 20 0 0], {'None', 0, 0, 0}; ...
+     'B-NOISE-VAC', 'Vac measurement noise 8 V', 2, 8, [0 20 0 0], {'None', 0, 0, 0}; ...
+     'B-NOISE-IAC', 'Iac measurement noise 1.5 A', 3, 1.5, [0 20 0 0], {'None', 0, 0, 0}};
+end
+
+function out = run_benign(mdl, ids, variants, opts, edir, sdir)
+B = benign_table(); rdir = fullfile(edir, 'benign'); tdir = fullfile(rdir, 'ts');
+for d = {rdir, tdir}, if ~exist(d{1}, 'dir'), mkdir(d{1}); end, end
+if isempty(ids) || (ischar(ids) && strcmpi(ids, 'all')), ids = B(:, 1)'; end
+if ischar(ids) || isstring(ids), ids = cellstr(ids); end
+for i = 1:numel(ids)
+    k = find(strcmp(B(:, 1), ids{i}), 1); if isempty(k), error('benign id %s unknown', ids{i}); end
+    for v = 1:numel(variants)
+        name = string(variants{v}); msfx = ''; if ~isempty(opts.mm) && isfield(opts.mm, 'tag'), msfx = ['_' char(opts.mm.tag)]; end
+        fsum = fullfile(rdir, sprintf('%s_%s%s.csv', B{k, 1}, name, msfx));
+        if exist(fsum, 'file') && ~opts.force, fprintf('[skip] %s\n', fsum); continue; end
+        INJ = struct('channel', [B{k, 3} 0 0], 'shape', [7 1 1], 'amp', [B{k, 4} 0 0], 'k', [0 0 0], 'f', [50 50 50], 'phase', [0 0 0], ...
+            'period', 0.1, 'duty', 0.5, 't_on', 0.7, 'dwell', 0.3, 'K_hall', 20);
+        if B{k, 3} == 0, INJ.channel = [0 0 0]; end
+        e = B{k, 5}; EVT = struct('chg_t', e(1), 'chg_I', e(2), 'vref_t', e(3), 'vref_dV', e(4)); g = B{k, 6}; GRID = struct('entity', g{1}, 'step', g{2}, 't0', 0.7, 'h5', g{3}, 'h7', g{4});
+        row = table(string(B{k, 1}), "", "", 0, 0, 50, 0, 0.1, 0.5, 0.7, 0.3, 20, "", "", 0, "B", ...
+            'VariableNames', {'test_id', 'channel', 'shape', 'amp', 'k', 'f', 'phase', 'period', 'duty', 't_on', 'dwell', 'K_hall', 'channel2', 'shape2', 'amp2', 'priority'});
+        try
+            snap = snap_file(sdir, name, grid_sfx(g));
+            if ~isempty(opts.mm) && isfield(opts.mm, 'tag') && exist(snap_file(sdir, name, [grid_sfx(g) '_' char(opts.mm.tag)]), 'file')
+                snap = snap_file(sdir, name, [grid_sfx(g) '_' char(opts.mm.tag)]);   % calibrated at the mismatched plant (M10 baseline)
+            end
+            s = load(snap); assignin('base', 'xInitial', s.xFinal);
+            prepare(mdl, name, INJ, 'cc', EVT, GRID);
+            if ~isempty(opts.mm), set_param(mdl, 'OperatingPointContentsChecksumMismatchMsg', 'warning'); end   % plant parameters differ from the snapshot
+            % numeric source parameters (amplitude step, harmonics) change the operating-point checksum: load anyway; a
+            % frequency offset uses its own snapshot (run_injection('baseline', ..., struct('grid', ...))) and loads cleanly
+            if GRID.step ~= 0 && ~strcmp(GRID.entity, 'Frequency') || GRID.h5 ~= 0 || GRID.h7 ~= 0, set_param(mdl, 'OperatingPointContentsChecksumMismatchMsg', 'warning'); end
+            fprintf('[%s %s] %s: 0.6 -> %g s ...\n', B{k, 1}, name, B{k, 2}, opts.stop_time); t0 = tic;
+            so = sim(mdl, 'LoadInitialState', 'on', 'InitialState', 'xInitial', 'StopTime', num2str(opts.stop_time), ...
+                'SignalLogging', 'on', 'SignalLoggingName', 'logsout', 'ReturnWorkspaceOutputs', 'on');
+            wall = toc(t0); S = extract(so.logsout);
+            r = summarize(S, row, name, INJ); r.sim_wall_s = wall; r.status = "OK"; r.benign_desc = string(B{k, 2});
+            % false alarms: flagged cycles after the snapshot, per channel, and the first alarm time
+            C = S.det_chan.x; tc = S.det_chan.t; r.fa_cycles = sum(C(:) > 0.5); chn = {'Vdc', 'Vac', 'Iac', 'Vbat', 'Ibat'};
+            for c = 1:5, r.(sprintf('fa_%s', chn{c})) = sum(C(:, c) > 0.5); end
+            k1 = find(any(C > 0.5, 2), 1); if isempty(k1), r.t_first_fa = NaN; else, r.t_first_fa = tc(k1); end
+            r.mm = ""; if ~isempty(opts.mm) && isfield(opts.mm, 'tag'), r.mm = string(opts.mm.tag); end
+            writetable(struct2table(r), fsum); write_ts(S, fullfile(tdir, sprintf('%s_%s%s', B{k, 1}, name, msfx)));
+            fprintf('[%s %s] done %.0f s: FA cycles %d (first %.2f s) THD50 %.2f->%.2f%% Pchg %.2f->%.2f kW trip=%d\n', B{k, 1}, name, wall, r.fa_cycles, r.t_first_fa, r.THD50_pre_pct, r.THD50_dur_pct, r.P_charge_pre_kW, r.P_charge_dur_kW, r.trip);
+        catch ME
+            fprintf(2, '[%s %s] FAILED: %s\n', B{k, 1}, name, getReport(ME, 'extended', 'hyperlinks', 'off')); write_failed(fsum, row, name, ME.message);
+        end
+        close_system(mdl, 0); hil_tcp('reset');
+    end
+end
+out = merge_results(rdir, 'B-*.csv');
 end
 
 function L = sample_labels(run_id, name, sdir, focus)
@@ -394,6 +556,8 @@ if isfield(S, 'det_raw')      % per-cycle detector record (20 ms): 43 features, 
     if isfield(S, 'mit_dbg')                                                  % MPCC_R: resample the 20 kHz debug vector on the cycle grid
         for k = 1:size(S.mit_dbg.x, 2), Td.(sprintf('mit_%d', k)) = resample_prev(S.mit_dbg.t, S.mit_dbg.x(:, k), tc); end
     end
+    if isfield(S, 'det_hil_flags'), Td.hil_flags = resample_prev(S.det_hil_flags.t, S.det_hil_flags.x(:, 1), tc); end
+    if isfield(S, 'det_used'), U = S.det_used.x; for k = 1:size(U, 2), Td.(sprintf('used%02d', k)) = U(1:numel(tc), k); end, end
     writetable(Td, [base '_det.csv']);
 end
 end
@@ -558,8 +722,9 @@ k2 = round(100 / df); i2 = 100 * X(k2 + 1) / A1;
 end
 
 % =========================================================================
-function T = merge_results(rdir)
-f = dir(fullfile(rdir, 'E-*.csv'));
+function T = merge_results(rdir, pattern)
+if nargin < 2, pattern = 'E-*.csv'; end
+f = dir(fullfile(rdir, pattern));
 T = table();
 for i = 1:numel(f)
     Ti = readtable(fullfile(rdir, f(i).name), 'TextType', 'string');
@@ -591,7 +756,7 @@ function out = smoke(mdl, name, sdir, rdir, opts)
 % Continuity check of the ModelOperatingPoint restart: straight run 0 -> t1
 % vs. snapshot run 0.6 -> t1, compared on 0.6 -> t1 (undisturbed).
 t1 = 0.72;
-snap = fullfile(sdir, sprintf('%s.mat', name));
+snap = snap_file(sdir, name, '');
 if ~exist(snap, 'file'), make_snapshot(mdl, name, sdir, rdir); end
 s = load(snap); assignin('base', 'xInitial', s.xFinal);
 prepare(mdl, name, struct());
