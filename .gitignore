@@ -99,6 +99,9 @@ Simulation/PV_MEV/results/emi/ts/*
 Simulation/PV_MEV/results/emi/ts_v1/
 Simulation/PV_MEV/results/emi/snapshots/
 Simulation/PV_MEV/results/emi/dataset/ts/
+# complete-loop HIL campaigns (results/emi/hil_*): scorecards and per-cycle detector records are kept
+Simulation/PV_MEV/results/emi/hil_*/ts/*
+!Simulation/PV_MEV/results/emi/hil_*/ts/*_det.csv
 
 # ---- EMI detector datasets and training runs ---------------------------------
 # Kept: the per-cycle feature datasets that reproduce the training, and the

@@ -5,7 +5,10 @@
  * gcc -O2 -pthread -o rt_sched rt_sched.c && sudo ./rt_sched frames.bin nf bufs.bin nb waves.bin nw seconds out_prefix
  * Per task and per instance: release jitter (actual start - scheduled release), service time (start -> done), end-to-end
  * (release -> done), PL time (ap_start -> ap_done seen, axi_timer for mpcc), late (done > next release), dropped (> 1 period).
- * All threads run at normal priority (SCHED_OTHER); the AXI-Lite master is shared. */
+ * The AXI-Lite master is shared.  Scheduling: normal priority (SCHED_OTHER) by default; with the environment variable
+ * RT_PRIO=<1..99> the three threads run under SCHED_FIFO at that priority and the process memory is locked (mlockall),
+ * which is the real-time configuration of the timing table.  The busy-waiting FIFO threads need the real-time throttle
+ * off for the run (sysctl -w kernel.sched_rt_runtime_us=-1; run_rt_sched.sh sets and restores it). */
 #define _GNU_SOURCE
 #include <fcntl.h>
 #include <math.h>
@@ -33,23 +36,31 @@ static void report(task_t *t, FILE *o) {
     for (int k = 0; k < 4; k++) { double *s = malloc(t->n * 8); memcpy(s, m[k], t->n * 8); qsort(s, t->n, 8, cmp); double mean = 0; for (long i = 0; i < t->n; i++) mean += m[k][i]; mean /= t->n;
         printf("%-10s %-15s n %7ld mean %8.2f median %8.2f p99 %8.2f max %8.2f us\n", t->name, nm[k], t->n, mean, s[t->n / 2], s[(long)(0.99 * t->n)], s[t->n - 1]);
         fprintf(o, "%s,%s,%ld,%.3f,%.3f,%.3f,%.3f\n", t->name, nm[k], t->n, mean, s[t->n / 2], s[(long)(0.99 * t->n)], s[t->n - 1]); free(s); }
+    long kw = 0; for (long i = 1; i < t->n; i++) if (t->e2e[i] > t->e2e[kw]) kw = i;
+    printf("%-10s worst end_to_end %.2f us at release %ld (t = %.4f s)\n", t->name, t->e2e[kw], kw, kw * t->period);
     printf("%-10s late %ld dropped %ld of %ld\n", t->name, t->late, t->dropped, t->n); fprintf(o, "%s,late,%ld,,,,\n%s,dropped,%ld,,,,\n", t->name, t->late, t->name, t->dropped);
 }
 static volatile uint32_t *ip_m, *ip_f, *ip_d, *ip_e, *tm; static float *FR, *BU, *WV; static long NF, NB, NW; static double SECS, T0;
-static void pin(int core) { cpu_set_t c; CPU_ZERO(&c); CPU_SET(core, &c); pthread_setaffinity_np(pthread_self(), sizeof(c), &c); }
-static void *run_mpcc(void *arg) { task_t *t = arg; pin(1); uint32_t last[18]; for (int j = 0; j < 18; j++) last[j] = 0xFFFFFFFFu; const double P = t->period; long k = 0;
+static int RT_PRIO = 0;
+/* start-up handshake: every thread pins itself, sets its priority and reports ready; the common release origin T0 is
+ * set only after all three are ready, so thread creation is not counted as release-to-start waiting */
+static volatile int READY = 0, GO = 0;
+static void ready_wait(void) { __sync_fetch_and_add(&READY, 1); while (!GO) {} }
+static void pin(int core) { cpu_set_t c; CPU_ZERO(&c); CPU_SET(core, &c); pthread_setaffinity_np(pthread_self(), sizeof(c), &c);
+    if (RT_PRIO > 0) { struct sched_param sp; memset(&sp, 0, sizeof sp); sp.sched_priority = RT_PRIO; int e = pthread_setschedparam(pthread_self(), SCHED_FIFO, &sp); if (e) { fprintf(stderr, "SCHED_FIFO: %s\n", strerror(e)); exit(1); } } }
+static void *run_mpcc(void *arg) { task_t *t = arg; pin(1); ready_wait(); uint32_t last[18]; for (int j = 0; j < 18; j++) last[j] = 0xFFFFFFFFu; const double P = t->period; long k = 0;
     while (1) { double rel = T0 + k * P; if (rel > T0 + SECS) break; while (now_s() < rel) {} double ts = now_s(); const float *v = FR + 18 * (k % NF);
         for (int j = 0; j < 18; j++) { uint32_t u; if (IS_INT[j]) u = (uint32_t)lrintf(v[j]); else memcpy(&u, &v[j], 4); if (u == last[j]) continue; ip_m[OFF[j] / 4] = u; last[j] = u; }
         uint32_t ta = tm[2]; ip_m[0] = 1; while (!(ip_m[0] & 2)) {} uint32_t tb = tm[2]; volatile uint32_t d = ip_m[160 / 4]; (void)d; double te = now_s();
         t->jit[k] = 1e6 * (ts - rel); t->svc[k] = 1e6 * (te - ts); t->e2e[k] = 1e6 * (te - rel); t->pl[k] = 1e-2 * (double)(tb - ta); if (te > rel + P) { t->late++; if (te > rel + 2 * P) t->dropped++; } k++; }
     t->n = k; return NULL; }
-static void *run_det(void *arg) { task_t *t = arg; pin(2); const double P = t->period; long k = 0;
+static void *run_det(void *arg) { task_t *t = arg; pin(2); ready_wait(); const double P = t->period; long k = 0;
     while (1) { double rel = T0 + k * P; if (rel > T0 + SECS) break; while (now_s() < rel) {} double ts = now_s(); const uint32_t *b = (const uint32_t *)(BU + 2400 * (k % NB));
         for (int i = 0; i < 2400; i++) ip_f[16384 / 4 + i] = b[i]; ip_f[16 / 4] = (k == 0); double t1 = now_s(); ip_f[0] = 1; while (!(ip_f[0] & 2)) {}
         for (int i = 0; i < 48; i++) ip_d[256 / 4 + i] = ip_f[256 / 4 + i]; ip_d[96 / 4] = (k == 0); ip_d[0] = 1; while (!(ip_d[0] & 2)) {} volatile uint32_t f = ip_d[16 / 4]; (void)f; double te = now_s();
         t->jit[k] = 1e6 * (ts - rel); t->svc[k] = 1e6 * (te - ts); t->e2e[k] = 1e6 * (te - rel); t->pl[k] = 1e6 * (te - t1); if (te > rel + P) { t->late++; if (te > rel + 2 * P) t->dropped++; } k++; }
     t->n = k; return NULL; }
-static void *run_est(void *arg) { task_t *t = arg; pin(3); const double P = t->period; long k = 0;
+static void *run_est(void *arg) { task_t *t = arg; pin(3); ready_wait(); const double P = t->period; long k = 0;
     while (1) { double rel = T0 + k * P; if (rel > T0 + SECS) break; while (now_s() < rel) {} double ts = now_s(); const uint32_t *w = (const uint32_t *)(WV + 80 * (k % NW));
         for (int i = 0; i < 80; i++) ip_e[512 / 4 + i] = w[i]; double t1 = now_s(); ip_e[0] = 1; while (!(ip_e[0] & 2)) {} double t2 = now_s(); volatile uint32_t e0 = ip_e[32 / 4]; (void)e0; double te = now_s();
         t->jit[k] = 1e6 * (ts - rel); t->svc[k] = 1e6 * (te - ts); t->e2e[k] = 1e6 * (te - rel); t->pl[k] = 1e6 * (t2 - t1); if (te > rel + P) { t->late++; if (te > rel + 2 * P) t->dropped++; } k++; }
@@ -57,6 +68,9 @@ static void *run_est(void *arg) { task_t *t = arg; pin(3); const double P = t->p
 static float *loadf(const char *f, long n) { float *b = malloc(n * 4); FILE *fp = fopen(f, "rb"); if (!fp || fread(b, 4, n, fp) != (size_t)n) { perror(f); exit(1); } fclose(fp); return b; }
 int main(int argc, char **argv) {
     if (argc < 9) { fprintf(stderr, "usage: %s frames.bin nf bufs.bin nb waves.bin nw seconds out_prefix\n", argv[0]); return 1; }
+    const char *rt = getenv("RT_PRIO"); if (rt) RT_PRIO = atoi(rt);
+    if (RT_PRIO > 0 && mlockall(MCL_CURRENT | MCL_FUTURE)) { perror("mlockall"); return 1; }
+    printf("scheduling: %s\n", RT_PRIO > 0 ? "SCHED_FIFO, memory locked" : "SCHED_OTHER");
     NF = atol(argv[2]); NB = atol(argv[4]); NW = atol(argv[6]); SECS = atof(argv[7]); FR = loadf(argv[1], NF * 18); BU = loadf(argv[3], NB * 2400); WV = loadf(argv[5], NW * 80);
     int fd = open("/dev/mem", O_RDWR | O_SYNC); ip_m = mmap(NULL, 0x10000, PROT_READ | PROT_WRITE, MAP_SHARED, fd, MPCC_BASE); ip_f = mmap(NULL, 0x10000, PROT_READ | PROT_WRITE, MAP_SHARED, fd, FEAT_BASE);
     ip_d = mmap(NULL, 0x10000, PROT_READ | PROT_WRITE, MAP_SHARED, fd, DET_BASE); ip_e = mmap(NULL, 0x10000, PROT_READ | PROT_WRITE, MAP_SHARED, fd, EST_BASE); tm = mmap(NULL, 0x10000, PROT_READ | PROT_WRITE, MAP_SHARED, fd, TIMER_BASE);
@@ -66,8 +80,14 @@ int main(int argc, char **argv) {
     task_t tmk = {"mpcc", 50e-6, 0, malloc(nm * 8), malloc(nm * 8), malloc(nm * 8), malloc(nm * 8), 0, 0};
     task_t tdt = {"detector", 20e-3, 0, malloc(nd * 8), malloc(nd * 8), malloc(nd * 8), malloc(nd * 8), 0, 0};
     task_t tes = {"estimator", 250e-6, 0, malloc(ne * 8), malloc(ne * 8), malloc(ne * 8), malloc(ne * 8), 0, 0};
-    pthread_t th[3]; T0 = now_s() + 0.05;
+    /* touch the record arrays before the run so that no page is faulted in inside a timed section */
+    memset(tmk.jit, 0, nm * 8); memset(tmk.svc, 0, nm * 8); memset(tmk.e2e, 0, nm * 8); memset(tmk.pl, 0, nm * 8);
+    memset(tdt.jit, 0, nd * 8); memset(tdt.svc, 0, nd * 8); memset(tdt.e2e, 0, nd * 8); memset(tdt.pl, 0, nd * 8);
+    memset(tes.jit, 0, ne * 8); memset(tes.svc, 0, ne * 8); memset(tes.e2e, 0, ne * 8); memset(tes.pl, 0, ne * 8);
+    pthread_t th[3];
     pthread_create(&th[0], NULL, run_mpcc, &tmk); pthread_create(&th[1], NULL, run_det, &tdt); pthread_create(&th[2], NULL, run_est, &tes);
+    while (READY < 3) usleep(1000);
+    T0 = now_s() + 0.05; GO = 1;
     for (int i = 0; i < 3; i++) pthread_join(th[i], NULL);
     char fn[512]; snprintf(fn, sizeof fn, "%s_summary.csv", argv[8]); FILE *o = fopen(fn, "w"); fprintf(o, "task,quantity,n,mean_us,median_us,p99_us,max_us\n");
     report(&tmk, o); report(&tdt, o); report(&tes, o); fclose(o);

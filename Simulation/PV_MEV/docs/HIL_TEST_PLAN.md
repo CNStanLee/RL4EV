@@ -309,3 +309,34 @@ tier3（`chain_3.sh`，在 chain_v6 之后）：MPCC_R6 的幅值扫描 S (16)�
 - 结果（04:02 全部完成，无 FAILED）：without M11 joint 7 / latched 5 / 2.50 kJ（E-DC-01c、E-BAT-02c、E-MUL-01 电网 OC 116/116/75 ms）；without M14 joint 10 / 2.81 kJ（E-DC-02b 72.5 %，母线 −48 V）；MPCC_H6_L55 joint 5 / latched 1 / 7.56 kJ；残差检测器 joint 7 / latched 3 / 5.43 kJ；失配 + 良性（η=0.95）：标志周期 117 → 671 / 710，R6 在 B-CHG-05 OV 闭锁，BR 无闭锁但 −20 % 跌落 67.6 %（限幅 55 A）。
 - 模型：残差开关补丁（apply_res.m / apply_res_fix.m，EMI Detector 子系统 residual_score + det_switch，无状态）不改变 det_src=0 变体的结果（MPCC_R6_chk 与 v6 逐项相同）；旧快照仍有效，01:00–01:15 期间的 FAILED 来自 init_paras 编辑，已重跑。
 - 未做：限幅按基线参考残差释放（M11 门控改为 BR 残差）；失配 + 攻击 + 负载暂态同跑；PREEMPT_RT / 隔离核重放。
+
+## 14. 最终策略全链路 HIL 补跑与实时调度重测（2026-10-01）
+
+板卡重新联网后，用仓库重建的 `mpcc_r.bit`（带保号修复）和仓库里的板端程序（部署到 `/home/xilinx/mpcc_r_repro/`，
+自检 `board_selftest_mpcc_r.py` 通过）补齐最终策略 `MPCC_R6`（mask 18869，含 M11 / M14）的全链路 HIL。
+
+### 14.1 预测器校正进入 HIL 通路（`build_hil('vo')`）
+原 HIL 帧（`HIL Input Frame1` 第 6 路）直接取量测母线 `V_o`，绕过了 M14：SIL 的 `D_predict` 用的是
+`Mitigation` 输出 9（`Vo_ctl`，校正后的母线）。首次试跑 E-DC-01b 因此与 SIL 不同（母线 +0.184 V、THD50 3.245 %，
+SIL 为 +0.083 V、2.729 %；记分卡留在 `results/emi/hil_v6_raw_vo_trial/`）。`build_hil('vo')` 把帧的第 6 路改接
+`Mitigation:9`，模型结构变化后重新生成 `MPCC_R6` 快照。
+
+### 14.2 全链路 HIL（三路全开，`results/emi/hil_v6/`）
+13 个攻击 + 两个慢斜坡（E-RP-250 / 500）× `MPCC_R6`，每次 14 001 拍占空比、2 801 次谐波估计、36 次检测都由
+板卡应答（TCP 往返均值 1.9 / 1.85 / 5.8 ms，主机步进）。同一天在 SIL 重跑了这 15 例，13 个基准例逐项复现归档记分卡。
+配对结果见 `hil_v6/equivalence.csv`（`EMI_DET_FPGA/scripts/hil_report.py equivalence`）：
+
+- 功率保持、闭锁代码与闭锁时刻、检测时刻、逐周期标志字：15 / 15 对相同（标志不一致周期 0）。
+- 攻击窗记分卡：14 / 15 对逐位相同；E-RP-250 在 0.96 s 起轨迹分离，母线均值差 0.00014 V、THD50 差 0.0065 pp。
+- 攻击撤除后另有 4 对轨迹分离（E-AC-02b、E-AC-02h 自 1.10 s，E-DC-02b、E-RP-500 自 1.18 s）：逐拍母线差
+  ≤ 0.19 V，恢复段母线均值差 ≤ 0.008 V，THD50 差 ≤ 0.039 pp。
+- 板上占空比与 SIL 的差在未分离的各对中为单精度舍入量级（中位 3e-8，首拍 1.2e-4），小于仿真 PWM 的时间分辨率
+  （50 ns 步长），所以开关时刻相同、电气量逐位相同；板上检测器 logit 与 ONNX 最大差 0.13 到 3.3，不改变标志。
+- 结果：基准 11 例中 10 例联合成功，E-DC-02b（−1000 V/s）功率 100 %、母线 −0.29 V，但 40.7 ms 时 OV 闭锁，
+  与 SIL 相同；E-RP-250 / 500 在 SIL 与 HIL 中均无闭锁（母线 +1.67 / +1.07 V）；两个电池电流例与 SIL 相同
+  （74.5 %、BOC 闭锁），不在恢复基准内。
+
+### 14.3 实时调度下的并发定时重测
+见 `PS_notebook/logs_20261001/README.md`：SCHED_FIFO + 内存锁定下，五次 20 s 重放共 2 000 005 次控制释放、
+400 005 次估计释放、5 005 次检测释放均无迟到；控制拍最大响应 48.5 µs。原普通优先级测量的 124 次迟到来自
+操作系统抢占。

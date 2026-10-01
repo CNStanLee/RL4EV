@@ -11,7 +11,7 @@
 | `x86_pl_emulator.py` | 无板替身（H0）：同样三条通路，float32 参考模型 + 位精确 ONNX；`MPCC_ABS_IREF=1` 复现修正前的 IP |
 | `ddr_replay_mpcc_r.py` | 实时性与功耗（H6 / H7）：SIL 记录放进 PS 内存连续驱动 PL，`axi_timer` 计时，PMBus 读功耗 |
 | `rt_loop_mpcc_r.c`、`rt_loop_det.c` | 不经 Python 的 PS 循环：控制拍 / 检测周期的服务时间 |
-| `rt_sched.c` | 三任务并发调度重放（控制 50 µs、估计 250 µs、检测 20 ms，绑核 1/2/3，普通优先级），论文定时表的来源 |
+| `rt_sched.c`、`run_rt_sched.sh` | 三任务并发调度重放（控制 50 µs、估计 250 µs、检测 20 ms，绑核 1/2/3）。默认普通优先级；环境变量 `RT_PRIO` 或 `run_rt_sched.sh` 切到 SCHED_FIFO + 内存锁定，这是论文定时表的配置（`logs_20261001/`） |
 | `cpu_partition/` | 处理器侧检测 / 全处理器划分的对照程序 |
 | `pwr_loop.c`、`pmbus_sample.py` | 仅控制器设计的 20 kHz 循环与 PMBus 采样（功耗基线） |
 | `mpcc_hil.ipynb`、`libs/mpcc_overlay.py`、`libs/tcp_cosim_utils.py`、`com_test.ipynb` | 最初的单 IP（`mpcc_hls`）HIL 通路 |
@@ -53,7 +53,8 @@
    ```
 
    运行 `rt_*` 程序前需先用 PYNQ 加载一次比特流（例如启动过 `ps_server_mpcc_r.py` 或 `Overlay('hardware/mpcc_r.bit')`）。
-   `rt_sched` 输出的 `late` / `releases` 即论文中 20 s 并发重放的迟到计数。
+   `rt_sched` 输出的 `late` / `releases` 即 20 s 并发重放的迟到计数。论文定时表用实时调度配置：
+   `sudo ./run_rt_sched.sh <数据目录> 20 <输出前缀> 80`，2026-10-01 的五次重放与对照见 `logs_20261001/README.md`。
 
 ## 来源说明
 

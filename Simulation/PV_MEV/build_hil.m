@@ -4,6 +4,8 @@ function build_hil(step)
 %
 %   build_hil()          add the blocks and save
 %   build_hil('inspect') print the current state
+%   build_hil('vo')      route the corrected bus sample (Mitigation Vo_ctl) into the mpcc_r HIL frame, so that the
+%                        predictor correction of the final policy also acts when the predictor runs in PL
 %
 % Paths (all instrumentlib TCP/IP Send / Receive, little-endian single, host HIL_HOST from init_paras):
 %   mpcc_r   : PFC Control/HIL TCP Send1 -> 5010 (existing, 14 values; MPCC_R needs 18: + flags, amp_iac, mask, t_ramp),
@@ -26,6 +28,20 @@ mdir = fileparts(mfilename('fullpath')); cd(mdir); addpath(mdir);
 mdl = 'PV_MEV'; load_system(mdl);
 pc = [mdl '/EV System/PFC Control']; d = [pc '/EMI Detector']; one = [pc '/One  Cycle Model Prediction'];
 if strcmp(step, 'inspect'), inspect(pc, d, one); close_system(mdl, 0); return; end
+if strcmp(step, 'vo')
+    % Predictor correction (M14) on the HIL path: the frame sent to mpcc_r_hls takes its bus sample from Mitigation
+    % output 9 (Vo_ctl: the corrected sample with M14, the raw sample otherwise), as D_predict does in SIL.
+    fr = [pc '/HIL Input Frame1']; lh = get_param(fr, 'LineHandles'); sp = get_param(lh.Inport(6), 'SrcPortHandle'); sb = get_param(sp, 'Parent');
+    if strcmp(get_param(sb, 'BlockType'), 'From') && strcmp(get_param(sb, 'GotoTag'), 'V_o')
+        delete_line(lh.Inport(6)); delete_block(sb);
+        pm = get_param([pc '/Mitigation'], 'PortHandles'); pf = get_param(fr, 'PortHandles');
+        add_line(pc, pm.Outport(9), pf.Inport(6), 'autorouting', 'on');
+        fprintf('[build_hil] vo: Mitigation:9 (Vo_ctl) -> HIL Input Frame1:6\n');
+    else
+        fprintf('[build_hil] vo: frame input 6 is fed by %s, nothing to do\n', strrep(get_param(sb, 'Name'), newline, ' '));
+    end
+    save_system(mdl); close_system(mdl); return;
+end
 if strcmp(step, 'v2')
     swap_tcp(pc, 'HIL TCP Send1', 'HIL TCP Receive1', 'HIL MPCC TCP', 'hil_mpcc_tcp', 1, 5010, 5011, 'double');
     swap_tcp(d, 'HIL Det Send', 'HIL Det Receive', 'HIL Det TCP', 'hil_det_tcp', 21, 5020, 5021, 'single');
