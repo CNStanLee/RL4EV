@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Build the HLS IPs with Vitis HLS 2022.2 (Tcl flow).
 #   ./build_all.sh                         # csim + csynth + export for all five components
 #   HLS_STEPS=csim ./build_all.sh          # C simulation only
