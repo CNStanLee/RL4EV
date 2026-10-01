@@ -1,0 +1,53 @@
+original,rebuilt_pdf,scope
+fig1_timing.svg,rebuilt/fig1_timing.pdf,specified timing schematic
+fig2_edc01c.svg,rebuilt/fig2_edc01c.pdf,phase1
+fig3_eac02b.svg,rebuilt/fig3_eac02b.pdf,phase1
+fig3_eac01a.svg,rebuilt/fig3_eac01a.pdf,phase1
+ac_chain_diagnostics.svg,rebuilt/ac_chain_diagnostics.pdf,phase1; manuscript selection from both original fig3s
+fig4_recovery.svg,rebuilt/fig4_recovery.pdf,phase1
+fig5_ebat_curves.svg,rebuilt/fig5_ebat_curves.pdf,phase1
+fig6_ebat02b.svg,rebuilt/fig6_ebat02b.pdf,phase1
+fig7_heatmap.svg,rebuilt/fig7_heatmap.pdf,phase1
+fig8_partial_load.svg,rebuilt/fig8_partial_load.pdf,phase1
+waveforms/E-DC-01b_state.png,rebuilt/waveforms/E-DC-01b_state.pdf,phase1
+waveforms/E-DC-01b_iac.png,rebuilt/waveforms/E-DC-01b_iac.pdf,phase1
+waveforms/E-DC-01b_transition.png,rebuilt/waveforms/E-DC-01b_transition.pdf,phase1
+waveforms/E-DC-01c_state.png,rebuilt/waveforms/E-DC-01c_state.pdf,phase1
+waveforms/E-DC-01c_iac.png,rebuilt/waveforms/E-DC-01c_iac.pdf,phase1
+waveforms/E-DC-01c_transition.png,rebuilt/waveforms/E-DC-01c_transition.pdf,phase1
+waveforms/E-DC-02b_state.png,rebuilt/waveforms/E-DC-02b_state.pdf,phase1
+waveforms/E-DC-02b_iac.png,rebuilt/waveforms/E-DC-02b_iac.pdf,phase1
+waveforms/E-DC-02b_transition.png,rebuilt/waveforms/E-DC-02b_transition.pdf,phase1
+waveforms/E-AC-01a_state.png,rebuilt/waveforms/E-AC-01a_state.pdf,phase1
+waveforms/E-AC-01a_iac.png,rebuilt/waveforms/E-AC-01a_iac.pdf,phase1
+waveforms/E-AC-01a_transition.png,rebuilt/waveforms/E-AC-01a_transition.pdf,phase1
+waveforms/E-AC-01b_state.png,rebuilt/waveforms/E-AC-01b_state.pdf,phase1
+waveforms/E-AC-01b_iac.png,rebuilt/waveforms/E-AC-01b_iac.pdf,phase1
+waveforms/E-AC-01b_transition.png,rebuilt/waveforms/E-AC-01b_transition.pdf,phase1
+waveforms/E-AC-02b_state.png,rebuilt/waveforms/E-AC-02b_state.pdf,phase1
+waveforms/E-AC-02b_iac.png,rebuilt/waveforms/E-AC-02b_iac.pdf,phase1
+waveforms/E-AC-02b_transition.png,rebuilt/waveforms/E-AC-02b_transition.pdf,phase1
+waveforms/E-AC-02s_state.png,rebuilt/waveforms/E-AC-02s_state.pdf,phase1
+waveforms/E-AC-02s_iac.png,rebuilt/waveforms/E-AC-02s_iac.pdf,phase1
+waveforms/E-AC-02s_transition.png,rebuilt/waveforms/E-AC-02s_transition.pdf,phase1
+waveforms/E-AC-02h_state.png,rebuilt/waveforms/E-AC-02h_state.pdf,phase1
+waveforms/E-AC-02h_iac.png,rebuilt/waveforms/E-AC-02h_iac.pdf,phase1
+waveforms/E-AC-02h_transition.png,rebuilt/waveforms/E-AC-02h_transition.pdf,phase1
+waveforms/E-MUL-01_state.png,rebuilt/waveforms/E-MUL-01_state.pdf,phase1
+waveforms/E-MUL-01_iac.png,rebuilt/waveforms/E-MUL-01_iac.pdf,phase1
+waveforms/E-MUL-01_transition.png,rebuilt/waveforms/E-MUL-01_transition.pdf,phase1
+waveforms/E-BAT-01b_state.png,rebuilt/waveforms/E-BAT-01b_state.pdf,phase1
+waveforms/E-BAT-01b_iac.png,rebuilt/waveforms/E-BAT-01b_iac.pdf,phase1
+waveforms/E-BAT-01b_transition.png,rebuilt/waveforms/E-BAT-01b_transition.pdf,phase1
+waveforms/E-BAT-02b_state.png,rebuilt/waveforms/E-BAT-02b_state.pdf,phase1
+waveforms/E-BAT-02b_iac.png,rebuilt/waveforms/E-BAT-02b_iac.pdf,phase1
+waveforms/E-BAT-02b_transition.png,rebuilt/waveforms/E-BAT-02b_transition.pdf,phase1
+waveforms/E-BAT-02c_state.png,rebuilt/waveforms/E-BAT-02c_state.pdf,phase1
+waveforms/E-BAT-02c_iac.png,rebuilt/waveforms/E-BAT-02c_iac.pdf,phase1
+waveforms/E-BAT-02c_transition.png,rebuilt/waveforms/E-BAT-02c_transition.pdf,phase1
+waveforms/E-BAT-01n_state.png,rebuilt/waveforms/E-BAT-01n_state.pdf,phase1
+waveforms/E-BAT-01n_iac.png,rebuilt/waveforms/E-BAT-01n_iac.pdf,phase1
+waveforms/E-BAT-01n_transition.png,rebuilt/waveforms/E-BAT-01n_transition.pdf,phase1
+final_waveforms.svg,rebuilt/final_waveforms.pdf,"five-family later SIL, rounded 10 kHz exports"
+final_cycle_thd.svg,rebuilt/final_cycle_thd.pdf,"five-family later SIL, recomputed 10 kHz cycle FFT"
+fig3_eac02c.svg,,original unused schematic retained as editable SVG; no measured data

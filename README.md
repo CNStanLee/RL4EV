@@ -20,3 +20,8 @@ DAES 论文的实验结果整理、证据口径和可复现图表脚本见
 2026-10-01 同步前的本地模型、实验数据和论文初稿完整快照见
 [`reproducibility/README.md`](reproducibility/README.md)，代码与论文仓库均保存
 相同的原始文件及 SHA-256 校验清单。
+
+`Simulation/PV_MEV/docs/figures` 的完整原始数据、重建脚本与图集见
+[`paper/pv_mev_figures/README.md`](paper/pv_mev_figures/README.md)。论文仓库在
+`data/pv_mev/` 保存相同副本，并已将传感链机理、CC/CV 切换、恢复时间、
+部分负载和最终控制版本的时域对照接入结果章节。

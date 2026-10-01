@@ -1,0 +1,235 @@
+case,strategy,label,file,rows,t_start,t_end
+E-DC-01b,CRPR,PR (proportional-resonant),waveforms/E-DC-01b__CRPR.csv,7000,0.6,1.2999
+E-DC-01c,CRPR,PR (proportional-resonant),waveforms/E-DC-01c__CRPR.csv,7000,0.6,1.2999
+E-DC-02b,CRPR,PR (proportional-resonant),waveforms/E-DC-02b__CRPR.csv,7000,0.6,1.2999
+E-AC-01a,CRPR,PR (proportional-resonant),waveforms/E-AC-01a__CRPR.csv,7000,0.6,1.2999
+E-AC-01b,CRPR,PR (proportional-resonant),waveforms/E-AC-01b__CRPR.csv,7000,0.6,1.2999
+E-AC-02b,CRPR,PR (proportional-resonant),waveforms/E-AC-02b__CRPR.csv,7000,0.6,1.2999
+E-AC-02h,CRPR,PR (proportional-resonant),waveforms/E-AC-02h__CRPR.csv,7000,0.6,1.2999
+E-AC-02s,CRPR,PR (proportional-resonant),waveforms/E-AC-02s__CRPR.csv,7000,0.6,1.2999
+E-BAT-01b,CRPR,PR (proportional-resonant),waveforms/E-BAT-01b__CRPR.csv,7000,0.6,1.2999
+E-BAT-01n,CRPR,PR (proportional-resonant),waveforms/E-BAT-01n__CRPR.csv,7000,0.6,1.2999
+E-BAT-02b,CRPR,PR (proportional-resonant),waveforms/E-BAT-02b__CRPR.csv,7000,0.6,1.2999
+E-BAT-02c,CRPR,PR (proportional-resonant),waveforms/E-BAT-02c__CRPR.csv,7000,0.6,1.2999
+E-MUL-01,CRPR,PR (proportional-resonant),waveforms/E-MUL-01__CRPR.csv,7000,0.6,1.2999
+E-DC-01b,MPCC_P,MPCC-P (direct gating),waveforms/E-DC-01b__MPCC_P.csv,7000,0.6,1.2999
+E-DC-01c,MPCC_P,MPCC-P (direct gating),waveforms/E-DC-01c__MPCC_P.csv,7000,0.6,1.2999
+E-DC-02b,MPCC_P,MPCC-P (direct gating),waveforms/E-DC-02b__MPCC_P.csv,7000,0.6,1.2999
+E-AC-01a,MPCC_P,MPCC-P (direct gating),waveforms/E-AC-01a__MPCC_P.csv,7000,0.6,1.2999
+E-AC-01b,MPCC_P,MPCC-P (direct gating),waveforms/E-AC-01b__MPCC_P.csv,7000,0.6,1.2999
+E-AC-02b,MPCC_P,MPCC-P (direct gating),waveforms/E-AC-02b__MPCC_P.csv,7000,0.6,1.2999
+E-AC-02h,MPCC_P,MPCC-P (direct gating),waveforms/E-AC-02h__MPCC_P.csv,7000,0.6,1.2999
+E-AC-02s,MPCC_P,MPCC-P (direct gating),waveforms/E-AC-02s__MPCC_P.csv,7000,0.6,1.2999
+E-BAT-01b,MPCC_P,MPCC-P (direct gating),waveforms/E-BAT-01b__MPCC_P.csv,7000,0.6,1.2999
+E-BAT-01n,MPCC_P,MPCC-P (direct gating),waveforms/E-BAT-01n__MPCC_P.csv,7000,0.6,1.2999
+E-BAT-02b,MPCC_P,MPCC-P (direct gating),waveforms/E-BAT-02b__MPCC_P.csv,7000,0.6,1.2999
+E-BAT-02c,MPCC_P,MPCC-P (direct gating),waveforms/E-BAT-02c__MPCC_P.csv,7000,0.6,1.2999
+E-MUL-01,MPCC_P,MPCC-P (direct gating),waveforms/E-MUL-01__MPCC_P.csv,7000,0.6,1.2999
+E-DC-01b,MPCC_D,MPCC-D (duty predictive),waveforms/E-DC-01b__MPCC_D.csv,7000,0.6,1.2999
+E-DC-01c,MPCC_D,MPCC-D (duty predictive),waveforms/E-DC-01c__MPCC_D.csv,7000,0.6,1.2999
+E-DC-02b,MPCC_D,MPCC-D (duty predictive),waveforms/E-DC-02b__MPCC_D.csv,7000,0.6,1.2999
+E-AC-01a,MPCC_D,MPCC-D (duty predictive),waveforms/E-AC-01a__MPCC_D.csv,7000,0.6,1.2999
+E-AC-01b,MPCC_D,MPCC-D (duty predictive),waveforms/E-AC-01b__MPCC_D.csv,7000,0.6,1.2999
+E-AC-02b,MPCC_D,MPCC-D (duty predictive),waveforms/E-AC-02b__MPCC_D.csv,7000,0.6,1.2999
+E-AC-02h,MPCC_D,MPCC-D (duty predictive),waveforms/E-AC-02h__MPCC_D.csv,7000,0.6,1.2999
+E-AC-02s,MPCC_D,MPCC-D (duty predictive),waveforms/E-AC-02s__MPCC_D.csv,7000,0.6,1.2999
+E-BAT-01b,MPCC_D,MPCC-D (duty predictive),waveforms/E-BAT-01b__MPCC_D.csv,7000,0.6,1.2999
+E-BAT-01n,MPCC_D,MPCC-D (duty predictive),waveforms/E-BAT-01n__MPCC_D.csv,7000,0.6,1.2999
+E-BAT-02b,MPCC_D,MPCC-D (duty predictive),waveforms/E-BAT-02b__MPCC_D.csv,7000,0.6,1.2999
+E-BAT-02c,MPCC_D,MPCC-D (duty predictive),waveforms/E-BAT-02c__MPCC_D.csv,7000,0.6,1.2999
+E-MUL-01,MPCC_D,MPCC-D (duty predictive),waveforms/E-MUL-01__MPCC_D.csv,7000,0.6,1.2999
+E-DC-01b,MPCC_D_H1,"MPCC-H (hybrid harmonic, v5 run)",waveforms/E-DC-01b__MPCC_D_H1.csv,7000,0.6,1.2999
+E-DC-01c,MPCC_D_H1,"MPCC-H (hybrid harmonic, v5 run)",waveforms/E-DC-01c__MPCC_D_H1.csv,7000,0.6,1.2999
+E-DC-02b,MPCC_D_H1,"MPCC-H (hybrid harmonic, v5 run)",waveforms/E-DC-02b__MPCC_D_H1.csv,7000,0.6,1.2999
+E-AC-01a,MPCC_D_H1,"MPCC-H (hybrid harmonic, v5 run)",waveforms/E-AC-01a__MPCC_D_H1.csv,7000,0.6,1.2999
+E-AC-01b,MPCC_D_H1,"MPCC-H (hybrid harmonic, v5 run)",waveforms/E-AC-01b__MPCC_D_H1.csv,7000,0.6,1.2999
+E-AC-02b,MPCC_D_H1,"MPCC-H (hybrid harmonic, v5 run)",waveforms/E-AC-02b__MPCC_D_H1.csv,7000,0.6,1.2999
+E-AC-02h,MPCC_D_H1,"MPCC-H (hybrid harmonic, v5 run)",waveforms/E-AC-02h__MPCC_D_H1.csv,7000,0.6,1.2999
+E-AC-02s,MPCC_D_H1,"MPCC-H (hybrid harmonic, v5 run)",waveforms/E-AC-02s__MPCC_D_H1.csv,7000,0.6,1.2999
+E-BAT-01b,MPCC_D_H1,"MPCC-H (hybrid harmonic, v5 run)",waveforms/E-BAT-01b__MPCC_D_H1.csv,7000,0.6,1.2999
+E-BAT-01n,MPCC_D_H1,"MPCC-H (hybrid harmonic, v5 run)",waveforms/E-BAT-01n__MPCC_D_H1.csv,7000,0.6,1.2999
+E-BAT-02b,MPCC_D_H1,"MPCC-H (hybrid harmonic, v5 run)",waveforms/E-BAT-02b__MPCC_D_H1.csv,7000,0.6,1.2999
+E-BAT-02c,MPCC_D_H1,"MPCC-H (hybrid harmonic, v5 run)",waveforms/E-BAT-02c__MPCC_D_H1.csv,7000,0.6,1.2999
+E-MUL-01,MPCC_D_H1,"MPCC-H (hybrid harmonic, v5 run)",waveforms/E-MUL-01__MPCC_D_H1.csv,7000,0.6,1.2999
+E-DC-01b,MPCC_H6,"MPCC-H (v6 re-run, unprotected reference)",waveforms/E-DC-01b__MPCC_H6.csv,7000,0.6,1.2999
+E-DC-01c,MPCC_H6,"MPCC-H (v6 re-run, unprotected reference)",waveforms/E-DC-01c__MPCC_H6.csv,7000,0.6,1.2999
+E-DC-02b,MPCC_H6,"MPCC-H (v6 re-run, unprotected reference)",waveforms/E-DC-02b__MPCC_H6.csv,7000,0.6,1.2999
+E-AC-01a,MPCC_H6,"MPCC-H (v6 re-run, unprotected reference)",waveforms/E-AC-01a__MPCC_H6.csv,7000,0.6,1.2999
+E-AC-01b,MPCC_H6,"MPCC-H (v6 re-run, unprotected reference)",waveforms/E-AC-01b__MPCC_H6.csv,7000,0.6,1.2999
+E-AC-02b,MPCC_H6,"MPCC-H (v6 re-run, unprotected reference)",waveforms/E-AC-02b__MPCC_H6.csv,7000,0.6,1.2999
+E-AC-02h,MPCC_H6,"MPCC-H (v6 re-run, unprotected reference)",waveforms/E-AC-02h__MPCC_H6.csv,7000,0.6,1.2999
+E-AC-02s,MPCC_H6,"MPCC-H (v6 re-run, unprotected reference)",waveforms/E-AC-02s__MPCC_H6.csv,7000,0.6,1.2999
+E-BAT-01b,MPCC_H6,"MPCC-H (v6 re-run, unprotected reference)",waveforms/E-BAT-01b__MPCC_H6.csv,7000,0.6,1.2999
+E-BAT-01n,MPCC_H6,"MPCC-H (v6 re-run, unprotected reference)",waveforms/E-BAT-01n__MPCC_H6.csv,7000,0.6,1.2999
+E-BAT-02b,MPCC_H6,"MPCC-H (v6 re-run, unprotected reference)",waveforms/E-BAT-02b__MPCC_H6.csv,7000,0.6,1.2999
+E-BAT-02c,MPCC_H6,"MPCC-H (v6 re-run, unprotected reference)",waveforms/E-BAT-02c__MPCC_H6.csv,7000,0.6,1.2999
+E-MUL-01,MPCC_H6,"MPCC-H (v6 re-run, unprotected reference)",waveforms/E-MUL-01__MPCC_H6.csv,7000,0.6,1.2999
+E-DC-01b,MPCC_R6,"MPCC-R (deployed, mask 18869)",waveforms/E-DC-01b__MPCC_R6.csv,7000,0.6,1.2999
+E-DC-01c,MPCC_R6,"MPCC-R (deployed, mask 18869)",waveforms/E-DC-01c__MPCC_R6.csv,7000,0.6,1.2999
+E-DC-02b,MPCC_R6,"MPCC-R (deployed, mask 18869)",waveforms/E-DC-02b__MPCC_R6.csv,7000,0.6,1.2999
+E-AC-01a,MPCC_R6,"MPCC-R (deployed, mask 18869)",waveforms/E-AC-01a__MPCC_R6.csv,7000,0.6,1.2999
+E-AC-01b,MPCC_R6,"MPCC-R (deployed, mask 18869)",waveforms/E-AC-01b__MPCC_R6.csv,7000,0.6,1.2999
+E-AC-02b,MPCC_R6,"MPCC-R (deployed, mask 18869)",waveforms/E-AC-02b__MPCC_R6.csv,7000,0.6,1.2999
+E-AC-02h,MPCC_R6,"MPCC-R (deployed, mask 18869)",waveforms/E-AC-02h__MPCC_R6.csv,7000,0.6,1.2999
+E-AC-02s,MPCC_R6,"MPCC-R (deployed, mask 18869)",waveforms/E-AC-02s__MPCC_R6.csv,7000,0.6,1.2999
+E-BAT-01b,MPCC_R6,"MPCC-R (deployed, mask 18869)",waveforms/E-BAT-01b__MPCC_R6.csv,7000,0.6,1.2999
+E-BAT-01n,MPCC_R6,"MPCC-R (deployed, mask 18869)",waveforms/E-BAT-01n__MPCC_R6.csv,7000,0.6,1.2999
+E-BAT-02b,MPCC_R6,"MPCC-R (deployed, mask 18869)",waveforms/E-BAT-02b__MPCC_R6.csv,7000,0.6,1.2999
+E-BAT-02c,MPCC_R6,"MPCC-R (deployed, mask 18869)",waveforms/E-BAT-02c__MPCC_R6.csv,7000,0.6,1.2999
+E-MUL-01,MPCC_R6,"MPCC-R (deployed, mask 18869)",waveforms/E-MUL-01__MPCC_R6.csv,7000,0.6,1.2999
+E-DC-01b,MPCC_R_REG,MPCC-R without M11 and M14 (mask 437),waveforms/E-DC-01b__MPCC_R_REG.csv,7000,0.6,1.2999
+E-DC-01c,MPCC_R_REG,MPCC-R without M11 and M14 (mask 437),waveforms/E-DC-01c__MPCC_R_REG.csv,7000,0.6,1.2999
+E-DC-02b,MPCC_R_REG,MPCC-R without M11 and M14 (mask 437),waveforms/E-DC-02b__MPCC_R_REG.csv,7000,0.6,1.2999
+E-AC-01a,MPCC_R_REG,MPCC-R without M11 and M14 (mask 437),waveforms/E-AC-01a__MPCC_R_REG.csv,7000,0.6,1.2999
+E-AC-01b,MPCC_R_REG,MPCC-R without M11 and M14 (mask 437),waveforms/E-AC-01b__MPCC_R_REG.csv,7000,0.6,1.2999
+E-AC-02b,MPCC_R_REG,MPCC-R without M11 and M14 (mask 437),waveforms/E-AC-02b__MPCC_R_REG.csv,7000,0.6,1.2999
+E-AC-02h,MPCC_R_REG,MPCC-R without M11 and M14 (mask 437),waveforms/E-AC-02h__MPCC_R_REG.csv,7000,0.6,1.2999
+E-AC-02s,MPCC_R_REG,MPCC-R without M11 and M14 (mask 437),waveforms/E-AC-02s__MPCC_R_REG.csv,7000,0.6,1.2999
+E-BAT-01b,MPCC_R_REG,MPCC-R without M11 and M14 (mask 437),waveforms/E-BAT-01b__MPCC_R_REG.csv,7000,0.6,1.2999
+E-BAT-01n,MPCC_R_REG,MPCC-R without M11 and M14 (mask 437),waveforms/E-BAT-01n__MPCC_R_REG.csv,7000,0.6,1.2999
+E-BAT-02b,MPCC_R_REG,MPCC-R without M11 and M14 (mask 437),waveforms/E-BAT-02b__MPCC_R_REG.csv,7000,0.6,1.2999
+E-BAT-02c,MPCC_R_REG,MPCC-R without M11 and M14 (mask 437),waveforms/E-BAT-02c__MPCC_R_REG.csv,7000,0.6,1.2999
+E-MUL-01,MPCC_R_REG,MPCC-R without M11 and M14 (mask 437),waveforms/E-MUL-01__MPCC_R_REG.csv,7000,0.6,1.2999
+E-DC-01b,MPCC_R6_noM11,MPCC-R without M11 (mask 16821),waveforms/E-DC-01b__MPCC_R6_noM11.csv,7000,0.6,1.2999
+E-DC-01c,MPCC_R6_noM11,MPCC-R without M11 (mask 16821),waveforms/E-DC-01c__MPCC_R6_noM11.csv,7000,0.6,1.2999
+E-DC-02b,MPCC_R6_noM11,MPCC-R without M11 (mask 16821),waveforms/E-DC-02b__MPCC_R6_noM11.csv,7000,0.6,1.2999
+E-AC-01a,MPCC_R6_noM11,MPCC-R without M11 (mask 16821),waveforms/E-AC-01a__MPCC_R6_noM11.csv,7000,0.6,1.2999
+E-AC-01b,MPCC_R6_noM11,MPCC-R without M11 (mask 16821),waveforms/E-AC-01b__MPCC_R6_noM11.csv,7000,0.6,1.2999
+E-AC-02b,MPCC_R6_noM11,MPCC-R without M11 (mask 16821),waveforms/E-AC-02b__MPCC_R6_noM11.csv,7000,0.6,1.2999
+E-AC-02h,MPCC_R6_noM11,MPCC-R without M11 (mask 16821),waveforms/E-AC-02h__MPCC_R6_noM11.csv,7000,0.6,1.2999
+E-AC-02s,MPCC_R6_noM11,MPCC-R without M11 (mask 16821),waveforms/E-AC-02s__MPCC_R6_noM11.csv,7000,0.6,1.2999
+E-BAT-01b,MPCC_R6_noM11,MPCC-R without M11 (mask 16821),waveforms/E-BAT-01b__MPCC_R6_noM11.csv,7000,0.6,1.2999
+E-BAT-01n,MPCC_R6_noM11,MPCC-R without M11 (mask 16821),waveforms/E-BAT-01n__MPCC_R6_noM11.csv,7000,0.6,1.2999
+E-BAT-02b,MPCC_R6_noM11,MPCC-R without M11 (mask 16821),waveforms/E-BAT-02b__MPCC_R6_noM11.csv,7000,0.6,1.2999
+E-BAT-02c,MPCC_R6_noM11,MPCC-R without M11 (mask 16821),waveforms/E-BAT-02c__MPCC_R6_noM11.csv,7000,0.6,1.2999
+E-MUL-01,MPCC_R6_noM11,MPCC-R without M11 (mask 16821),waveforms/E-MUL-01__MPCC_R6_noM11.csv,7000,0.6,1.2999
+E-DC-01b,MPCC_R6_noM14,MPCC-R without M14 (mask 2485),waveforms/E-DC-01b__MPCC_R6_noM14.csv,7000,0.6,1.2999
+E-DC-01c,MPCC_R6_noM14,MPCC-R without M14 (mask 2485),waveforms/E-DC-01c__MPCC_R6_noM14.csv,7000,0.6,1.2999
+E-DC-02b,MPCC_R6_noM14,MPCC-R without M14 (mask 2485),waveforms/E-DC-02b__MPCC_R6_noM14.csv,7000,0.6,1.2999
+E-AC-01a,MPCC_R6_noM14,MPCC-R without M14 (mask 2485),waveforms/E-AC-01a__MPCC_R6_noM14.csv,7000,0.6,1.2999
+E-AC-01b,MPCC_R6_noM14,MPCC-R without M14 (mask 2485),waveforms/E-AC-01b__MPCC_R6_noM14.csv,7000,0.6,1.2999
+E-AC-02b,MPCC_R6_noM14,MPCC-R without M14 (mask 2485),waveforms/E-AC-02b__MPCC_R6_noM14.csv,7000,0.6,1.2999
+E-AC-02h,MPCC_R6_noM14,MPCC-R without M14 (mask 2485),waveforms/E-AC-02h__MPCC_R6_noM14.csv,7000,0.6,1.2999
+E-AC-02s,MPCC_R6_noM14,MPCC-R without M14 (mask 2485),waveforms/E-AC-02s__MPCC_R6_noM14.csv,7000,0.6,1.2999
+E-BAT-01b,MPCC_R6_noM14,MPCC-R without M14 (mask 2485),waveforms/E-BAT-01b__MPCC_R6_noM14.csv,7000,0.6,1.2999
+E-BAT-01n,MPCC_R6_noM14,MPCC-R without M14 (mask 2485),waveforms/E-BAT-01n__MPCC_R6_noM14.csv,7000,0.6,1.2999
+E-BAT-02b,MPCC_R6_noM14,MPCC-R without M14 (mask 2485),waveforms/E-BAT-02b__MPCC_R6_noM14.csv,7000,0.6,1.2999
+E-BAT-02c,MPCC_R6_noM14,MPCC-R without M14 (mask 2485),waveforms/E-BAT-02c__MPCC_R6_noM14.csv,7000,0.6,1.2999
+E-MUL-01,MPCC_R6_noM14,MPCC-R without M14 (mask 2485),waveforms/E-MUL-01__MPCC_R6_noM14.csv,7000,0.6,1.2999
+E-DC-01b,MPCC_R6_B,MPCC-R-B (M9 slew-limited fallback),waveforms/E-DC-01b__MPCC_R6_B.csv,7000,0.6,1.2999
+E-DC-01c,MPCC_R6_B,MPCC-R-B (M9 slew-limited fallback),waveforms/E-DC-01c__MPCC_R6_B.csv,7000,0.6,1.2999
+E-DC-02b,MPCC_R6_B,MPCC-R-B (M9 slew-limited fallback),waveforms/E-DC-02b__MPCC_R6_B.csv,7000,0.6,1.2999
+E-AC-01a,MPCC_R6_B,MPCC-R-B (M9 slew-limited fallback),waveforms/E-AC-01a__MPCC_R6_B.csv,7000,0.6,1.2999
+E-AC-01b,MPCC_R6_B,MPCC-R-B (M9 slew-limited fallback),waveforms/E-AC-01b__MPCC_R6_B.csv,7000,0.6,1.2999
+E-AC-02b,MPCC_R6_B,MPCC-R-B (M9 slew-limited fallback),waveforms/E-AC-02b__MPCC_R6_B.csv,7000,0.6,1.2999
+E-AC-02h,MPCC_R6_B,MPCC-R-B (M9 slew-limited fallback),waveforms/E-AC-02h__MPCC_R6_B.csv,7000,0.6,1.2999
+E-AC-02s,MPCC_R6_B,MPCC-R-B (M9 slew-limited fallback),waveforms/E-AC-02s__MPCC_R6_B.csv,7000,0.6,1.2999
+E-BAT-01b,MPCC_R6_B,MPCC-R-B (M9 slew-limited fallback),waveforms/E-BAT-01b__MPCC_R6_B.csv,7000,0.6,1.2999
+E-BAT-01n,MPCC_R6_B,MPCC-R-B (M9 slew-limited fallback),waveforms/E-BAT-01n__MPCC_R6_B.csv,7000,0.6,1.2999
+E-BAT-02b,MPCC_R6_B,MPCC-R-B (M9 slew-limited fallback),waveforms/E-BAT-02b__MPCC_R6_B.csv,7000,0.6,1.2999
+E-BAT-02c,MPCC_R6_B,MPCC-R-B (M9 slew-limited fallback),waveforms/E-BAT-02c__MPCC_R6_B.csv,7000,0.6,1.2999
+E-MUL-01,MPCC_R6_B,MPCC-R-B (M9 slew-limited fallback),waveforms/E-MUL-01__MPCC_R6_B.csv,7000,0.6,1.2999
+E-DC-01b,MPCC_R6_BR,MPCC-R-BR (M10 baseline-referenced),waveforms/E-DC-01b__MPCC_R6_BR.csv,7000,0.6,1.2999
+E-DC-01c,MPCC_R6_BR,MPCC-R-BR (M10 baseline-referenced),waveforms/E-DC-01c__MPCC_R6_BR.csv,7000,0.6,1.2999
+E-DC-02b,MPCC_R6_BR,MPCC-R-BR (M10 baseline-referenced),waveforms/E-DC-02b__MPCC_R6_BR.csv,7000,0.6,1.2999
+E-AC-01a,MPCC_R6_BR,MPCC-R-BR (M10 baseline-referenced),waveforms/E-AC-01a__MPCC_R6_BR.csv,7000,0.6,1.2999
+E-AC-01b,MPCC_R6_BR,MPCC-R-BR (M10 baseline-referenced),waveforms/E-AC-01b__MPCC_R6_BR.csv,7000,0.6,1.2999
+E-AC-02b,MPCC_R6_BR,MPCC-R-BR (M10 baseline-referenced),waveforms/E-AC-02b__MPCC_R6_BR.csv,7000,0.6,1.2999
+E-AC-02h,MPCC_R6_BR,MPCC-R-BR (M10 baseline-referenced),waveforms/E-AC-02h__MPCC_R6_BR.csv,7000,0.6,1.2999
+E-AC-02s,MPCC_R6_BR,MPCC-R-BR (M10 baseline-referenced),waveforms/E-AC-02s__MPCC_R6_BR.csv,7000,0.6,1.2999
+E-BAT-01b,MPCC_R6_BR,MPCC-R-BR (M10 baseline-referenced),waveforms/E-BAT-01b__MPCC_R6_BR.csv,7000,0.6,1.2999
+E-BAT-01n,MPCC_R6_BR,MPCC-R-BR (M10 baseline-referenced),waveforms/E-BAT-01n__MPCC_R6_BR.csv,7000,0.6,1.2999
+E-BAT-02b,MPCC_R6_BR,MPCC-R-BR (M10 baseline-referenced),waveforms/E-BAT-02b__MPCC_R6_BR.csv,7000,0.6,1.2999
+E-BAT-02c,MPCC_R6_BR,MPCC-R-BR (M10 baseline-referenced),waveforms/E-BAT-02c__MPCC_R6_BR.csv,7000,0.6,1.2999
+E-MUL-01,MPCC_R6_BR,MPCC-R-BR (M10 baseline-referenced),waveforms/E-MUL-01__MPCC_R6_BR.csv,7000,0.6,1.2999
+E-DC-01b,MPCC_R6_P1,MPCC-R-P1 (single-cycle persistence),waveforms/E-DC-01b__MPCC_R6_P1.csv,7000,0.6,1.2999
+E-DC-01c,MPCC_R6_P1,MPCC-R-P1 (single-cycle persistence),waveforms/E-DC-01c__MPCC_R6_P1.csv,7000,0.6,1.2999
+E-DC-02b,MPCC_R6_P1,MPCC-R-P1 (single-cycle persistence),waveforms/E-DC-02b__MPCC_R6_P1.csv,7000,0.6,1.2999
+E-AC-01a,MPCC_R6_P1,MPCC-R-P1 (single-cycle persistence),waveforms/E-AC-01a__MPCC_R6_P1.csv,7000,0.6,1.2999
+E-AC-01b,MPCC_R6_P1,MPCC-R-P1 (single-cycle persistence),waveforms/E-AC-01b__MPCC_R6_P1.csv,7000,0.6,1.2999
+E-AC-02b,MPCC_R6_P1,MPCC-R-P1 (single-cycle persistence),waveforms/E-AC-02b__MPCC_R6_P1.csv,7000,0.6,1.2999
+E-AC-02h,MPCC_R6_P1,MPCC-R-P1 (single-cycle persistence),waveforms/E-AC-02h__MPCC_R6_P1.csv,7000,0.6,1.2999
+E-AC-02s,MPCC_R6_P1,MPCC-R-P1 (single-cycle persistence),waveforms/E-AC-02s__MPCC_R6_P1.csv,7000,0.6,1.2999
+E-BAT-01b,MPCC_R6_P1,MPCC-R-P1 (single-cycle persistence),waveforms/E-BAT-01b__MPCC_R6_P1.csv,7000,0.6,1.2999
+E-BAT-01n,MPCC_R6_P1,MPCC-R-P1 (single-cycle persistence),waveforms/E-BAT-01n__MPCC_R6_P1.csv,7000,0.6,1.2999
+E-BAT-02b,MPCC_R6_P1,MPCC-R-P1 (single-cycle persistence),waveforms/E-BAT-02b__MPCC_R6_P1.csv,7000,0.6,1.2999
+E-BAT-02c,MPCC_R6_P1,MPCC-R-P1 (single-cycle persistence),waveforms/E-BAT-02c__MPCC_R6_P1.csv,7000,0.6,1.2999
+E-MUL-01,MPCC_R6_P1,MPCC-R-P1 (single-cycle persistence),waveforms/E-MUL-01__MPCC_R6_P1.csv,7000,0.6,1.2999
+E-DC-01b,MPCC_R6_RES,residual detector driving the same corrections,waveforms/E-DC-01b__MPCC_R6_RES.csv,7000,0.6,1.2999
+E-DC-01c,MPCC_R6_RES,residual detector driving the same corrections,waveforms/E-DC-01c__MPCC_R6_RES.csv,7000,0.6,1.2999
+E-DC-02b,MPCC_R6_RES,residual detector driving the same corrections,waveforms/E-DC-02b__MPCC_R6_RES.csv,7000,0.6,1.2999
+E-AC-01a,MPCC_R6_RES,residual detector driving the same corrections,waveforms/E-AC-01a__MPCC_R6_RES.csv,7000,0.6,1.2999
+E-AC-01b,MPCC_R6_RES,residual detector driving the same corrections,waveforms/E-AC-01b__MPCC_R6_RES.csv,7000,0.6,1.2999
+E-AC-02b,MPCC_R6_RES,residual detector driving the same corrections,waveforms/E-AC-02b__MPCC_R6_RES.csv,7000,0.6,1.2999
+E-AC-02h,MPCC_R6_RES,residual detector driving the same corrections,waveforms/E-AC-02h__MPCC_R6_RES.csv,7000,0.6,1.2999
+E-AC-02s,MPCC_R6_RES,residual detector driving the same corrections,waveforms/E-AC-02s__MPCC_R6_RES.csv,7000,0.6,1.2999
+E-BAT-01b,MPCC_R6_RES,residual detector driving the same corrections,waveforms/E-BAT-01b__MPCC_R6_RES.csv,7000,0.6,1.2999
+E-BAT-01n,MPCC_R6_RES,residual detector driving the same corrections,waveforms/E-BAT-01n__MPCC_R6_RES.csv,7000,0.6,1.2999
+E-BAT-02b,MPCC_R6_RES,residual detector driving the same corrections,waveforms/E-BAT-02b__MPCC_R6_RES.csv,7000,0.6,1.2999
+E-BAT-02c,MPCC_R6_RES,residual detector driving the same corrections,waveforms/E-BAT-02c__MPCC_R6_RES.csv,7000,0.6,1.2999
+E-MUL-01,MPCC_R6_RES,residual detector driving the same corrections,waveforms/E-MUL-01__MPCC_R6_RES.csv,7000,0.6,1.2999
+E-DC-01b,MPCC_H6_L55,MPCC-H with a permanent 55 A limit,waveforms/E-DC-01b__MPCC_H6_L55.csv,7000,0.6,1.2999
+E-DC-01c,MPCC_H6_L55,MPCC-H with a permanent 55 A limit,waveforms/E-DC-01c__MPCC_H6_L55.csv,7000,0.6,1.2999
+E-DC-02b,MPCC_H6_L55,MPCC-H with a permanent 55 A limit,waveforms/E-DC-02b__MPCC_H6_L55.csv,7000,0.6,1.2999
+E-AC-01a,MPCC_H6_L55,MPCC-H with a permanent 55 A limit,waveforms/E-AC-01a__MPCC_H6_L55.csv,7000,0.6,1.2999
+E-AC-01b,MPCC_H6_L55,MPCC-H with a permanent 55 A limit,waveforms/E-AC-01b__MPCC_H6_L55.csv,7000,0.6,1.2999
+E-AC-02b,MPCC_H6_L55,MPCC-H with a permanent 55 A limit,waveforms/E-AC-02b__MPCC_H6_L55.csv,7000,0.6,1.2999
+E-AC-02h,MPCC_H6_L55,MPCC-H with a permanent 55 A limit,waveforms/E-AC-02h__MPCC_H6_L55.csv,7000,0.6,1.2999
+E-AC-02s,MPCC_H6_L55,MPCC-H with a permanent 55 A limit,waveforms/E-AC-02s__MPCC_H6_L55.csv,7000,0.6,1.2999
+E-BAT-01b,MPCC_H6_L55,MPCC-H with a permanent 55 A limit,waveforms/E-BAT-01b__MPCC_H6_L55.csv,7000,0.6,1.2999
+E-BAT-01n,MPCC_H6_L55,MPCC-H with a permanent 55 A limit,waveforms/E-BAT-01n__MPCC_H6_L55.csv,7000,0.6,1.2999
+E-BAT-02b,MPCC_H6_L55,MPCC-H with a permanent 55 A limit,waveforms/E-BAT-02b__MPCC_H6_L55.csv,7000,0.6,1.2999
+E-BAT-02c,MPCC_H6_L55,MPCC-H with a permanent 55 A limit,waveforms/E-BAT-02c__MPCC_H6_L55.csv,7000,0.6,1.2999
+E-MUL-01,MPCC_H6_L55,MPCC-H with a permanent 55 A limit,waveforms/E-MUL-01__MPCC_H6_L55.csv,7000,0.6,1.2999
+E-DC-01b,MPCC_R6_OR,"oracle flags, 0-cycle correction onset",waveforms/E-DC-01b__MPCC_R6_OR.csv,7000,0.6,1.2999
+E-DC-01c,MPCC_R6_OR,"oracle flags, 0-cycle correction onset",waveforms/E-DC-01c__MPCC_R6_OR.csv,7000,0.6,1.2999
+E-DC-02b,MPCC_R6_OR,"oracle flags, 0-cycle correction onset",waveforms/E-DC-02b__MPCC_R6_OR.csv,7000,0.6,1.2999
+E-AC-01a,MPCC_R6_OR,"oracle flags, 0-cycle correction onset",waveforms/E-AC-01a__MPCC_R6_OR.csv,7000,0.6,1.2999
+E-AC-01b,MPCC_R6_OR,"oracle flags, 0-cycle correction onset",waveforms/E-AC-01b__MPCC_R6_OR.csv,7000,0.6,1.2999
+E-AC-02b,MPCC_R6_OR,"oracle flags, 0-cycle correction onset",waveforms/E-AC-02b__MPCC_R6_OR.csv,7000,0.6,1.2999
+E-AC-02h,MPCC_R6_OR,"oracle flags, 0-cycle correction onset",waveforms/E-AC-02h__MPCC_R6_OR.csv,7000,0.6,1.2999
+E-AC-02s,MPCC_R6_OR,"oracle flags, 0-cycle correction onset",waveforms/E-AC-02s__MPCC_R6_OR.csv,7000,0.6,1.2999
+E-BAT-01b,MPCC_R6_OR,"oracle flags, 0-cycle correction onset",waveforms/E-BAT-01b__MPCC_R6_OR.csv,7000,0.6,1.2999
+E-BAT-01n,MPCC_R6_OR,"oracle flags, 0-cycle correction onset",waveforms/E-BAT-01n__MPCC_R6_OR.csv,7000,0.6,1.2999
+E-BAT-02b,MPCC_R6_OR,"oracle flags, 0-cycle correction onset",waveforms/E-BAT-02b__MPCC_R6_OR.csv,7000,0.6,1.2999
+E-BAT-02c,MPCC_R6_OR,"oracle flags, 0-cycle correction onset",waveforms/E-BAT-02c__MPCC_R6_OR.csv,7000,0.6,1.2999
+E-MUL-01,MPCC_R6_OR,"oracle flags, 0-cycle correction onset",waveforms/E-MUL-01__MPCC_R6_OR.csv,7000,0.6,1.2999
+E-DC-01b,MPCC_R6_OR1,"oracle flags, 1-cycle onset",waveforms/E-DC-01b__MPCC_R6_OR1.csv,7000,0.6,1.2999
+E-DC-01c,MPCC_R6_OR1,"oracle flags, 1-cycle onset",waveforms/E-DC-01c__MPCC_R6_OR1.csv,7000,0.6,1.2999
+E-DC-02b,MPCC_R6_OR1,"oracle flags, 1-cycle onset",waveforms/E-DC-02b__MPCC_R6_OR1.csv,7000,0.6,1.2999
+E-AC-01a,MPCC_R6_OR1,"oracle flags, 1-cycle onset",waveforms/E-AC-01a__MPCC_R6_OR1.csv,7000,0.6,1.2999
+E-AC-01b,MPCC_R6_OR1,"oracle flags, 1-cycle onset",waveforms/E-AC-01b__MPCC_R6_OR1.csv,7000,0.6,1.2999
+E-AC-02b,MPCC_R6_OR1,"oracle flags, 1-cycle onset",waveforms/E-AC-02b__MPCC_R6_OR1.csv,7000,0.6,1.2999
+E-AC-02h,MPCC_R6_OR1,"oracle flags, 1-cycle onset",waveforms/E-AC-02h__MPCC_R6_OR1.csv,7000,0.6,1.2999
+E-AC-02s,MPCC_R6_OR1,"oracle flags, 1-cycle onset",waveforms/E-AC-02s__MPCC_R6_OR1.csv,7000,0.6,1.2999
+E-BAT-01b,MPCC_R6_OR1,"oracle flags, 1-cycle onset",waveforms/E-BAT-01b__MPCC_R6_OR1.csv,7000,0.6,1.2999
+E-BAT-01n,MPCC_R6_OR1,"oracle flags, 1-cycle onset",waveforms/E-BAT-01n__MPCC_R6_OR1.csv,7000,0.6,1.2999
+E-BAT-02b,MPCC_R6_OR1,"oracle flags, 1-cycle onset",waveforms/E-BAT-02b__MPCC_R6_OR1.csv,7000,0.6,1.2999
+E-BAT-02c,MPCC_R6_OR1,"oracle flags, 1-cycle onset",waveforms/E-BAT-02c__MPCC_R6_OR1.csv,7000,0.6,1.2999
+E-MUL-01,MPCC_R6_OR1,"oracle flags, 1-cycle onset",waveforms/E-MUL-01__MPCC_R6_OR1.csv,7000,0.6,1.2999
+E-DC-01b,MPCC_R6_OR2,"oracle flags, 2-cycle onset",waveforms/E-DC-01b__MPCC_R6_OR2.csv,7000,0.6,1.2999
+E-DC-01c,MPCC_R6_OR2,"oracle flags, 2-cycle onset",waveforms/E-DC-01c__MPCC_R6_OR2.csv,7000,0.6,1.2999
+E-DC-02b,MPCC_R6_OR2,"oracle flags, 2-cycle onset",waveforms/E-DC-02b__MPCC_R6_OR2.csv,7000,0.6,1.2999
+E-AC-01a,MPCC_R6_OR2,"oracle flags, 2-cycle onset",waveforms/E-AC-01a__MPCC_R6_OR2.csv,7000,0.6,1.2999
+E-AC-01b,MPCC_R6_OR2,"oracle flags, 2-cycle onset",waveforms/E-AC-01b__MPCC_R6_OR2.csv,7000,0.6,1.2999
+E-AC-02b,MPCC_R6_OR2,"oracle flags, 2-cycle onset",waveforms/E-AC-02b__MPCC_R6_OR2.csv,7000,0.6,1.2999
+E-AC-02h,MPCC_R6_OR2,"oracle flags, 2-cycle onset",waveforms/E-AC-02h__MPCC_R6_OR2.csv,7000,0.6,1.2999
+E-AC-02s,MPCC_R6_OR2,"oracle flags, 2-cycle onset",waveforms/E-AC-02s__MPCC_R6_OR2.csv,7000,0.6,1.2999
+E-BAT-01b,MPCC_R6_OR2,"oracle flags, 2-cycle onset",waveforms/E-BAT-01b__MPCC_R6_OR2.csv,7000,0.6,1.2999
+E-BAT-01n,MPCC_R6_OR2,"oracle flags, 2-cycle onset",waveforms/E-BAT-01n__MPCC_R6_OR2.csv,7000,0.6,1.2999
+E-BAT-02b,MPCC_R6_OR2,"oracle flags, 2-cycle onset",waveforms/E-BAT-02b__MPCC_R6_OR2.csv,7000,0.6,1.2999
+E-BAT-02c,MPCC_R6_OR2,"oracle flags, 2-cycle onset",waveforms/E-BAT-02c__MPCC_R6_OR2.csv,7000,0.6,1.2999
+E-MUL-01,MPCC_R6_OR2,"oracle flags, 2-cycle onset",waveforms/E-MUL-01__MPCC_R6_OR2.csv,7000,0.6,1.2999
+E-DC-01b,MPCC_R6_OR3,"oracle flags, 3-cycle onset",waveforms/E-DC-01b__MPCC_R6_OR3.csv,7000,0.6,1.2999
+E-DC-01c,MPCC_R6_OR3,"oracle flags, 3-cycle onset",waveforms/E-DC-01c__MPCC_R6_OR3.csv,7000,0.6,1.2999
+E-DC-02b,MPCC_R6_OR3,"oracle flags, 3-cycle onset",waveforms/E-DC-02b__MPCC_R6_OR3.csv,7000,0.6,1.2999
+E-AC-01a,MPCC_R6_OR3,"oracle flags, 3-cycle onset",waveforms/E-AC-01a__MPCC_R6_OR3.csv,7000,0.6,1.2999
+E-AC-01b,MPCC_R6_OR3,"oracle flags, 3-cycle onset",waveforms/E-AC-01b__MPCC_R6_OR3.csv,7000,0.6,1.2999
+E-AC-02b,MPCC_R6_OR3,"oracle flags, 3-cycle onset",waveforms/E-AC-02b__MPCC_R6_OR3.csv,7000,0.6,1.2999
+E-AC-02h,MPCC_R6_OR3,"oracle flags, 3-cycle onset",waveforms/E-AC-02h__MPCC_R6_OR3.csv,7000,0.6,1.2999
+E-AC-02s,MPCC_R6_OR3,"oracle flags, 3-cycle onset",waveforms/E-AC-02s__MPCC_R6_OR3.csv,7000,0.6,1.2999
+E-BAT-01b,MPCC_R6_OR3,"oracle flags, 3-cycle onset",waveforms/E-BAT-01b__MPCC_R6_OR3.csv,7000,0.6,1.2999
+E-BAT-01n,MPCC_R6_OR3,"oracle flags, 3-cycle onset",waveforms/E-BAT-01n__MPCC_R6_OR3.csv,7000,0.6,1.2999
+E-BAT-02b,MPCC_R6_OR3,"oracle flags, 3-cycle onset",waveforms/E-BAT-02b__MPCC_R6_OR3.csv,7000,0.6,1.2999
+E-BAT-02c,MPCC_R6_OR3,"oracle flags, 3-cycle onset",waveforms/E-BAT-02c__MPCC_R6_OR3.csv,7000,0.6,1.2999
+E-MUL-01,MPCC_R6_OR3,"oracle flags, 3-cycle onset",waveforms/E-MUL-01__MPCC_R6_OR3.csv,7000,0.6,1.2999

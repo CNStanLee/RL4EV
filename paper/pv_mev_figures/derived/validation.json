@@ -1,0 +1,21 @@
+{
+  "source_files_verified": 784,
+  "phase1_scorecards": 104,
+  "phase1_current_sample_hz": 1000000,
+  "phase1_waveform_runs": 104,
+  "phase1_cycle_windows": 3640,
+  "rebuilt_figures": 51,
+  "final_sil": {
+    "waveforms": 234,
+    "cycles": 8190,
+    "displayed_cycles": 7943,
+    "max_supplied_difference_valid_pp": 0.05865909058843499,
+    "selected_cycles": 525,
+    "selected_masked_cycles": 67,
+    "selected_max_supplied_difference_valid_pp": 0.0019944447849411517
+  },
+  "new_experiments": false,
+  "input_interpolation": false,
+  "phase1_ranking_thd_mask": "withheld below 5% charging power",
+  "cycle_display_mask": "power below 5% baseline or fundamental below 1% baseline"
+}

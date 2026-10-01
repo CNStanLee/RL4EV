@@ -70,7 +70,7 @@ end
 % ---------------------------------------------------------------- fig 4 --
     function fig4()
         if isempty(sc), return; end
-        ids = unique(sc.test_id, 'stable'); M = nan(numel(ids), 6); Tr = zeros(numel(ids), 6);
+        ids = unique(sc.test_id, 'stable'); M = nan(numel(ids), numel(V)); Tr = zeros(numel(ids), numel(V));
         for a = 1:numel(ids), for i = 1:numel(V)
             r = sc(sc.test_id == ids(a) & sc.VARIANT_NAME == V{i}, :);
             if ~isempty(r) && ismember('t_rec_ms', r.Properties.VariableNames), M(a, i) = r.t_rec_ms(1); Tr(a, i) = r.trip(1); end
@@ -136,7 +136,7 @@ end
     function fig7()
         if isempty(sc), return; end
         ids = unique(sc.test_id, 'stable'); nI = numel(ids);
-        met = {'THD50 rise', 'recovery', 'Vdc excursion'}; H = nan(6, nI, 3);
+        met = {'THD50 rise', 'recovery', 'Vdc excursion'}; H = nan(numel(V), nI, 3);
         for a = 1:nI, for i = 1:numel(V)
             r = sc(sc.test_id == ids(a) & sc.VARIANT_NAME == V{i}, :);
             if isempty(r) || ~ismember('t_rec_ms', r.Properties.VariableNames), continue; end

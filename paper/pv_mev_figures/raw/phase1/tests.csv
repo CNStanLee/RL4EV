@@ -1,0 +1,14 @@
+test_id,channel,shape,amp,k,f,phase,period,duty,t_on,dwell,K_hall,channel2,shape2,amp2,priority,note
+E-DC-01b,Vdc,step,50,0,50,0,0.1,0.5,0.70,0.30,20,,,,P1,T-DC-01 linear: real Vdc 350 V; link check
+E-DC-01c,Vdc,step,100,0,50,0,0.1,0.5,0.70,0.30,20,,,,P1,T-DC-01 boundary: real Vdc 300 V = UV
+E-DC-02b,Vdc,ramp,-100,1000,50,0,0.1,0.5,0.70,0.30,20,,,,P1,T-DC-02 ramp 1000 V/s: real Vdc 500 V; OV at 450 V
+E-AC-01a,Vac,step,17,0,50,0,0.1,0.5,0.70,0.30,20,,,,P1,T-AC-01 zero-crossing offset 0.16 ms
+E-AC-01b,Vac,step,34,0,50,0,0.1,0.5,0.70,0.30,20,,,,P2,T-AC-01 zero-crossing offset 0.32 ms; OC risk MPCC_P
+E-AC-02b,Iac,step,5,0,50,0,0.1,0.5,0.70,0.30,20,,,,P1,T-AC-02 DC bias: real I_dc -5 A; link check
+E-AC-02s,Iac,sine,10,0,50,90,0.1,0.5,0.70,0.30,20,,,,P2,T-AC-02 quadrature 50 Hz bias: PF 0.974
+E-AC-02h,Iac,hall,4,0,100,0,0.1,0.5,0.70,0.30,20,,,,P2,Hall model K_hall*(0.2+0.5 sin 2pi 100 t) = 4 A + 10 A
+E-MUL-01,Vdc,step,50,0,50,0,0.1,0.5,0.70,0.30,20,Iac,step,5,P2,T-MUL-01 Vdc +50 V and Iac +5 A together
+E-BAT-01b,Ibat,step,5,0,50,0,0.1,0.5,0.70,0.30,20,,,,P1,battery current chain: real Ibat 15 A; retention 74 %; link check
+E-BAT-02b,Vbat,step,10,0,50,0,0.1,0.5,0.70,0.30,20,,,,P1,battery voltage chain: early CV; P_charge halves
+E-BAT-02c,Vbat,step,20,0,50,0,0.1,0.5,0.70,0.30,20,,,,P2,battery voltage chain: charging stops; PFC no-load
+E-BAT-01n,Ibat,step,-5,0,50,0,0.1,0.5,0.70,0.30,20,,,,P2,battery current chain negative: real Ibat 25 A = BOC

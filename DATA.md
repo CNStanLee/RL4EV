@@ -5,6 +5,13 @@
 相同快照。这一固定归档包含备份里的硬件交付物和缓存；日常生成的大文件仍按
 下面的规则分发。
 
+用于重建 `Simulation/PV_MEV/docs/figures` 的 104 次运行完整 10 kHz 状态日志、
+1 MHz 电流 MAT、检测周期日志及对应记分卡现已保存在
+[`paper/pv_mev_figures/`](paper/pv_mev_figures/README.md)。其中还包含 234 条
+后期 SIL 波形和原始逐周期 THD 表。论文仓库的规范位置为 `data/pv_mev/`；
+现有论文表格与汇总图的输入在 `data/daes_results/`。两套实验保留各自版本、
+采样率和 SHA-256 来源清单，按需下载日常仿真输出的规则仍见下文。
+
 本仓库只放源码、模型、小体积派生产物和文档。PV_MEV 注入实验产生约 3 GB 波形日志，
 不进 git；它们全部可由 `Simulation/PV_MEV/run_injection.m` 重新生成，也打包成了下面的
 分发包。规则写在 `.gitignore` 的 “Simulation data” 段。

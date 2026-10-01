@@ -9,3 +9,10 @@ paper/daes_results/derived/*.json text eol=lf
 
 # Local backup payloads and patches retain the bytes recorded in SHA256SUMS.
 reproducibility/local_backup_20261001T142101Z/** -text -whitespace
+
+# Original plotting observations retain their hash-verified source bytes.
+paper/pv_mev_figures/raw/** -text -whitespace
+paper/pv_mev_figures/provenance/** -text -whitespace
+paper/pv_mev_figures/original_figures/** -text -whitespace
+paper/pv_mev_figures/rebuilt/** -text -whitespace
+paper/pv_mev_figures/rebuilt/**/*.svg binary
