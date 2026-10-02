@@ -15,18 +15,29 @@ FPGA 复现：`HLS_PRJ/build_all.sh`（Vitis HLS 2022.2，C 仿真 + 综合 + �
 [`HLS_PRJ/README.md`](HLS_PRJ/README.md) 和 [`Vivado_PRJ/README.md`](Vivado_PRJ/README.md)；重建的实现资源与论文资源表逐项相同。
 2026-09-05 之后未入库工作的恢复情况见 [`paper/recovery_20261001/README.md`](paper/recovery_20261001/README.md)。
 
+2026-10-01 / 02 用重建的比特流在 ZCU104 上补做的实验（最终策略 `MPCC_R6`）：
+
+| 实验 | 结果 | 位置 |
+|---|---|---|
+| 全链路 HIL：13 个攻击、250 / 500 V/s 斜坡、11 个基准攻击的三个延后起始相位，共 48 例，各配一次 SIL | 闭锁、标志、检测时刻 48 对全部相同；基准 11 例联合成功 10 / 11（各起始相位相同） | [`Simulation/PV_MEV/results/emi/hil_v6/`](Simulation/PV_MEV/results/emi/hil_v6/)（`equivalence.csv`、`detector_summary.csv`） |
+| 实时调度下的三任务并发定时重放 | 五次 20 s，2 000 005 次控制释放无迟到 | [`PS_notebook/logs_20261001/`](PS_notebook/logs_20261001/README.md) |
+| 板卡功耗（PMBus） | 完整设计运行 11.35 W，比仅控制器设计多 0.61 W | [`PS_notebook/logs_20261002/`](PS_notebook/logs_20261002/README.md) |
+
+过程与判据见 [`Simulation/PV_MEV/docs/HIL_TEST_PLAN.md`](Simulation/PV_MEV/docs/HIL_TEST_PLAN.md) 第 14 节。
+
 数据存放规则、仓库外分发包与重新生成方法见 [`DATA.md`](DATA.md)。
 
 DAES 论文的实验结果整理、证据口径和可复现图表脚本见
 [`paper/daes_results/README.md`](paper/daes_results/README.md)。
-该包保留小体积原始记分卡，分别报告最终 SIL、历史 HIL 与独立板端时序；
-论文仓库为 [DAES_Special_Issue](https://github.com/CNStanLee/DAES_Special_Issue)。
+该包保留小体积原始记分卡，是 2026-10-01 之前的整理版本（最终 SIL、历史 HIL 与独立板端时序）；
+论文当前使用的数据包在论文仓库 [DAES_Special_Issue](https://github.com/CNStanLee/DAES_Special_Issue) 的
+`data/daes_results/`，其中 2026-10-01 / 02 的 HIL、定时与功耗记录按提交号和 SHA-256 指回本仓库。
 
 2026-10-01 同步前的本地模型、实验数据和论文初稿完整快照见
 [`reproducibility/README.md`](reproducibility/README.md)，代码与论文仓库均保存
 相同的原始文件及 SHA-256 校验清单。
 
 `Simulation/PV_MEV/docs/figures` 的完整原始数据、重建脚本与图集见
-[`paper/pv_mev_figures/README.md`](paper/pv_mev_figures/README.md)。论文仓库在
-`data/pv_mev/` 保存相同副本，并已将传感链机理、CC/CV 切换、恢复时间、
-部分负载和最终控制版本的时域对照接入结果章节。
+[`paper/pv_mev_figures/README.md`](paper/pv_mev_figures/README.md)。论文仓库的
+`data/pv_mev/` 只保存作图所需的精简输入（带 SHA-256 清单，指回这里的完整数据），
+用于结果章节的传感链机理、CC/CV 切换、恢复时间、部分负载和最终控制版本的时域对照图。
