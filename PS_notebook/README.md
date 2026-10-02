@@ -13,7 +13,7 @@
 | `rt_loop_mpcc_r.c`、`rt_loop_det.c` | 不经 Python 的 PS 循环：控制拍 / 检测周期的服务时间 |
 | `rt_sched.c`、`run_rt_sched.sh` | 三任务并发调度重放（控制 50 µs、估计 250 µs、检测 20 ms，绑核 1/2/3）。默认普通优先级；环境变量 `RT_PRIO` 或 `run_rt_sched.sh` 切到 SCHED_FIFO + 内存锁定，这是论文定时表的配置（`logs_20261001/`） |
 | `cpu_partition/` | 处理器侧检测 / 全处理器划分的对照程序 |
-| `pwr_loop.c`、`pmbus_sample.py` | 仅控制器设计的 20 kHz 循环与 PMBus 采样（功耗基线） |
+| `pwr_loop.c`、`pmbus_sample.py`、`measure_power.sh` | 仅控制器设计的 20 kHz 循环与 PMBus 采样（功耗基线）；`measure_power.sh` 依次测两种设计的空闲 / 运行功耗（`logs_20261002/`） |
 | `mpcc_hil.ipynb`、`libs/mpcc_overlay.py`、`libs/tcp_cosim_utils.py`、`com_test.ipynb` | 最初的单 IP（`mpcc_hls`）HIL 通路 |
 | `hardware/*.hwh`、`libs/system.hwh` | 两个设计的接口描述 |
 
